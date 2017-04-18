@@ -1,0 +1,3 @@
+See examples
+http://projects.spring.io/spring-data-rest/#quick-start
+https://github.com/spring-projects/spring-data-examples/tree/master/rest
