@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" 
+	xmlns:tns="http://example.org/ws" targetNamespace="http://example.org/ws" elementFormDefault="qualified">
+
+	<xs:element name="getCountryRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="code" type="xs:string" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="getCountryResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="country" type="tns:country" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="updateCountryRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="country" type="tns:country" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="updateCountryResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="country" type="tns:country" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:complexType name="country">
+		<xs:sequence>
+			<xs:element name="code" type="xs:string" />
+			<xs:element name="name" type="xs:string" />
+			<xs:element name="description" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+</xs:schema>
