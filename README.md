@@ -1,1 +1,1 @@
-# spring-demos
+# spring-examples
