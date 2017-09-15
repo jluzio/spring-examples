@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.common.collect.Lists;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
 @RequestMapping("genericReference")
 public class GenericReferenceResource extends AbstractResource {
@@ -25,11 +29,24 @@ public class GenericReferenceResource extends AbstractResource {
 				new User("3", "User 3", "user3@mail.org")
 			);
 	}
+	
+	@ApiModel(description="user ref")
+	public static class RefResponse extends GenericReference<User> {}
 
-	@RequestMapping(method=RequestMethod.GET)
-	public ResponseEntity<GenericReference<User>> getReference() {
+	@RequestMapping(value="v1", method=RequestMethod.GET)
+	public ResponseEntity<GenericReference<User>> getReferenceV1() {
 		GenericReference<User> genericReference = new GenericReference<User>(users.get(0));
 		return ResponseEntity.ok(genericReference);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="v2", method=RequestMethod.GET)
+	@ApiResponses({
+		@ApiResponse(response=RefResponse.class, code=200, message="success response")
+	})
+	public ResponseEntity<GenericReference<Object>> getReferenceV2() {
+		GenericReference<User> genericReference = new GenericReference<User>(users.get(0));
+		return ResponseEntity.ok((GenericReference)genericReference);
 	}
 
 }

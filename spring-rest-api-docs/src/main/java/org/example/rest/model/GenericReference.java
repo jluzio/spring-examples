@@ -15,7 +15,6 @@ public class GenericReference<T> {
 		this.reference = reference;
 	}
 
-//	@ApiModelProperty(reference="org.example.rest.model.User")
 	public T getReference() {
 		return reference;
 	}
