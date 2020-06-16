@@ -25,7 +25,7 @@ dependencies {
 	implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.3'
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-xml'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-	implementation 'org.hsqldb:hsqldb:2.4.0'
+	implementation 'org.hsqldb:hsqldb'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
