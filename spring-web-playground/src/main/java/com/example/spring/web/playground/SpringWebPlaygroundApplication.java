@@ -1,4 +1,4 @@
-package com.example.spring.boot.playground;
+package com.example.spring.web.playground;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
