@@ -17,8 +17,8 @@ import com.example.spring.boot.playground.model.User;
 import com.example.spring.boot.playground.repository.UserRepository;
 
 @RestController
-@RequestMapping("/users")
-public class UserController {
+@RequestMapping("/custom/users")
+public class CustomUserController {
 	@Autowired
 	private UserRepository userRepository;
 
