@@ -1,0 +1,23 @@
+[
+	{
+		"_class": "com.example.spring.boot.playground.model.User",
+		"name": "John Doe",
+		"username": "jdoe"
+	},
+	{
+		"_class": "com.example.spring.boot.playground.model.User",
+		"name": "Jane Doe",
+		"username": "jndoe"
+	},
+	{
+		"_class": "com.example.spring.boot.playground.model.User",
+		"name": "Little D",
+		"username": "ldoe"
+	},
+	{
+		"_class": "com.example.spring.boot.playground.model.Todo",
+		"title": "Learn stuff",
+		"completed": false,
+		"userId": 1
+	}
+]

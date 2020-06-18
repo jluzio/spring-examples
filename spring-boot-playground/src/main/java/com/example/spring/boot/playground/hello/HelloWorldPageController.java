@@ -1,4 +1,4 @@
-package com.example.spring.boot.playground.web.controller;
+package com.example.spring.boot.playground.hello;
 
 import java.util.Map;
 

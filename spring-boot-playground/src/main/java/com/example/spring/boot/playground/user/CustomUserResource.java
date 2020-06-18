@@ -1,9 +1,10 @@
-package com.example.spring.boot.playground.api.controller;
+package com.example.spring.boot.playground.user;
 
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,13 +13,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.example.spring.boot.playground.model.User;
-import com.example.spring.boot.playground.repository.UserRepository;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequestMapping("/custom/users")
-public class CustomUserController {
+@RequestMapping("/api/custom/users")
+public class CustomUserResource {
 	@Autowired
 	private UserRepository userRepository;
 
@@ -33,13 +32,21 @@ public class CustomUserController {
 	}
 
 	@GetMapping("{id}")
-	public Optional<User> findUser(@PathVariable("id") Integer id) {
-		return userRepository.findById(id);
+	public User findUser(@PathVariable("id") Integer id) {
+		return userRepository.findById(id)
+		  .orElseThrow(() -> new UserNotFoundException("id: %s".formatted(id)));
 	}
 
 	@PostMapping
-	public User createUser(@RequestBody User user) {
-		return userRepository.save(user);
+	public ResponseEntity<Object> createUser(@RequestBody User user) {
+		var savedUser = userRepository.save(user);
+		var location = ServletUriComponentsBuilder.fromCurrentRequest()
+		  .path("{id}")
+		  .buildAndExpand(savedUser.getId())
+		  .toUri();
+		return ResponseEntity
+		  .created(location)
+		  .build();
 	}
 
 	@PutMapping("{id}")
