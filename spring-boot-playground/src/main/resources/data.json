@@ -1,21 +1,21 @@
 [
 	{
-		"_class": "com.example.spring.boot.playground.model.User",
+		"_class": "com.example.spring.boot.playground.user.User",
 		"name": "John Doe",
 		"username": "jdoe"
 	},
 	{
-		"_class": "com.example.spring.boot.playground.model.User",
+		"_class": "com.example.spring.boot.playground.user.User",
 		"name": "Jane Doe",
 		"username": "jndoe"
 	},
 	{
-		"_class": "com.example.spring.boot.playground.model.User",
+		"_class": "com.example.spring.boot.playground.user.User",
 		"name": "Little D",
 		"username": "ldoe"
 	},
 	{
-		"_class": "com.example.spring.boot.playground.model.Todo",
+		"_class": "com.example.spring.boot.playground.todo.Todo",
 		"title": "Learn stuff",
 		"completed": false,
 		"userId": 1
