@@ -1,11 +1,6 @@
 package com.example.spring.boot.playground.user;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import lombok.Data;
@@ -23,5 +18,7 @@ public class User {
 	private String name;
   private String username;
   private String email;
+  @Embedded
+  private Address address;
 
 }

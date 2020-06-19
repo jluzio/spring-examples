@@ -2,17 +2,32 @@
 	{
 		"_class": "com.example.spring.boot.playground.user.User",
 		"name": "John Doe",
-		"username": "jdoe"
+		"username": "jdoe",
+		"address": {
+			"street": "Lisbon Street, n1",
+			"city": "Lisbon",
+			"country": "pt"
+		}
 	},
 	{
 		"_class": "com.example.spring.boot.playground.user.User",
 		"name": "Jane Doe",
-		"username": "jndoe"
+		"username": "jndoe",
+		"address": {
+			"street": "Pico Street, n2",
+			"city": "Pico",
+			"country": "pt"
+		}
 	},
 	{
 		"_class": "com.example.spring.boot.playground.user.User",
 		"name": "Little D",
-		"username": "ldoe"
+		"username": "ldoe",
+		"address": {
+			"street": "Foreign Doe Street, n1",
+			"city": "Brussels",
+			"country": "be"
+		}
 	},
 	{
 		"_class": "com.example.spring.boot.playground.todo.Todo",
