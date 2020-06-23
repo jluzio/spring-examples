@@ -1,31 +1,31 @@
 package com.example.spring.cdi;
 
 public class GreeterManager {
-	private Greeter greeter;
-	private Greeter fancyGreeter;
-	
-	public void greet() {
-		greeter.sayHello();
-	}
-	
-	public void fancyGreet() {
-		fancyGreeter.sayHello();
-	}
+  private Greeter greeter;
+  private Greeter fancyGreeter;
 
-	public Greeter getGreeter() {
-		return greeter;
-	}
+  public void greet() {
+    greeter.sayHello();
+  }
 
-	public void setGreeter(Greeter greeter) {
-		this.greeter = greeter;
-	}
+  public void fancyGreet() {
+    fancyGreeter.sayHello();
+  }
 
-	public Greeter getFancyGreeter() {
-		return fancyGreeter;
-	}
+  public Greeter getGreeter() {
+    return greeter;
+  }
 
-	public void setFancyGreeter(Greeter fancyGreeter) {
-		this.fancyGreeter = fancyGreeter;
-	}
-	
+  public void setGreeter(Greeter greeter) {
+    this.greeter = greeter;
+  }
+
+  public Greeter getFancyGreeter() {
+    return fancyGreeter;
+  }
+
+  public void setFancyGreeter(Greeter fancyGreeter) {
+    this.fancyGreeter = fancyGreeter;
+  }
+
 }

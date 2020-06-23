@@ -6,10 +6,10 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 // @ComponentScan(basePackages="com.example.spring")
 public class AppConfig {
-	
-	@Bean
-	public String appVersion() {
-		return "App@1.0";
-	}
+
+  @Bean
+  public String appVersion() {
+    return "App@1.0";
+  }
 
 }
