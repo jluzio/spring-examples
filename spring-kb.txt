@@ -1,0 +1,14 @@
+# Spring Framework
+https://docs.spring.io/spring/docs/current/spring-framework-reference/pdf/
+https://docs.spring.io/spring/docs/current/spring-framework-reference/
+
+# Spring Libs
+
+## Spring Boot
+https://docs.spring.io/spring-boot/docs/current/reference/pdf/
+https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/
+
+## Spring Security
+https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/reference/pdf/
+https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/reference/html5/
+https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/api/

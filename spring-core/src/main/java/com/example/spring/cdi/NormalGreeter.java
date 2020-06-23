@@ -1,4 +1,4 @@
-package org.example.cdi;
+package com.example.spring.cdi;
 
 import org.springframework.stereotype.Component;
 

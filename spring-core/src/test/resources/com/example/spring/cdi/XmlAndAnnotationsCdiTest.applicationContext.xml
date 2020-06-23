@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-	<bean id="greeterManager" class="org.example.cdi.GreeterManager">
+	<bean id="greeterManager" class="com.example.spring.cdi.GreeterManager">
 		<property name="greeter" ref="normalGreeter" />
 		<property name="fancyGreeter" ref="theFancyGreeter" />
 	</bean>
