@@ -19,7 +19,7 @@ public class XmlAndAnnotationsCdiTest {
 	
 	@Configuration
 	@ComponentScan(basePackages="com.example.spring")
-	@ImportResource("classpath:/com/example/spring/cdi/XmlAndAnnotationsCdiTest.applicationContext.xml")
+	@ImportResource("classpath:/contexts/XmlAndAnnotationsCdiTest.applicationContext.xml")
 	static class Config {
 	}
 
