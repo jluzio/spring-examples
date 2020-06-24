@@ -2,7 +2,6 @@ package com.example.spring.init;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +11,12 @@ public class InitTest {
 
   @Test
   void test() {
-    ApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+    context.registerBean("newBean", String.class, "newBeanValue");
+//    context.refresh();
+
     log.info((String) context.getBean("someBean"));
+    log.info((String) context.getBean("newBean"));
   }
 
   @Configuration
