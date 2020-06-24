@@ -9,8 +9,7 @@
 	<version>1.0</version>
 
 	<properties>
-		<inject.version>1</inject.version>
-		<java.version>1.8</java.version>
+		<java.version>14</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
