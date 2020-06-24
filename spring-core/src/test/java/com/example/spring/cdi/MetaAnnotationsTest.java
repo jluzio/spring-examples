@@ -8,7 +8,7 @@ import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 @SpringBootTest
@@ -30,12 +30,16 @@ public class MetaAnnotationsTest {
 
   @Test
   void test() {
-    log.debug("customScopedDefaultBeans: {}", Lists.newArrayList(customScopedDefaultBean1, customScopedDefaultBean2, customScopedDefaultBean3));
-    log.debug("customScopedSingletonBeans: {}", Lists.newArrayList(customScopedSingletonBean1, customScopedSingletonBean2, customScopedSingletonBean3));
+    log.debug("customScopedDefaultBeans: {}", Lists
+        .newArrayList(customScopedDefaultBean1, customScopedDefaultBean2,
+            customScopedDefaultBean3));
+    log.debug("customScopedSingletonBeans: {}", Lists
+        .newArrayList(customScopedSingletonBean1, customScopedSingletonBean2,
+            customScopedSingletonBean3));
   }
 
-  @TestConfiguration
-  public static class Config {
+  @Configuration
+  static class Config {
 
     interface SampleBean {
 
@@ -44,7 +48,7 @@ public class MetaAnnotationsTest {
 
     @Component
     @CustomScope
-    public static class CustomScopedDefaultBean {
+    static class CustomScopedDefaultBean {
 
       public String sayHello() {
         return "hello";
@@ -53,7 +57,7 @@ public class MetaAnnotationsTest {
 
     @Component
     @CustomScope("singleton")
-    public static class CustomScopedSingletonBean {
+    static class CustomScopedSingletonBean {
 
       public String sayHello() {
         return "hello";

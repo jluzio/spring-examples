@@ -9,16 +9,14 @@ import java.lang.annotation.Target;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.annotation.AliasFor;
 
-@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.TYPE, ElementType.ANNOTATION_TYPE})
+@Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.TYPE,
+    ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
 @Qualifier
-public @interface TypedQualifier {
+public @interface GroupQualifier {
 
-  @AliasFor(annotation = Qualifier.class)
-  String value();
-
-  String type() default "";
+  String group() default "";
 
 }
