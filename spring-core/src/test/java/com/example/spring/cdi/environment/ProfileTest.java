@@ -1,5 +1,7 @@
-package com.example.spring.cdi.conditional;
+package com.example.spring.cdi.environment;
 
+import com.example.spring.core.profile.Development;
+import com.example.spring.core.profile.Production;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -11,7 +13,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("development")
 @Slf4j
 public class ProfileTest {
   @Autowired
@@ -31,30 +33,30 @@ public class ProfileTest {
     }
 
     @Bean
-    @Profile("test")
+    @Profile("development")
     String bean_2_test() {
-      return "config-2-test";
+      return "config-2-dev";
     }
 
     @Bean
-    @Profile("prd")
+    @Profile("production")
     String bean_3_prd() {
       return "config-3-prd";
     }
   }
 
   @Configuration
-  @Profile("test")
+  @Development
   static class TestConfig {
 
     @Bean
     String bean_test_1() {
-      return "test-config-1";
+      return "dev-config-1";
     }
   }
 
   @Configuration
-  @Profile("prd")
+  @Production
   static class PrdConfig {
 
     @Bean

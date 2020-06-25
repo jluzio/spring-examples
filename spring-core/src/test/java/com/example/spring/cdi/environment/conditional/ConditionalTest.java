@@ -1,4 +1,4 @@
-package com.example.spring.cdi.conditional;
+package com.example.spring.cdi.environment.conditional;
 
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

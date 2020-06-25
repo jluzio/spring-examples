@@ -1,8 +1,8 @@
 package com.example.spring.cdi;
 
-import com.example.spring.cdi.qualifier.DebugQualifier;
-import com.example.spring.cdi.qualifier.GroupQualifier;
-import com.example.spring.cdi.qualifier.NamedGroupQualifier;
+import com.example.spring.core.qualifier.DebugQualifier;
+import com.example.spring.core.qualifier.GroupQualifier;
+import com.example.spring.core.qualifier.NamedGroupQualifier;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Qualifier;

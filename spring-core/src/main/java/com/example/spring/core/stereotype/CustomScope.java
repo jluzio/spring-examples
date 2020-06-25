@@ -1,4 +1,4 @@
-package com.example.spring.cdi.stereotype;
+package com.example.spring.core.stereotype;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

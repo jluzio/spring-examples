@@ -9,8 +9,10 @@
 	<version>1.0</version>
 
 	<properties>
-		<java.version>14</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<java.version>14</java.version>
+		<maven.compiler.parameters>true</maven.compiler.parameters>
 	</properties>
 
 	<parent>

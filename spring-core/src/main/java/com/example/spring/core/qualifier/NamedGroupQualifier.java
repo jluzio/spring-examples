@@ -1,4 +1,4 @@
-package com.example.spring.cdi.qualifier;
+package com.example.spring.core.qualifier;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -15,8 +15,13 @@ import org.springframework.core.annotation.AliasFor;
 @Inherited
 @Documented
 @Qualifier
-public @interface GroupQualifier {
+@GroupQualifier
+public @interface NamedGroupQualifier {
 
+  @AliasFor(annotation = Qualifier.class)
+  String value() default "";
+
+  @AliasFor(annotation = GroupQualifier.class)
   String group() default "";
 
 }

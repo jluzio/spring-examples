@@ -2,7 +2,7 @@ package com.example.spring.cdi;
 
 import com.example.spring.cdi.MetaAnnotationsTest.Config.CustomScopedDefaultBean;
 import com.example.spring.cdi.MetaAnnotationsTest.Config.CustomScopedSingletonBean;
-import com.example.spring.cdi.stereotype.CustomScope;
+import com.example.spring.core.stereotype.CustomScope;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
