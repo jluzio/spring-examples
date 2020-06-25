@@ -1,6 +1,6 @@
 package com.example.spring.cdi;
 
-import java.util.ArrayList;
+import com.example.spring.cdi.qualifier.FooQualifier;
 import java.util.List;
 import java.util.Optional;
 import javax.annotation.Resource;

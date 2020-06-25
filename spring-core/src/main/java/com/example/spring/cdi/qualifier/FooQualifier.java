@@ -1,4 +1,4 @@
-package com.example.spring.cdi;
+package com.example.spring.cdi.qualifier;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
