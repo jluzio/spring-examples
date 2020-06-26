@@ -1,0 +1,46 @@
+package com.example.spring.core.aop.spring;
+
+import com.example.spring.core.aop.spring.AspectTest.Config.SomeBean;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.stereotype.Component;
+
+@SpringBootTest
+@Slf4j
+public class AspectTest {
+
+  @Autowired
+  SomeBean someBean;
+
+  @Test
+  void test() throws InterruptedException {
+    someBean.someFunc();
+  }
+
+//  @TestConfiguration
+  @Configuration
+  @ComponentScan("com.example.spring.core.aop.spring")
+  @EnableAspectJAutoProxy
+  static class Config {
+
+//    @Bean
+//    LogExecutionTimeAspect aspect() {
+//      return new LogExecutionTimeAspect();
+//    }
+
+    @Component
+    static class SomeBean {
+
+      @LogExecutionTime
+      public void someFunc() throws InterruptedException {
+        Thread.sleep(1000l);
+      }
+    }
+  }
+
+}
