@@ -4,6 +4,7 @@ import com.example.spring.core.aop.spring.AspectTest.Config.SomeBean;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -18,8 +19,9 @@ public class AspectTest {
   SomeBean someBean;
 
   @Test
-  void test() throws InterruptedException {
-    someBean.someFunc();
+  void test() throws Exception {
+    log.info("someBean: {}", someBean);
+    someBean.someMethod();
   }
 
 //  @TestConfiguration
@@ -27,17 +29,12 @@ public class AspectTest {
   @ComponentScan("com.example.spring.core.aop.spring")
   @EnableAspectJAutoProxy
   static class Config {
-
-//    @Bean
-//    LogExecutionTimeAspect aspect() {
-//      return new LogExecutionTimeAspect();
-//    }
-
     @Component
-    static class SomeBean {
+    @Qualifier("someBean")
+    public static class SomeBean {
 
       @LogExecutionTime
-      public void someFunc() throws InterruptedException {
+      public void someMethod() throws InterruptedException {
         Thread.sleep(1000l);
       }
     }
