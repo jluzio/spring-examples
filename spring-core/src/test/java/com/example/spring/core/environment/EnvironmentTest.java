@@ -21,9 +21,9 @@ public class EnvironmentTest {
 
   @Test
   void test() {
-    log.info("environment info :: p:{} | test prop:{} | test prop csv:{} | application.properties:{}",
+    log.info("environment info :: p:{} | test prop:{} | test prop csv:{} | application.yaml:{}",
         environment.getActiveProfiles(),
-        environment.getProperty("app.test"),
+        environment.getProperty("app.test.string"),
         Arrays.asList(environment.getProperty("app.test.csv", Integer[].class)),
         environment.getProperty("logging.level.com.example.spring"));
   }

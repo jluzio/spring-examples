@@ -7,7 +7,7 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 // @ComponentScan(basePackages="com.example.spring")
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.yaml")
 public class AppConfig {
 
   @Bean
