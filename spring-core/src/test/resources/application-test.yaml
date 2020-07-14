@@ -2,3 +2,10 @@ yaml:
   config:
     xpto: 123
     asd: asd
+    petDataMap:
+      boy:
+        name: boy
+        type: dog
+      miao:
+        name: miao
+        type: cat

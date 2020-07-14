@@ -1,6 +1,7 @@
 package com.example.spring.core.yaml;
 
 import com.example.spring.core.yaml.YamlTest.Config;
+import java.util.Map;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 @Slf4j
 @ActiveProfiles("test")
 public class YamlTest {
+
   @Autowired
   ConfigBean configBean;
 
@@ -24,14 +26,24 @@ public class YamlTest {
   @EnableConfigurationProperties
   @Import(ConfigBean.class)
   static class Config {
+
+  }
+
+  @Data
+  public static class PetData {
+
+    private String name;
+    private String type;
   }
 
   @Configuration
   @ConfigurationProperties(prefix = "yaml.config")
   @Data
   static class ConfigBean {
+
     private String xpto;
     private String asd;
+    private Map<String, PetData> petDataMap;
 
   }
 
