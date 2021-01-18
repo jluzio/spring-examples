@@ -13,6 +13,10 @@ https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/reference/pdf/
 https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/reference/html5/
 https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/api/
 
+## Debug with Spring Boot with Maven
+VM Options: -Dspring-boot.run.fork=false
+Environment variables: overrides to Spring Boot app
+
 
 ## Doc Notes
 
