@@ -1,11 +1,11 @@
-yaml:
-  config:
-    xpto: 123
-    asd: asd
-    petDataMap:
-      boy:
-        name: boy
-        type: dog
-      miao:
-        name: miao
-        type: cat
+keycloak:
+  authenticators:
+    otp-authenticator:
+      enabled: true
+      communications-service-endpoint: http://comms-service:8080/service-api/v1/batches
+      otp-channels:
+        text:
+          channel: text
+          from: "+351000000000"
+          identity-attributes:
+            phoneNumber: 1
