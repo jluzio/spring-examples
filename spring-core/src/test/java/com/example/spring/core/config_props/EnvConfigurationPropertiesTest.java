@@ -36,6 +36,15 @@ public class EnvConfigurationPropertiesTest {
     setProperty(
         "keycloak.authenticators.otp-authenticator.otp-channels.text.identity-attributes.phoneNumber",
         "1");
+    setProperty(
+        "keycloak.authenticators.otp-authenticator.otp-channels.email.channel",
+        "email");
+    setProperty(
+        "keycloak.authenticators.otp-authenticator.otp-channels.email.from",
+        "john.doe@server.com");
+    setProperty(
+        "keycloak.authenticators.otp-authenticator.otp-channels.email.identity-attributes.phoneNumber",
+        "2");
   }
 
   @Autowired

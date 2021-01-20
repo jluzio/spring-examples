@@ -9,3 +9,8 @@ keycloak:
           from: "+351000000000"
           identity-attributes:
             phoneNumber: 1
+        email:
+          channel: email
+          from: "john.doe@server.com"
+          identity-attributes:
+            emailAddress: 2

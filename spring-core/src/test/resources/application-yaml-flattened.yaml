@@ -3,3 +3,6 @@
 "keycloak.authenticators.otp-authenticator.otp-channels.text.channel": "text"
 "keycloak.authenticators.otp-authenticator.otp-channels.text.from": "+351000000000"
 "keycloak.authenticators.otp-authenticator.otp-channels.text.identity-attributes.phoneNumber": "1"
+"keycloak.authenticators.otp-authenticator.otp-channels.email.channel": "email"
+"keycloak.authenticators.otp-authenticator.otp-channels.email.from": "john.doe@server.com"
+"keycloak.authenticators.otp-authenticator.otp-channels.email.identity-attributes.emailAddress": "2"
