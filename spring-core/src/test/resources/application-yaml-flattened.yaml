@@ -1,0 +1,5 @@
+"keycloak.authenticators.otp-authenticator.enabled": "true"
+"keycloak.authenticators.otp-authenticator.communications-service-endpoint": "http://comms-service:8080/service-api/v1/batches"
+"keycloak.authenticators.otp-authenticator.otp-channels.text.channel": "text"
+"keycloak.authenticators.otp-authenticator.otp-channels.text.from": "+351000000000"
+"keycloak.authenticators.otp-authenticator.otp-channels.text.identity-attributes.phoneNumber": "1"

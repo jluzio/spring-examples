@@ -11,9 +11,9 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @Import(ServiceProperties.class)
 @EnableConfigurationProperties
-@ActiveProfiles("yaml")
+@ActiveProfiles("yaml-flattened")
 @Slf4j
-public class YamlConfigurationPropertiesTest {
+public class YamlFlattenedConfigurationPropertiesTest {
 
   @Autowired
   ServiceProperties properties;
