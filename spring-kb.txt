@@ -2,6 +2,7 @@
 https://docs.spring.io/spring/docs/current/spring-framework-reference/pdf/
 https://docs.spring.io/spring/docs/current/spring-framework-reference/
 
+
 # Spring Libs
 
 ## Spring Boot
@@ -13,9 +14,33 @@ https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/reference/pdf/
 https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/reference/html5/
 https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/api/
 
+
 ## Debug with Spring Boot with Maven
 VM Options: -Dspring-boot.run.fork=false
 Environment variables: overrides to Spring Boot app
+
+
+## Running with different properties
+- spring.config.location=<csv-resources>
+- spring.config.additional-location=<csv-additional-resources>
+
+## Relaxed binding for Configuration and Environment Properties
+@ConfigurationProperties(prefix="acme.my-project.person")
+public class OwnerProperties {
+ private String firstName;
+ public String getFirstName() {
+ return this.firstName;
+ }
+ public void setFirstName(String firstName) {
+ this.firstName = firstName;
+ }
+}
+
+-- Options
+acme.my-project.person.first-name: Kebab case, which is recommended for use in .properties and .yml files.
+acme.myProject.person.firstName: Standard camel case syntax.
+acme.my_project.person.first_name: Underscore notation, which is an alternative format for use in .properties and .yml files.
+ACME_MYPROJECT_PERSON_FIRSTNAME: Upper case format, which is recommended when using system enviroment.
 
 
 ## Doc Notes
