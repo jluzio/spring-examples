@@ -1,5 +1,6 @@
 spring:
   datasource:
+    driver-class-name: com.mysql.jdbc.Driver
     url: jdbc:mysql://host.docker.internal:3306/test?createDatabaseIfNotExist=true
 #    username: liquibase
 #    password: password
@@ -7,4 +8,4 @@ spring:
     password: root
   liquibase:
     enabled: true
-    change-log: classpath:db/changelog.yaml
+    change-log: "classpath:db/changelog.yaml"
