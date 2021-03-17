@@ -66,7 +66,8 @@
         <changelog.type>jar</changelog.type>
         <changelog.classifier>classes</changelog.classifier>
         <changelog.includes>db/**/*</changelog.includes>
-        <spring.datasource.url>jdbc:mysql://host.docker.internal:3306/actions?createDatabaseIfNotExist=true</spring.datasource.url>
+
+        <spring.datasource.url><![CDATA[jdbc:mysql://host.docker.internal:3306/dbs-actions-actionservice?createDatabaseIfNotExist=true&useSSL=false]]></spring.datasource.url>
         <spring.liquibase.change-log>classpath:db/changelog.yaml</spring.liquibase.change-log>
       </properties>
     </profile>
