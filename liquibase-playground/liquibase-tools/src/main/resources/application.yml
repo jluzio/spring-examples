@@ -1,0 +1,29 @@
+logging:
+  level:
+    root: INFO
+    com.example.liquibase: DEBUG
+#    liquibase: DEBUG
+    liquibase: INFO
+    org.springframework: INFO
+#    org.springframework: DEBUG
+
+spring:
+  # datasource for liquibase
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://host.docker.internal:3306/test?createDatabaseIfNotExist=true&useSSL=false
+    username: root
+    password: root
+  # settings for liquibase
+  liquibase:
+    enabled: false
+#    change-log: classpath:db/changelog/changelog.yaml
+    change-log: classpath:db/changelog/changelog.yaml
+
+# liquibase task properties
+liquibase:
+  task:
+    commands: VALIDATE, STATUS
+    verbose: true
+#    contexts: c1, c2
+#    labels: l1, l2
