@@ -2,6 +2,7 @@ package com.example.liquibase.tools.task;
 
 import com.example.liquibase.tools.config.LiquibaseTaskProperties;
 import com.example.liquibase.tools.config.LiquibaseTaskProperties.Command;
+import com.example.liquibase.tools.repository.DatabaseChangelogRepository;
 import java.io.PrintWriter;
 import liquibase.Liquibase;
 import liquibase.exception.LiquibaseException;
@@ -18,6 +19,7 @@ public class LiquibaseTask {
 
   private final Liquibase liquibase;
   private final LiquibaseTaskProperties properties;
+  private final DatabaseChangelogRepository changelogRepository;
 
   void execute() {
     Flux.fromIterable(properties.getCommands())
@@ -42,13 +44,17 @@ public class LiquibaseTask {
           break;
         case STATUS:
           liquibase.reportStatus(
-              properties.isVerbose(), properties.getContexts(), outputWriter);
+              properties.isVerbose(), properties.getContexts(), properties.getLabels(),
+              outputWriter);
           break;
         case FORCE_RELEASE_LOCKS:
           liquibase.forceReleaseLocks();
           break;
         case CLEAR_CHECKSUM:
           liquibase.clearCheckSums();
+          break;
+        case CLEAR_CHANGE_LOG:
+          changelogRepository.deleteAll();
           break;
         case CHANGE_LOG_SYNC:
           liquibase.changeLogSync(
@@ -60,11 +66,11 @@ public class LiquibaseTask {
           break;
         case UPDATE:
           liquibase.update(
-              properties.getContexts());
+              properties.getContexts(), properties.getLabels());
           break;
         case UPDATE_SQL:
           liquibase.update(
-              properties.getContexts(), outputWriter);
+              properties.getContexts(), properties.getLabels(), outputWriter);
           break;
       }
     } catch (LiquibaseException e) {

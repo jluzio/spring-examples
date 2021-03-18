@@ -19,7 +19,7 @@ public class LiquibaseTaskProperties {
   public enum Command {
     VALIDATE, STATUS, FORCE_RELEASE_LOCKS,
     CLEAR_CHECKSUM, CHANGE_LOG_SYNC, CHANGE_LOG_SYNC_SQL,
-    UPDATE, UPDATE_SQL}
+    UPDATE, UPDATE_SQL, CLEAR_CHANGE_LOG}
 
   private List<Command> commands;
   private Contexts contexts;

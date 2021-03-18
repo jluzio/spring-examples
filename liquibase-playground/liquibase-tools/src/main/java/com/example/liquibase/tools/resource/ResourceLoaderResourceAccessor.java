@@ -1,4 +1,4 @@
-package com.example.liquibase.tools.liquibase;
+package com.example.liquibase.tools.resource;
 
 import java.io.IOException;
 import java.io.InputStream;

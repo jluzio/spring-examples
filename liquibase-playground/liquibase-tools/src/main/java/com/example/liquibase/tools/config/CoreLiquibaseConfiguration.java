@@ -1,6 +1,6 @@
 package com.example.liquibase.tools.config;
 
-import com.example.liquibase.tools.liquibase.ResourceLoaderResourceAccessor;
+import com.example.liquibase.tools.resource.ResourceLoaderResourceAccessor;
 import java.sql.SQLException;
 import javax.sql.DataSource;
 import liquibase.Liquibase;
