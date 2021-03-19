@@ -1,0 +1,13 @@
+liquibase:
+  default-change-log: classpath:db/default.yml
+  tasks:
+    - command: VALIDATE
+      change-log: classpath:db/first.yml
+      contexts: c1
+      labels: l1
+      verbose: true
+    - command: STATUS
+      contexts: c2,c3
+      labels: l2,l3
+      verbose: false
+

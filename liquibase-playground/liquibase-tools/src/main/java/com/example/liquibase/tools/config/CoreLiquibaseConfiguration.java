@@ -1,9 +1,10 @@
 package com.example.liquibase.tools.config;
 
 import com.example.liquibase.tools.resource.ResourceLoaderResourceAccessor;
+import com.example.liquibase.tools.service.LiquibaseFactory;
 import java.sql.SQLException;
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import liquibase.Liquibase;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.database.jvm.JdbcConnection;
@@ -20,12 +21,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableConfigurationProperties({LiquibaseProperties.class, LiquibaseTaskProperties.class})
+@EnableConfigurationProperties({LiquibaseProperties.class, LiquibaseTasksProperties.class})
 @RequiredArgsConstructor
 @Slf4j
 public class CoreLiquibaseConfiguration {
 
-  private final LiquibaseProperties properties;
   private final DataSource dataSource;
   private final ResourceLoaderResourceAccessor resourceLoaderResourceAccessor;
 
@@ -38,7 +38,7 @@ public class CoreLiquibaseConfiguration {
    * @see liquibase.integration.spring.SpringLiquibase.SpringResourceOpener
    */
   @Bean
-  public Liquibase coreLiquibase() throws SQLException, LiquibaseException {
+  public LiquibaseFactory liquibaseFactory() throws SQLException, LiquibaseException {
     Database database = DatabaseFactory.getInstance()
         .findCorrectDatabaseImplementation(new JdbcConnection(dataSource.getConnection()));
 
@@ -47,12 +47,7 @@ public class CoreLiquibaseConfiguration {
         new ClassLoaderResourceAccessor(),
         springResourceAccessor());
 
-    Liquibase liquibase = new Liquibase(
-        properties.getChangeLog(),
-        resourceAccessor,
-        database);
-    log.info("Liquibase configured :: {}", liquibase);
-    return liquibase;
+    return new LiquibaseFactory(database, resourceAccessor);
   }
 
   private ResourceAccessor springResourceAccessor() {

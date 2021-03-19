@@ -20,13 +20,14 @@ spring:
 #    change-log: classpath:db/changelog/changelog.yaml
     change-log: classpath:db/changelog/changelog.yaml
   jpa:
+#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
     hibernate:
       naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
 # liquibase task properties
 liquibase:
-  task:
-    commands: VALIDATE, STATUS
-    verbose: true
-#    contexts: c1, c2
-#    labels: l1, l2
+  default-change-log: ${spring.liquibase.change-log}
+  tasks:
+    - command: VALIDATE
+    - command: STATUS
+      verbose: true

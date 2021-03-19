@@ -1,0 +1,6 @@
+liquibase:
+  default-change-log: classpath:db/default.yml
+  tasks:
+    - command: STATUS
+      verbose: true
+

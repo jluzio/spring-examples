@@ -1,27 +1,25 @@
-package com.example.liquibase.tools.config;
+package com.example.liquibase.tools.model;
 
-import java.util.List;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties("liquibase.task")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LiquibaseTaskProperties {
+public class Task {
 
   public enum Command {
     VALIDATE, STATUS, FORCE_RELEASE_LOCKS,
     CLEAR_CHECKSUM, CHANGE_LOG_SYNC, CHANGE_LOG_SYNC_SQL,
     UPDATE, UPDATE_SQL, CLEAR_CHANGE_LOG}
 
-  private List<Command> commands;
+  private Command command;
+  private String changeLog;
   private Contexts contexts;
   private LabelExpression labels;
   private boolean verbose;

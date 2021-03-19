@@ -1,8 +1,11 @@
 package com.example.liquibase.tools;
 
 import com.example.liquibase.tools.config.CoreLiquibaseConfiguration;
-import com.example.liquibase.tools.config.LiquibaseTaskProperties;
-import com.example.liquibase.tools.config.LiquibaseTaskProperties.Command;
+import com.example.liquibase.tools.config.LiquibaseTasksProperties;
+import com.example.liquibase.tools.model.Task;
+import com.example.liquibase.tools.model.Task.Command;
+import com.example.liquibase.tools.service.LiquibaseDataService;
+import com.example.liquibase.tools.service.LiquibaseFactory;
 import java.io.PrintWriter;
 import liquibase.Liquibase;
 import liquibase.exception.LiquibaseException;
@@ -18,32 +21,39 @@ import org.springframework.test.context.junit.jupiter.EnabledIf;
 class CustomLiveLiquibaseTest {
 
   @Autowired
-  private Liquibase liquibase;
+  private LiquibaseFactory liquibaseFactory;
   @Autowired
-  private LiquibaseTaskProperties taskProperties;
+  private LiquibaseTasksProperties tasksProperties;
+  @Autowired
+  private LiquibaseDataService liquibaseDataService;
   private PrintWriter writer = new PrintWriter(System.out);
 
   @Test
   void custom() throws LiquibaseException {
-    Command command = Command.VALIDATE;
+    Liquibase liquibase = liquibaseFactory.get(tasksProperties.getDefaultChangeLog());
+    Task task = tasksProperties.getTasks().get(0);
+    Command command = Command.CLEAR_CHANGE_LOG;
 
     if (command == Command.VALIDATE) {
       liquibase.validate();
     }
     if (command == Command.STATUS) {
       liquibase.reportStatus(
-          taskProperties.isVerbose(), taskProperties.getContexts(), writer);
+          task.isVerbose(), task.getContexts(), writer);
     }
     if (command == Command.UPDATE) {
       liquibase.update(
-          taskProperties.getContexts());
+          task.getContexts());
     }
     if (command == Command.CLEAR_CHECKSUM) {
       liquibase.clearCheckSums();
     }
     if (command == Command.CHANGE_LOG_SYNC) {
       liquibase.changeLogSync(
-          taskProperties.getContexts(), taskProperties.getLabels());
+          task.getContexts(), task.getLabels());
+    }
+    if (command == Command.CLEAR_CHANGE_LOG) {
+      liquibaseDataService.clearChangeLog();
     }
   }
 

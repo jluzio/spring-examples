@@ -10,9 +10,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 @DataJpaTest
 @Slf4j
-class DatabaseChangelogRepositoryTest {
+class DatabaseChangeLogRepositoryTest {
   @Autowired
-  private DatabaseChangelogRepository repository;
+  private DatabaseChangeLogRepository repository;
 
   @Test
   void test() {

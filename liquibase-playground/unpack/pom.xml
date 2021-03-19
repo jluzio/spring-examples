@@ -63,7 +63,7 @@
     <profile>
       <id>user-profile-manager</id>
       <properties>
-        <changeloggroupId>com.backbase.dbs.user</changeloggroupId>
+        <changelog.groupId>com.backbase.dbs.user</changelog.groupId>
         <changelog.artifactId>user-profile-manager</changelog.artifactId>
         <changelog.version>1.0.16</changelog.version>
         <changelog.type>jar</changelog.type>
@@ -114,8 +114,29 @@
                   <includes>${changelog.includes}</includes>
                 </artifactItem>
               </artifactItems>
-              <includes>**/*.sql,**/*.xml,**/*.yaml,**/*.yml</includes>
+              <includes>**/*.sql,**/*.xml,**/*.y*ml</includes>
               <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>unpack-application-yaml</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${changelog.groupId}</groupId>
+                  <artifactId>${changelog.artifactId}</artifactId>
+                  <version>${changelog.version}</version>
+                  <type>${changelog.type}</type>
+                  <classifier>${changelog.classifier}</classifier>
+                  <includes>application*.y*ml</includes>
+                </artifactItem>
+              </artifactItems>
+              <includes>**/*</includes>
+              <outputDirectory>${project.build.directory}/application</outputDirectory>
             </configuration>
           </execution>
         </executions>
