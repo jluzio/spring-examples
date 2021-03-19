@@ -9,6 +9,7 @@ https://docs.spring.io/spring/docs/current/spring-framework-reference/
 https://docs.spring.io/spring-boot/docs/current/reference/pdf/
 https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/
 
+
 ## Spring Security
 https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/reference/pdf/
 https://docs.spring.io/spring-security/site/docs/5.3.2.RELEASE/reference/html5/
@@ -23,6 +24,12 @@ Environment variables: overrides to Spring Boot app
 ## Running with different properties
 - spring.config.location=<csv-resources>
 - spring.config.additional-location=<csv-additional-resources>
+- use <app-working-directory>/config
+
+
+## spring-boot:run with profiles and other parameters
+mvn spring-boot:run -Dspring-boot.run.profiles=<profile1>,<profile2> -Dspring-boot.run.jvmArguments="-Dspring.config.additional-location=.settings/config/"
+
 
 ## Relaxed binding for Configuration and Environment Properties
 @ConfigurationProperties(prefix="acme.my-project.person")
