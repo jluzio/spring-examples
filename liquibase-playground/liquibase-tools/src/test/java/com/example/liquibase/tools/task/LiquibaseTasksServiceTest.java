@@ -52,6 +52,7 @@ class LiquibaseTasksServiceTest {
   }
 
   @Test
+  @SuppressWarnings("java:S6073")
   void execute_success() throws LiquibaseException {
     setTasks(Command.VALIDATE, Command.STATUS, Command.CLEAR_CHANGE_LOG);
     liquibaseTasksService.execute();
@@ -71,6 +72,7 @@ class LiquibaseTasksServiceTest {
   }
 
   @Test
+  @SuppressWarnings("java:S6073")
   void execute_status() throws LiquibaseException {
     setTasks(Command.STATUS);
     liquibaseTasksService.execute();
@@ -151,9 +153,10 @@ class LiquibaseTasksServiceTest {
   private void setTasks(Command... commands) {
     tasksProperties.setTasks(
         Stream.of(commands)
-            .map(command -> Task.builder()
-                .command(command)
-                .build())
+            .map(command ->
+                Task.builder()
+                    .command(command)
+                    .build())
             .collect(Collectors.toList()));
   }
 

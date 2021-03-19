@@ -1,9 +1,8 @@
 package com.example.liquibase.tools.config;
 
-import com.example.liquibase.tools.resource.ResourceLoaderResourceAccessor;
 import com.example.liquibase.tools.service.LiquibaseFactory;
+import com.example.liquibase.tools.util.ResourceLoaderResourceAccessor;
 import java.sql.SQLException;
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
@@ -30,29 +29,31 @@ public class CoreLiquibaseConfiguration {
   private final ResourceLoaderResourceAccessor resourceLoaderResourceAccessor;
 
 
-  /**
-   * @see liquibase.resource.ResourceAccessor
-   * @see liquibase.resource.AbstractResourceAccessor
-   * @see liquibase.resource.ClassLoaderResourceAccessor
-   * @see liquibase.resource.CompositeResourceAccessor
-   * @see liquibase.integration.spring.SpringLiquibase.SpringResourceOpener
-   */
   @Bean
   public LiquibaseFactory liquibaseFactory() throws SQLException, LiquibaseException {
     Database database = DatabaseFactory.getInstance()
         .findCorrectDatabaseImplementation(new JdbcConnection(dataSource.getConnection()));
-
-    ResourceAccessor resourceAccessor = new CompositeResourceAccessor(
-        new FileSystemResourceAccessor(),
-        new ClassLoaderResourceAccessor(),
-        springResourceAccessor());
-
+    ResourceAccessor resourceAccessor = resourceAccessor();
     return new LiquibaseFactory(database, resourceAccessor);
   }
 
+  /**
+   * @see liquibase.resource.ResourceAccessor
+   * @see liquibase.resource.ClassLoaderResourceAccessor
+   * @see liquibase.resource.CompositeResourceAccessor
+   * @see #springResourceAccessor()
+   */
+  private ResourceAccessor resourceAccessor() {
+    return new CompositeResourceAccessor(
+        new FileSystemResourceAccessor(),
+        new ClassLoaderResourceAccessor(),
+        springResourceAccessor());
+  }
+
+  /**
+   * @see liquibase.integration.spring.SpringLiquibase.SpringResourceOpener
+   */
   private ResourceAccessor springResourceAccessor() {
-//    return  new liquibase.integration.spring.SpringLiquibase()
-//        .new SpringResourceOpener(properties.getChangeLog());
     return resourceLoaderResourceAccessor;
   }
 }

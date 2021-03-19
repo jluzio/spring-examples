@@ -1,5 +1,7 @@
 package com.example.liquibase.tools.task;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+
 import com.example.liquibase.tools.LiveTestSupport;
 import com.example.liquibase.tools.config.CoreLiquibaseConfiguration;
 import com.example.liquibase.tools.service.LiquibaseTasksService;
@@ -19,7 +21,7 @@ class LiveLiquibaseTasksServiceTest {
 
   @Test
   void execute() {
-    liquibaseTasksService.execute();
+    assertDoesNotThrow(() -> liquibaseTasksService.execute());
   }
 
 }
