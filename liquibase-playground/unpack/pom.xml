@@ -11,7 +11,31 @@
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
+
+    <identity.version>1.8.0.1</identity.version>
+<!--    <identity.version>1.7.0</identity.version>-->
+    <dbs.version>2.20.1.1</dbs.version>
+<!--    <dbs.version>2.19.0</dbs.version>-->
   </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>com.backbase.dbs</groupId>
+        <artifactId>banking-services-bom</artifactId>
+        <version>${dbs.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.backbase.identity</groupId>
+        <artifactId>identity-bom</artifactId>
+        <version>${identity.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <profiles>
     <profile>
@@ -19,7 +43,7 @@
       <properties>
         <changelog.groupId>com.backbase.dbs.actions</changelog.groupId>
         <changelog.artifactId>action-service</changelog.artifactId>
-        <changelog.version>1.0.64</changelog.version>
+        <changelog.version>1.0.334</changelog.version>
         <changelog.type>jar</changelog.type>
         <changelog.classifier>classes</changelog.classifier>
         <changelog.includes>db/**/*</changelog.includes>
@@ -56,6 +80,12 @@
         <changelog.type>jar</changelog.type>
         <changelog.classifier>classes</changelog.classifier>
         <changelog.includes>db/**/*</changelog.includes>
+      </properties>
+    </profile>
+    <profile>
+      <id>use-bom</id>
+      <properties>
+        <changelog.version></changelog.version>
       </properties>
     </profile>
   </profiles>
