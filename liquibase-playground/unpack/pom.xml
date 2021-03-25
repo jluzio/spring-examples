@@ -43,7 +43,7 @@
       <properties>
         <changelog.groupId>com.backbase.dbs.actions</changelog.groupId>
         <changelog.artifactId>action-service</changelog.artifactId>
-        <changelog.version>1.0.334</changelog.version>
+        <changelog.version>1.0.64</changelog.version>
         <changelog.type>jar</changelog.type>
         <changelog.classifier>classes</changelog.classifier>
         <changelog.includes>db/**/*</changelog.includes>
