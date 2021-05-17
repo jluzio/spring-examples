@@ -15,6 +15,7 @@
     <identity.version>1.8.0.1</identity.version>
 <!--    <identity.version>1.7.0</identity.version>-->
     <dbs.version>2.20.1.1</dbs.version>
+<!--    <dbs.version>2.20.3</dbs.version>-->
 <!--    <dbs.version>2.19.0</dbs.version>-->
   </properties>
 
@@ -77,6 +78,17 @@
         <changelog.groupId>com.backbase.dbs.audit</changelog.groupId>
         <changelog.artifactId>audit-service</changelog.artifactId>
         <changelog.version>3.1.13</changelog.version>
+        <changelog.type>jar</changelog.type>
+        <changelog.classifier>classes</changelog.classifier>
+        <changelog.includes>db/**/*</changelog.includes>
+      </properties>
+    </profile>
+    <profile>
+      <id>notifications-service</id>
+      <properties>
+        <changelog.groupId>com.backbase.dbs.notifications</changelog.groupId>
+        <changelog.artifactId>notifications-service</changelog.artifactId>
+        <changelog.version></changelog.version>
         <changelog.type>jar</changelog.type>
         <changelog.classifier>classes</changelog.classifier>
         <changelog.includes>db/**/*</changelog.includes>
