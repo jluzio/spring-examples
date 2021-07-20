@@ -9,7 +9,7 @@
     </tr>
     <#list users as user>
       <tr>
-        <td>${user.username}</td>
+        <td>${user.username?replace("user", "person")?replace("name", "Name")}</td>
         <td>${user.email}</td>
       </tr>
     </#list>

@@ -31,6 +31,32 @@ Environment variables: overrides to Spring Boot app
 mvn spring-boot:run -Dspring-boot.run.profiles=<profile1>,<profile2> -Dspring-boot.run.jvmArguments="-Dspring.config.additional-location=.settings/config/"
 
 
+## Profiles
+- active profiles
+spring.profiles.active
+
+- Change configuration depending on the environment
+A YAML file is actually a sequence of documents separated by --- lines, and each document is parsed separately to a flattened map.
+If a YAML document contains a spring.profiles key, then the profiles value (comma-separated list of profiles) is fed into the Spring Environment.acceptsProfiles() and if any of those profiles is active that document is included in the final merge (otherwise not).
+
+Example:
+server:
+    port: 9000
+---
+spring:
+    profiles: development
+server:
+    port: 9001
+---
+spring:
+    profiles: production
+server:
+    port: 0
+    
+In this example the default port is 9000, but if the Spring profile “development” is active then the port is 9001, and if “production” is active then it is 0.
+The YAML documents are merged in the order they are encountered (so later values override earlier ones).
+To do the same thing with properties files you can use application-${profile}.properties to specify profile-specific values.    
+
 ## Relaxed binding for Configuration and Environment Properties
 @ConfigurationProperties(prefix="acme.my-project.person")
 public class OwnerProperties {
