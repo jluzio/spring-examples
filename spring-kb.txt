@@ -76,6 +76,11 @@ acme.my_project.person.first_name: Underscore notation, which is an alternative 
 ACME_MYPROJECT_PERSON_FIRSTNAME: Upper case format, which is recommended when using system enviroment.
 
 
+## Spring Boot jar archive
+Can be unzipped with unzip or 7zip specifying "Open Archive > zip"
+Can also be less'ed to view header info.
+
+
 ## Doc Notes
 
 ### 1.10.1. @Component and Further Stereotype Annotations
