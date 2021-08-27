@@ -24,6 +24,8 @@ class WireMockTest {
 
   @Test
   void test() {
+    // See Also: wiremock-playground project
+
     String wiremockServerPort = environment.getProperty("wiremock.server.port");
 
     String message = "World!";
@@ -39,11 +41,11 @@ class WireMockTest {
     log.info(response);
     assertThat(response).isEqualTo(message);
 
-    String mappingResponse = webClient.get().uri("/some/thing")
+    String messageSimpleResponse = webClient.get().uri("/message/simple")
         .exchangeToMono(clientResponse -> clientResponse.bodyToMono(String.class))
         .block();
-    log.info(mappingResponse);
-    assertThat(mappingResponse).isEqualTo("Hello world!");
+    log.info(messageSimpleResponse);
+    assertThat(messageSimpleResponse).isEqualTo("Hello world!");
   }
 
 }
