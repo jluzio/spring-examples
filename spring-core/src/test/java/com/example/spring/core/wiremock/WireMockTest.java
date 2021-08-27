@@ -38,6 +38,12 @@ class WireMockTest {
         .block();
     log.info(response);
     assertThat(response).isEqualTo(message);
+
+    String mappingResponse = webClient.get().uri("/some/thing")
+        .exchangeToMono(clientResponse -> clientResponse.bodyToMono(String.class))
+        .block();
+    log.info(mappingResponse);
+    assertThat(mappingResponse).isEqualTo("Hello world!");
   }
 
 }
