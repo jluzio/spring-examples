@@ -9,18 +9,21 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Entity
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Person {
+@ToString(exclude = "body")
+public class Post {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
-  private String firstName;
-  private String lastName;
+  private Long userId;
+  private String title;
+  private String body;
 
 }

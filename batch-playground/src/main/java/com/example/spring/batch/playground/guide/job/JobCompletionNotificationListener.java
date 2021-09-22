@@ -1,15 +1,12 @@
-package com.example.spring.batch.playground.guide.listener;
+package com.example.spring.batch.playground.guide.job;
 
-import com.example.spring.batch.playground.guide.repository.PersonRepository;
+import com.example.spring.batch.playground.guide.repository.PostRepository;
+import com.example.spring.batch.playground.guide.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.listener.JobExecutionListenerSupport;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
@@ -18,7 +15,8 @@ import reactor.core.publisher.Flux;
 @Slf4j
 public class JobCompletionNotificationListener extends JobExecutionListenerSupport {
 
-  private final PersonRepository personRepository;
+  private final UserRepository userRepository;
+  private final PostRepository postRepository;
 
 
   @Override
@@ -26,8 +24,11 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
     if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
       log.info("!!! JOB FINISHED! Time to verify the results");
 
-      Flux.fromIterable(personRepository.findAll())
-          .doOnNext(person -> log.info("Found <" + person + "> in the database."))
+      Flux.fromIterable(userRepository.findAll())
+          .doOnNext(user -> log.info("Found user <{}> in the database.", user))
+          .blockLast();
+      Flux.fromIterable(postRepository.findAll())
+          .doOnNext(post -> log.info("Found post <{}> in the database.", post))
           .blockLast();
     }
   }
