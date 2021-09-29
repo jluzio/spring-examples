@@ -1,6 +1,7 @@
 package com.example.spring.cloud.playground.function;
 
 import java.util.function.Function;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import reactor.core.publisher.Flux;
@@ -19,5 +20,11 @@ public class WebFunctions {
   public Function<Flux<String>, Flux<String>> uppercase() {
     return flux -> flux.map(String::toUpperCase);
   }
+
+  @Bean
+  public Function<String, String> reverse() {
+    return StringUtils::reverse;
+  }
+
 
 }

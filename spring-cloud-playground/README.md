@@ -18,3 +18,4 @@ These additional references should also help you:
 ### Tests
 curl -H "Content-Type: text/plain" localhost:8080/uppercase -d Hello
 curl -H "Content-Type: text/plain" localhost:8080/lowercase -d Hello
+curl -H "Content-Type: text/plain" localhost:8080/lowercase,reverse -d Hello

@@ -30,4 +30,18 @@ class NonHttpWebFunctionsTest {
     assertThat(function.apply("Hello"))
         .isEqualTo("hello");
   }
+
+  @Test
+  void reverse() throws Exception {
+    Function<String, String> function = catalog.lookup(Function.class, "lowercase");
+    assertThat(function.apply("Hello"))
+        .isEqualTo("olleH");
+  }
+
+  @Test
+  void lowercase_reverse() throws Exception {
+    Function<String, String> function = catalog.lookup(Function.class, "lowercase,reverse");
+    assertThat(function.apply("Hello"))
+        .isEqualTo("olleh");
+  }
 }
