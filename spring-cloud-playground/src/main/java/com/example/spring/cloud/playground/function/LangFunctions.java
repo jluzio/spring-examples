@@ -1,13 +1,15 @@
 package com.example.spring.cloud.playground.function;
 
 import java.util.function.Function;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import reactor.core.publisher.Flux;
 
 @Configuration
-public class WebFunctions {
+@Slf4j
+public class LangFunctions {
 
   @Bean
   // Imperative
@@ -16,8 +18,13 @@ public class WebFunctions {
   }
 
   @Bean
+  public Function<String, String> uppercase() {
+    return String::toUpperCase;
+  }
+
+  @Bean
   // Reactive
-  public Function<Flux<String>, Flux<String>> uppercase() {
+  public Function<Flux<String>, Flux<String>> uppercaseReactive() {
     return flux -> flux.map(String::toUpperCase);
   }
 
@@ -25,6 +32,5 @@ public class WebFunctions {
   public Function<String, String> reverse() {
     return StringUtils::reverse;
   }
-
 
 }

@@ -19,3 +19,12 @@ These additional references should also help you:
 curl -H "Content-Type: text/plain" localhost:8080/uppercase -d Hello
 curl -H "Content-Type: text/plain" localhost:8080/lowercase -d Hello
 curl -H "Content-Type: text/plain" localhost:8080/lowercase,reverse -d Hello
+curl -H "Content-Type: text/plain" localhost:8080/lowercase,reverse/TestTing
+curl --location --request GET 'http://localhost:8080/users'
+curl --location --request GET 'http://localhost:8080/users,username'
+curl --location --request POST 'http://localhost:8080/findUser,email' \
+--header 'Content-Type: application/json' \
+--data-raw '[
+"user-1",
+"user-3"
+]'
