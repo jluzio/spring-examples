@@ -1,0 +1,17 @@
+logging:
+  level:
+    org.springframework: INFO
+    org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
+#    org.springframework.web.servlet.mvc.method.annotation: TRACE
+#    org.springframework.boot.autoconfigure: DEBUG
+#    org.springframework.web: TRACE
+
+#spring:
+#  data:
+#    rest:
+#      basePath: /api
+
+app:
+  http:
+    request-logging-filter:
+      maxPayloadLength: 120

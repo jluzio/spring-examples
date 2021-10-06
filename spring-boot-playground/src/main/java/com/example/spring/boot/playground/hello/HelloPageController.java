@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class HelloWorldPageController {
+public class HelloPageController {
 	
 	@RequestMapping("/pages/hello/{name}")
 	public String hello(Map<String, Object> model, @PathVariable("name") String name) {
