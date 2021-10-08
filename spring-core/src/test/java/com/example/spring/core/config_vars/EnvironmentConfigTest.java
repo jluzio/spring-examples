@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
@@ -32,6 +33,8 @@ class EnvironmentConfigTest {
       .set("example-service.settings.endpoint", "http://prop-example-service.com/v1");
   @Autowired
   private ExampleServiceConfig config;
+  @Value("${app.some-service.endpoint}")
+  private String someAppValue;
 
   @Test
   void var_source_priority() {
@@ -50,6 +53,8 @@ class EnvironmentConfigTest {
         .isEqualTo("prop-example-service");
     assertThat(config.getEndpoint())
         .isEqualTo("http://prop-example-service.com/v1");
+    assertThat(someAppValue)
+        .isEqualTo("http://some-service-endpoint:8080");
   }
 
 }

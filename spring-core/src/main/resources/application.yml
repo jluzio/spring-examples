@@ -5,3 +5,7 @@ logging:
 #    org.springframework.boot.autoconfigure: DEBUG
 #    org.springframework.web: TRACE
 #    org.springframework.web.servlet.mvc.method.annotation: TRACE
+
+app:
+  some-service:
+    endpoint: http://some-service-endpoint:8080
