@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Configuration;
 public class ExampleServiceConfig {
 
   private Boolean enabled;
+  private String id;
   private String name;
   private String endpoint;
   private Map<String, Feature> features;

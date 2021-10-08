@@ -21,11 +21,14 @@ class EnvironmentConfigTest {
 
   @SystemStub
   private static EnvironmentVariables envVars = new EnvironmentVariables()
+      .set("SPRING_APPLICATION_JSON", "{ \"example-service\": { \"settings\": { \"id\": \"app-json-example-service\" } } }")
       .set("example-service.settings.enabled", "true")
-      .set("example-service.settings.name", "env-example-service");
+      .set("example-service.settings.name", "env-example-service")
+      .set("example-service.settings.id", "env-example-service");
   @SystemStub
-  private static SystemProperties envVarxs = new SystemProperties()
+  private static SystemProperties systemProps = new SystemProperties()
       .set("example-service.settings.name", "prop-example-service")
+      .set("example-service.settings.id", "prop-example-service")
       .set("example-service.settings.endpoint", "http://prop-example-service.com/v1");
   @Autowired
   private ExampleServiceConfig config;
@@ -41,6 +44,8 @@ class EnvironmentConfigTest {
 
     assertThat(config.getEnabled())
         .isEqualTo(true);
+    assertThat(config.getId())
+        .isEqualTo("app-json-example-service");
     assertThat(config.getName())
         .isEqualTo("prop-example-service");
     assertThat(config.getEndpoint())
