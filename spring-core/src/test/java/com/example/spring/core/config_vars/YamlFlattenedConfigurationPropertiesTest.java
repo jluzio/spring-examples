@@ -1,4 +1,6 @@
-package com.example.spring.core.config_props;
+package com.example.spring.core.config_vars;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -9,17 +11,20 @@ import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
-@Import(ServiceProperties.class)
+@Import(ExampleServiceConfig.class)
 @EnableConfigurationProperties
 @ActiveProfiles("yaml-flattened")
 @Slf4j
-public class YamlFlattenedConfigurationPropertiesTest {
+class YamlFlattenedConfigurationPropertiesTest {
 
   @Autowired
-  ServiceProperties properties;
+  ExampleServiceConfig config;
 
   @Test
   void test() {
-    log.info("{}", properties);
+    log.info("{}", config);
+
+    assertThat(config)
+        .isEqualTo(ExpectedTestValues.exampleServiceConfig());
   }
 }

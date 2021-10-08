@@ -1,16 +1,14 @@
-keycloak:
-  authenticators:
-    otp-authenticator:
-      enabled: true
-      communications-service-endpoint: http://comms-service:8080/service-api/v1/batches
-      otp-channels:
-        text:
-          channel: text
+example-service:
+  settings:
+    enabled: true
+    name: example-service
+    endpoint: http://example-service:8080/v1
+    features:
+      text:
+        name: text
+        values:
           from: "+351000000000"
-          identity-attributes:
-            phoneNumber: 1
-        email:
-          channel: email
+      email:
+        name: email
+        values:
           from: "john.doe@server.com"
-          identity-attributes:
-            emailAddress: 2
