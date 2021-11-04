@@ -1,0 +1,2 @@
+spring.application.name: playground-rabbit
+spring.banner.location: classpath:/banner-rabbit.txt
