@@ -1,8 +1,9 @@
----
-version: '2'
+version: "3.5"
+
 services:
   kafdrop:
-    image: obsidiandynamics/kafdrop:3.8.1
+    image: obsidiandynamics/kafdrop:latest
+#    image: obsidiandynamics/kafdrop:3.8.1
     container_name: kafdrop
     depends_on:
       - zookeeper
@@ -16,7 +17,8 @@ services:
       KAFKA_BROKERCONNECT: kafka:29092
 
   rabbitmq:
-    image: rabbitmq:3.7-management
+    image: rabbitmq:management
+#    image: rabbitmq:3.7-management
     container_name: rabbitmq
     expose:
       - 5672
