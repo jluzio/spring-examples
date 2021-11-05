@@ -17,7 +17,7 @@ public class PingController {
   @RequestMapping("/ping")
   @ResponseStatus(HttpStatus.ACCEPTED)
   public void delegateToSupplier(@RequestBody String body) {
-    streamBridge.send("ping-pong", body);
+    streamBridge.send("ping", body);
   }
 
 }

@@ -2,5 +2,4 @@ spring:
   cloud:
     stream:
       function:
-        definition: fizzBuzzProducer;ping
-#        definition: fizzBuzzProducer;ping
+        definition: fizzBuzzProducer;pingSupplier

@@ -18,7 +18,7 @@ spring:
   cloud:
     stream:
       function:
-        definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer;ping;pong
+        definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer;pingSupplier;pingConsumer
       # https://docs.spring.io/spring-cloud-stream/docs/3.1.5/reference/html/spring-cloud-stream.html#_polling_configuration_properties
       poller:
         # default is 1000 (1s)
@@ -35,7 +35,7 @@ spring:
           destination: fizz-buzz
         fizzBuzzConsumer-in-0:
           destination: fizz-buzz
-        ping-out-0:
-          destination: ping-pong
-        pong-in-0:
-          destination: ping-pong
+        pingSupplier-out-0:
+          destination: ping
+        pingConsumer-in-0:
+          destination: ping

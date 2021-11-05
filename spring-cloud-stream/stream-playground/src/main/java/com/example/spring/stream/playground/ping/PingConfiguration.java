@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class PingConfiguration {
 
   @Bean
-  public Supplier<String> ping() {
+  public Supplier<String> pingSupplier() {
     return () -> {
       String pingMsg = "ping-%s".formatted(LocalDateTime.now());
       log.debug(pingMsg);
@@ -21,7 +21,7 @@ public class PingConfiguration {
   }
 
   @Bean
-  public Consumer<String> pong() {
+  public Consumer<String> pingConsumer() {
     return args -> log.info("pong: %s".formatted(args));
   }
 
