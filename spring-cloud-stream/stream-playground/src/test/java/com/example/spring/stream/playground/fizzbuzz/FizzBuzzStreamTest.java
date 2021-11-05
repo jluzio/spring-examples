@@ -13,8 +13,10 @@ import org.springframework.cloud.stream.binder.test.TestChannelBinderConfigurati
 import org.springframework.context.annotation.Import;
 import org.springframework.integration.support.MessageBuilder;
 import org.springframework.messaging.support.GenericMessage;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@ActiveProfiles("fizz-buzz")
 @Import(TestChannelBinderConfiguration.class)
 @Slf4j
 class FizzBuzzStreamTest {

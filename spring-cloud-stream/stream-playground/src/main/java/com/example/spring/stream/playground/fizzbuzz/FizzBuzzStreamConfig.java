@@ -1,6 +1,7 @@
 package com.example.spring.stream.playground.fizzbuzz;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import reactor.core.publisher.Flux;
 
 import org.springframework.context.annotation.Bean;
@@ -12,12 +13,10 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-/**
- * Created on 25/August/2021 By Author Eresh, Gorantla
- **/
 @Configuration
+@Profile("fizz-buzz")
 @Slf4j
-public class FizzBuzzConfiguration {
+public class FizzBuzzStreamConfig {
 
   Random random = new Random();
 

@@ -1,0 +1,3 @@
+logging:
+  level:
+    com.example.spring.stream: TRACE

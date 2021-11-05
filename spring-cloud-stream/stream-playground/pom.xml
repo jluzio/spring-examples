@@ -3,12 +3,14 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.5.6</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
+
   <groupId>com.example.spring.stream</groupId>
   <artifactId>stream-playground</artifactId>
   <version>0.0.1-SNAPSHOT</version>
@@ -29,9 +31,18 @@
       <artifactId>spring-boot-starter-webflux</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <scope>test</scope>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>31.0.1-jre</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.github.javafaker</groupId>
+      <artifactId>javafaker</artifactId>
+      <version>1.0.2</version>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
@@ -39,6 +50,11 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-stream</artifactId>
@@ -73,6 +89,12 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <environmentVariables>
+            <stream.binder>${stream.binder}</stream.binder>
+            <stream.profile>${stream.profile}</stream.profile>
+          </environmentVariables>
+        </configuration>
       </plugin>
     </plugins>
   </build>
@@ -81,7 +103,7 @@
     <profile>
       <id>kafka</id>
       <properties>
-        <spring.profile.activated>kafka</spring.profile.activated>
+        <stream.binder>kafka</stream.binder>
       </properties>
       <activation>
         <activeByDefault>true</activeByDefault>
@@ -96,7 +118,7 @@
     <profile>
       <id>rabbit</id>
       <properties>
-        <spring.profile.activated>rabbit</spring.profile.activated>
+        <stream.binder>rabbit</stream.binder>
       </properties>
       <activation>
         <activeByDefault>false</activeByDefault>
@@ -107,6 +129,15 @@
           <artifactId>spring-cloud-stream-binder-rabbit</artifactId>
         </dependency>
       </dependencies>
+    </profile>
+    <profile>
+      <id>default-stream-profile</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <stream.profile>ping</stream.profile>
+      </properties>
     </profile>
   </profiles>
 

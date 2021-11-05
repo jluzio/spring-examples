@@ -1,5 +1,3 @@
-# This setting controls the switch between modes
-spring.profiles.active: @spring.profile.activated@
 
 logging:
   level:
@@ -15,14 +13,19 @@ logging:
 ## spring.cloud.function.definition=supplyLoan
 
 spring:
+  profiles:
+    active: ${stream.binder:kafka},${stream.profile:ping}
   cloud:
     stream:
       function:
-        definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer;pingSupplier;pingConsumer
+        definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer;pingSupplier;pingConsumer;randomNameSupplier|uppercaseFunction|reverseFunction;stringConsumer;unreliableDataSupplier;unreliableDataConsumer
+        bindings:
+          randomNameSupplier|uppercaseFunction|reverseFunction-out-0: randomNameUppercaseReversed
+
       # https://docs.spring.io/spring-cloud-stream/docs/3.1.5/reference/html/spring-cloud-stream.html#_polling_configuration_properties
       poller:
         # default is 1000 (1s)
-        fixedDelay: 10000
+        fixedDelay: 5000
 #        timeUnit: MILLISECONDS
 #        initialDelay: 0
 #        cron: ~
@@ -39,3 +42,13 @@ spring:
           destination: ping
         pingConsumer-in-0:
           destination: ping
+        randomNameUppercaseReversed:
+          destination: names
+        stringConsumer-in-0:
+          destination: names
+        unreliableDataSupplier-out-0:
+          destination: unreliable-data
+          group: watchlist
+        unreliableDataConsumer-in-0:
+          destination: unreliable-data
+          group: watchlist

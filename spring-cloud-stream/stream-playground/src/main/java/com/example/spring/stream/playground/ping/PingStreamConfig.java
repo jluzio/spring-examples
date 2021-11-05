@@ -6,10 +6,12 @@ import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
+@Profile("ping")
 @Slf4j
-public class PingConfiguration {
+public class PingStreamConfig {
 
   @Bean
   public Supplier<String> pingSupplier() {
