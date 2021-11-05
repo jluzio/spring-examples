@@ -2,4 +2,4 @@ spring:
   cloud:
     stream:
       function:
-        definition: fizzBuzzProcessor;fizzBuzzConsumer
+        definition: fizzBuzzProcessor;fizzBuzzConsumer;pong
