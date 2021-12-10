@@ -8,14 +8,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Aspect
-public class SomeMethodLogAspect {
+public class AroundAnnotationLogAspect {
 
   @Autowired
   private LoggingAspect loggingAspect;
 
-  @Around("execution(* someMethod(..))")
+  @Around("@annotation(LogInvocation)")
   public Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
-    return loggingAspect.logExecutionTime(joinPoint, this);
+    return loggingAspect.logInvocation(joinPoint, this);
   }
-
 }

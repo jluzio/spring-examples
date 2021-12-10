@@ -8,14 +8,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Aspect
-public class SomeBeanLogAspect {
+public class AroundBeanLogAspect {
 
   @Autowired
   private LoggingAspect loggingAspect;
 
   @Around("bean(someBean)")
   public Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
-    return loggingAspect.logExecutionTime(joinPoint, this);
+    return loggingAspect.logInvocation(joinPoint, this);
   }
 
 }
