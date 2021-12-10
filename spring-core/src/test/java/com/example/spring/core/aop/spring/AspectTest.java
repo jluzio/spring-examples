@@ -40,26 +40,30 @@ class AspectTest {
     clearMockInvocations();
     someService.hello();
     verify(aroundAnnotationLogAspect, times(1))
-        .handle(any());
+        .handleMethod(any());
+    verify(aroundAnnotationLogAspect, times(0))
+        .handleType(any());
     verify(aroundBeanLogAspect, times(1))
         .handle(any());
     verify(aroundExecutionLogAspect, times(1))
         .handleMethod(any());
     verify(aroundExecutionLogAspect, times(0))
-        .handleMethodWithPackagePattern(any());
+        .handleMethodInPackage(any());
     verify(aroundWithinLogAspect, times(1))
         .handle(any());
 
     clearMockInvocations();
     someService.processData("1");
     verify(aroundAnnotationLogAspect, times(0))
-        .handle(any());
+        .handleMethod(any());
+    verify(aroundAnnotationLogAspect, times(0))
+        .handleType(any());
     verify(aroundBeanLogAspect, times(1))
         .handle(any());
     verify(aroundExecutionLogAspect, times(0))
         .handleMethod(any());
     verify(aroundExecutionLogAspect, times(1))
-        .handleMethodWithPackagePattern(any());
+        .handleMethodInPackage(any());
     verify(aroundWithinLogAspect, times(1))
         .handle(any());
 
@@ -67,26 +71,32 @@ class AspectTest {
     assertThatThrownBy(() -> someService.throwError())
         .isInstanceOf(UnsupportedOperationException.class);
     verify(aroundAnnotationLogAspect, times(0))
-        .handle(any());
+        .handleMethod(any());
+    verify(aroundAnnotationLogAspect, times(0))
+        .handleType(any());
     verify(aroundBeanLogAspect, times(1))
         .handle(any());
     verify(aroundExecutionLogAspect, times(0))
         .handleMethod(any());
     verify(aroundExecutionLogAspect, times(0))
-        .handleMethodWithPackagePattern(any());
+        .handleMethodInPackage(any());
     verify(aroundWithinLogAspect, times(1))
         .handle(any());
 
     clearMockInvocations();
     anotherService.hello();
+    verify(aroundAnnotationLogAspect, times(0))
+        .handleMethod(any());
     verify(aroundAnnotationLogAspect, times(1))
-        .handle(any());
+        .handleType(any());
+    verify(aroundAnnotationLogAspect, times(1))
+        .handleType(any());
     verify(aroundBeanLogAspect, times(0))
         .handle(any());
     verify(aroundExecutionLogAspect, times(1))
         .handleMethod(any());
     verify(aroundExecutionLogAspect, times(0))
-        .handleMethodWithPackagePattern(any());
+        .handleMethodInPackage(any());
     verify(aroundWithinLogAspect, times(1))
         .handle(any());
   }

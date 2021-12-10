@@ -19,7 +19,7 @@ public class AroundExecutionLogAspect {
   }
 
   @Around("execution(* com.example.spring.core.aop.spring.service..*.processData(..))")
-  public Object handleMethodWithPackagePattern(ProceedingJoinPoint joinPoint) throws Throwable {
+  public Object handleMethodInPackage(ProceedingJoinPoint joinPoint) throws Throwable {
     return loggingAspect.logInvocation(joinPoint, this);
   }
 

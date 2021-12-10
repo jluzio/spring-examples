@@ -2,11 +2,9 @@ package com.example.spring.core.aop.spring.service;
 
 import com.example.spring.core.aop.spring.LogInvocation;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 @Component
-//@Qualifier("someBean")
 @Slf4j
 public class SomeService {
 
@@ -16,12 +14,13 @@ public class SomeService {
   }
 
   public String processData(String id) {
-    log.info("Process data with id: {}!", id);
+    log.info("Process data with id: {}", id);
     return "processed-data-%s".formatted(id);
   }
 
   public String throwError() {
-    log.info("Throw error!");
+    log.info("Throw error");
     throw new UnsupportedOperationException("Can't process");
   }
+
 }
