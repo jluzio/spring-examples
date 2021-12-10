@@ -22,6 +22,7 @@ public class MessageSourceTest {
 
   @TestConfiguration
   static class Config {
+
     @Bean
     MessageSource validationMessageSource() {
       var messageSource = new ReloadableResourceBundleMessageSource();
@@ -34,6 +35,7 @@ public class MessageSourceTest {
   void test() {
     log.info("hello default: {}", messageSource.getMessage("hello.world", null, Locale.ENGLISH));
     log.info("hello pt: {}", messageSource.getMessage("hello.world", null, new Locale("pt")));
-    log.info("validation: {}", validationMessageSource.getMessage("validation.success", null, Locale.ENGLISH));
+    log.info("validation: {}",
+        validationMessageSource.getMessage("validation.success", null, Locale.ENGLISH));
   }
 }

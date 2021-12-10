@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Import;
 @SpringBootTest(classes = Config1.class)
 @Slf4j
 public class ImportConfigTest {
+
   @Autowired
   List<String> beans;
 

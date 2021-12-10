@@ -34,7 +34,8 @@ class EnvironmentTest {
     Map<String, Function<String, Object>> mappings = ImmutableMap.of(
         "logging.level.com.example.spring", env::getProperty,
         "app.test.string", env::getProperty,
-        "app.test.csv", key -> ofNullable(env.getProperty(key, Integer[].class)).map(Arrays::asList),
+        "app.test.csv",
+        key -> ofNullable(env.getProperty(key, Integer[].class)).map(Arrays::asList),
         "app.test.composite", env::getProperty,
         "app.test.composite-quoted", env::getProperty
     );

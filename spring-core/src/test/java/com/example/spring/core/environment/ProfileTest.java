@@ -16,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("development")
 @Slf4j
 public class ProfileTest {
+
   @Autowired
   List<String> values;
 

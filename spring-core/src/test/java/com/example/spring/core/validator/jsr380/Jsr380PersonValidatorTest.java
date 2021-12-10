@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 @Slf4j
 public class Jsr380PersonValidatorTest {
+
   @Autowired
   Validator validator;
 

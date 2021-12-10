@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Aspect
 public class LogExecutionTimeAspect {
+
   @Autowired
   private LoggingAspect loggingAspect;
 

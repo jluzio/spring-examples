@@ -22,7 +22,8 @@ class EnvironmentConfigTest {
 
   @SystemStub
   private static EnvironmentVariables envVars = new EnvironmentVariables()
-      .set("SPRING_APPLICATION_JSON", "{ \"example-service\": { \"settings\": { \"id\": \"app-json-example-service\" } } }")
+      .set("SPRING_APPLICATION_JSON",
+          "{ \"example-service\": { \"settings\": { \"id\": \"app-json-example-service\" } } }")
       .set("example-service.settings.enabled", "true")
       .set("example-service.settings.name", "env-example-service")
       .set("example-service.settings.id", "env-example-service");

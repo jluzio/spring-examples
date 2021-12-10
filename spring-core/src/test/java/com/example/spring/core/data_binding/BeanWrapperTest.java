@@ -35,6 +35,7 @@ public class BeanWrapperTest {
   @Data
   @Builder
   static class Person {
+
     private String id;
     private String name;
     private Integer age;

@@ -161,7 +161,7 @@ public class AnnotationsTest {
     }
 
     @Bean
-    // bean name = "resourceItem", which is used in injection
+      // bean name = "resourceItem", which is used in injection
     Item resourceItem() {
       return Item.builder()
           .id("resource-item")

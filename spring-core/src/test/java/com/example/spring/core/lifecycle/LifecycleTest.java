@@ -22,6 +22,7 @@ public class LifecycleTest {
 
   @TestConfiguration
   public static class Config {
+
     @Component
     @Slf4j
     public static class LifecycleBean implements InitializingBean, DisposableBean, Lifecycle {

@@ -24,6 +24,7 @@ public class AutowireConfigTest {
 
   @Configuration
   static class ServiceConfig {
+
     @Autowired
     RepositoryConfig repositoryConfig;
 
@@ -35,6 +36,7 @@ public class AutowireConfigTest {
 
   @Configuration
   static class RepositoryConfig {
+
     final DataSource dataSource;
 
     public RepositoryConfig(DataSource dataSource) {

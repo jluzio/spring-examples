@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 @SpringBootTest
 @Slf4j
 public class ImportResourceTest {
+
   @Autowired
   List<String> beans;
 

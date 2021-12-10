@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
@@ -21,7 +20,7 @@ public class ApplicationListenerTest {
   void test() {
     log.info("Note: standard events");
     List.of("ContextRefreshedEvent", "ContextStartedEvent", "ContextStoppedEvent",
-        "ContextClosedEvent", "RequestHandledEvent", "ServletRequestHandledEvent")
+            "ContextClosedEvent", "RequestHandledEvent", "ServletRequestHandledEvent")
         .forEach(log::info);
   }
 

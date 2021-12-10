@@ -11,7 +11,8 @@ public class AnnotationConfigTest {
 
   @Test
   void test() {
-    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(Config.class);
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
+        Config.class);
     context.registerBean("newBean", String.class, "newBeanValue");
 //    context.refresh();
 

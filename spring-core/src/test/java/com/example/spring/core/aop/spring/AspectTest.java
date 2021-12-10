@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @SpringBootTest
 @Slf4j
-public class AspectTest {
+class AspectTest {
 
   @Autowired
   SomeBean someBean;
@@ -24,11 +24,12 @@ public class AspectTest {
     someBean.someMethod();
   }
 
-//  @TestConfiguration
+  //  @TestConfiguration
   @Configuration
   @ComponentScan("com.example.spring.core.aop.spring")
   @EnableAspectJAutoProxy
   static class Config {
+
     @Component
     @Qualifier("someBean")
     public static class SomeBean {

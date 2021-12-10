@@ -11,9 +11,11 @@ import org.aspectj.lang.annotation.Pointcut;
 public class AppPointcuts {
 
   @Pointcut("bean(someBean)")
-  public void someBean() {}
+  public void someBean() {
+  }
 
   @Around("execution(* someMethod(..))")
-  public void someMethod() {}
+  public void someMethod() {
+  }
 
 }

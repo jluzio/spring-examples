@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 @Data
 public class AccountRepository {
+
   private final DataSource dataSource;
 
 }

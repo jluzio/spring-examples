@@ -15,6 +15,7 @@ public class NoAutowiredConstructorTest {
 
   @TestConfiguration
   static class Config {
+
     @Component
     @Data
     public static class SomeBean {

@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationEvent;
 @Getter
 @Setter
 public class CustomEvent extends ApplicationEvent {
+
   private String data;
 
   public CustomEvent(Object source, String data) {
