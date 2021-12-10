@@ -8,18 +8,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Aspect
-public class AroundExecutionLogAspect {
+public class AroundWithinLogAspect {
 
   @Autowired
   private LoggingAspect loggingAspect;
 
-  @Around("execution(* hello(..))")
-  public Object handleMethod(ProceedingJoinPoint joinPoint) throws Throwable {
-    return loggingAspect.logInvocation(joinPoint, this);
-  }
-
-  @Around("execution(* com.example.spring.core.aop.spring.service..*.processData(..))")
-  public Object handleMethodWithPackagePattern(ProceedingJoinPoint joinPoint) throws Throwable {
+  @Around("within(com.example.spring.core.aop.spring.service..*)")
+  public Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
     return loggingAspect.logInvocation(joinPoint, this);
   }
 

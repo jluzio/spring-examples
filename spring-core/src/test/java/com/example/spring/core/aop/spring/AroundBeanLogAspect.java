@@ -13,7 +13,7 @@ public class AroundBeanLogAspect {
   @Autowired
   private LoggingAspect loggingAspect;
 
-  @Around("bean(someBean)")
+  @Around("bean(someService)")
   public Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
     return loggingAspect.logInvocation(joinPoint, this);
   }
