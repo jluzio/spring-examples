@@ -55,6 +55,8 @@ class AspectTest {
         .handle(any());
     verify(aroundTargetLogAspect, times(1))
         .handle(any());
+    verify(aroundTargetLogAspect, times(1))
+        .handleHello(any());
 
     clearMockInvocations();
     someService.processData("1");
@@ -72,6 +74,8 @@ class AspectTest {
         .handle(any());
     verify(aroundTargetLogAspect, times(1))
         .handle(any());
+    verify(aroundTargetLogAspect, times(0))
+        .handleHello(any());
 
     clearMockInvocations();
     assertThatThrownBy(() -> someService.throwError())
@@ -90,6 +94,8 @@ class AspectTest {
         .handle(any());
     verify(aroundTargetLogAspect, times(1))
         .handle(any());
+    verify(aroundTargetLogAspect, times(0))
+        .handleHello(any());
 
     clearMockInvocations();
     anotherService.hello();
@@ -109,6 +115,8 @@ class AspectTest {
         .handle(any());
     verify(aroundTargetLogAspect, times(1))
         .handle(any());
+    verify(aroundTargetLogAspect, times(1))
+        .handleHello(any());
   }
 
   private void clearMockInvocations() {

@@ -18,4 +18,9 @@ public class AroundTargetLogAspect {
     return loggingAspect.logInvocation(joinPoint, this);
   }
 
+  @Around("target(com.example.spring.core.aop.spring.service.GreetingService) and execution(* hello(..))")
+  public Object handleHello(ProceedingJoinPoint joinPoint) throws Throwable {
+    return loggingAspect.logInvocation(joinPoint, this);
+  }
+
 }
