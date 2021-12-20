@@ -34,6 +34,8 @@ class AspectTest {
   private AroundExecutionLogAspect aroundExecutionLogAspect;
   @SpyBean
   private AroundWithinLogAspect aroundWithinLogAspect;
+  @SpyBean
+  private AroundTargetLogAspect aroundTargetLogAspect;
 
   @Test
   void test() throws Throwable {
@@ -51,6 +53,8 @@ class AspectTest {
         .handleMethodInPackage(any());
     verify(aroundWithinLogAspect, times(1))
         .handle(any());
+    verify(aroundTargetLogAspect, times(1))
+        .handle(any());
 
     clearMockInvocations();
     someService.processData("1");
@@ -65,6 +69,8 @@ class AspectTest {
     verify(aroundExecutionLogAspect, times(1))
         .handleMethodInPackage(any());
     verify(aroundWithinLogAspect, times(1))
+        .handle(any());
+    verify(aroundTargetLogAspect, times(1))
         .handle(any());
 
     clearMockInvocations();
@@ -81,6 +87,8 @@ class AspectTest {
     verify(aroundExecutionLogAspect, times(0))
         .handleMethodInPackage(any());
     verify(aroundWithinLogAspect, times(1))
+        .handle(any());
+    verify(aroundTargetLogAspect, times(1))
         .handle(any());
 
     clearMockInvocations();
@@ -99,12 +107,14 @@ class AspectTest {
         .handleMethodInPackage(any());
     verify(aroundWithinLogAspect, times(1))
         .handle(any());
+    verify(aroundTargetLogAspect, times(1))
+        .handle(any());
   }
 
   private void clearMockInvocations() {
     clearInvocations(
         aroundAnnotationLogAspect, aroundBeanLogAspect, aroundExecutionLogAspect,
-        aroundWithinLogAspect);
+        aroundWithinLogAspect, aroundTargetLogAspect);
   }
 
 }

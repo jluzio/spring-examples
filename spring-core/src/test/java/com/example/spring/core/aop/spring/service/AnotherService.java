@@ -7,8 +7,9 @@ import org.springframework.stereotype.Component;
 @Component
 @LogInvocation
 @Slf4j
-public class AnotherService {
+public class AnotherService implements GreetingService {
 
+  @Override
   public void hello() {
     log.info("Hello AOP!");
   }
