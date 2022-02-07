@@ -7,7 +7,7 @@ import org.springframework.validation.DataBinder;
 
 @SpringBootTest
 @Slf4j
-public class SpringPersonValidatorTest {
+public class SpringValidatorTest {
 
   @Test
   void test_data_binder() {
