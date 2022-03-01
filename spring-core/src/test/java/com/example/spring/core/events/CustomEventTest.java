@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @SpringBootTest
 @Slf4j
-public class CustomEventTest {
+class CustomEventTest {
 
   @Autowired
   ApplicationEventPublisher eventPublisher;
