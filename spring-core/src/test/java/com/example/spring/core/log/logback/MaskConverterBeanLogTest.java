@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Import;
 class MaskConverterBeanLogTest {
 
   @Configuration
-  @Import({MaskConverterConfig.class})
+  @Import(MaskConverterConfig.class)
   static class Config {
 
     @PostConstruct
@@ -39,9 +39,8 @@ class MaskConverterBeanLogTest {
       System.out.println(System.getProperties());
       ILoggerFactory loggerFactory = LoggerFactory.getILoggerFactory();
       LoggerContext loggerContext = (LoggerContext) loggerFactory;
-      Map<String, String> ruleRegistry = ofNullable(
-          (Map<String, String>) loggerContext.getObject(CoreConstants.PATTERN_RULE_REGISTRY))
-          .orElseGet(HashMap::new);
+      Map<String, String> ruleRegistry = (Map<String, String>) loggerContext.getObject(
+          CoreConstants.PATTERN_RULE_REGISTRY);
 //      ruleRegistry.put("mask", MaskConverterProxy.class.getName());
       log.info("ruleRegistry: {}", ruleRegistry);
     }
