@@ -5,7 +5,14 @@ logging:
 #    org.springframework.boot.autoconfigure: DEBUG
 #    org.springframework.web: TRACE
 #    org.springframework.web.servlet.mvc.method.annotation: TRACE
+#  pattern:
+#    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %mask(%m){}%n"
 
 app:
   some-service:
     endpoint: http://some-service-endpoint:8080
+  log:
+    mask-converter:
+      pattern-entries:
+        - pattern: \b([0-9]{6})([0-9]{6,10})([0-9]{4})\b
+          replacement: $1XXXXXX$3
