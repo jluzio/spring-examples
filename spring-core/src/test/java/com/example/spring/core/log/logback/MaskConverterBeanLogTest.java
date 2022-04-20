@@ -1,6 +1,10 @@
 package com.example.spring.core.log.logback;
 
 import static java.util.Optional.ofNullable;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.CoreConstants;
@@ -14,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -37,11 +42,8 @@ class MaskConverterBeanLogTest {
       Map<String, String> ruleRegistry = ofNullable(
           (Map<String, String>) loggerContext.getObject(CoreConstants.PATTERN_RULE_REGISTRY))
           .orElseGet(HashMap::new);
-      System.out.println(ruleRegistry);
 //      ruleRegistry.put("mask", MaskConverterProxy.class.getName());
-//      ruleRegistry.put("mask", ColorConverter.class.getName());
-      System.out.println(ruleRegistry);
-      System.out.println();
+      log.info("ruleRegistry: {}", ruleRegistry);
     }
 
     @Autowired
@@ -50,13 +52,13 @@ class MaskConverterBeanLogTest {
     }
   }
 
-  @Autowired
+  @SpyBean
   MaskConverter converter;
 
   @Test
   void test() {
     log.warn("test()");
     log.warn("1234 1234561234561234");
-    System.out.println();
+    verify(converter, atLeastOnce()).transform(any(), any());
   }
 }
