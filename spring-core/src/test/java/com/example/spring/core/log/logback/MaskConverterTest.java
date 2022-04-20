@@ -1,6 +1,7 @@
 package com.example.spring.core.log.logback;
 
-import java.util.regex.Pattern;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import org.springframework.context.annotation.Import;
 class MaskConverterTest {
 
   @Configuration
-  @Import(MaskConverterConfig.class)
+  @Import(LoggingConfig.class)
   static class Config {
 
   }
@@ -25,10 +26,14 @@ class MaskConverterTest {
 
   @Test
   void test() {
-    log.info("{}", converter);
-    Pattern pattern = Pattern.compile("\\b([0-9]{6})([0-9]{6,10})([0-9]{4})\\b");
-    log.info("{}", pattern);
-    log.info(converter.transform(null, "1234 1234561234561234"));
+    assertThat(converter.transform(null, "1234561234561234"))
+        .isEqualTo("123456XXXXXX1234");
+    assertThat(converter.transform(null, "Number: 1234561234561234"))
+        .isEqualTo("Number: 123456XXXXXX1234");
+    assertThat(converter.transform(null, "Number: 123456123456781234"))
+        .isEqualTo("Number: 123456XXXXXX1234");
+    assertThat(converter.transform(null, "Number: 1234561234567890121234"))
+        .isEqualTo("Number: 1234561234567890121234");
   }
 
 }

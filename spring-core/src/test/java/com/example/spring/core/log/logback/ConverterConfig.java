@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class MaskConverterConfig {
+public class ConverterConfig {
 
   @Bean
   @ConfigurationProperties(prefix = "app.log.mask-converter")
