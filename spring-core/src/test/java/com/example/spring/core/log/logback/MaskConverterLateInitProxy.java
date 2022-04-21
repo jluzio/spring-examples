@@ -5,7 +5,7 @@ import ch.qos.logback.core.pattern.CompositeConverter;
 import lombok.Getter;
 import lombok.Setter;
 
-public class MaskConverterProxy extends CompositeConverter<ILoggingEvent> {
+public class MaskConverterLateInitProxy extends CompositeConverter<ILoggingEvent> {
 
   @Getter
   @Setter

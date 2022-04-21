@@ -10,7 +10,7 @@ public class LoggingConfig {
 
   @Autowired
   void initMaskConverter(MaskConverter maskConverter) {
-    MaskConverterProxy.setConverter(maskConverter);
+    MaskConverterLateInitProxy.setConverter(maskConverter);
   }
 
 }
