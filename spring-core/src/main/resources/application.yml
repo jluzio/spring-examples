@@ -16,3 +16,6 @@ app:
       pattern-entries:
         - pattern: \b([0-9]{6})([0-9]{6,10})([0-9]{4})\b
           replacement: $1XXXXXX$3
+  merged-profile-bean:
+    name: property1
+    value: value1
