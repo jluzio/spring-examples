@@ -3,13 +3,10 @@ package com.example.spring.core.beans;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
-import lombok.Builder;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -17,6 +14,10 @@ import org.springframework.core.annotation.Order;
 @SpringBootTest(classes = OrderTest.Config.class)
 @Slf4j
 class OrderTest {
+
+  record Item(String id) {
+
+  }
 
   @Configuration
   static class Config {
@@ -56,13 +57,6 @@ class OrderTest {
     }
   }
 
-  @Data
-  @Builder
-  static class Item {
-
-    private String id;
-  }
-
   @Autowired
   List<Item> items;
 
@@ -72,9 +66,8 @@ class OrderTest {
     // gives first beans with @Order/@Priority/impl Ordered, then others by order of registration
     log.info("items: {}", items);
     assertThat(items)
-        .map(Item::getId)
+        .map(Item::id)
         .isEqualTo(List.of("1", "2", "3", "5", "4", "resource-item"));
   }
-
 
 }
