@@ -4,49 +4,83 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import com.example.spring.core.cache.CaffeineCacheTest.Config.CacheProperties;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
+import java.util.stream.Stream;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.caffeine.CaffeineCache;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import reactor.core.publisher.Mono;
 
-@SpringBootTest(classes = {CaffeineCacheTest.Config.class})
+@SpringBootTest(
+    classes = {CaffeineCacheTest.Config.class},
+    properties = {
+        "app.cache.specs.CALCULATIONS=expireAfterWrite=PT0.1S",
+        "app.cache.specs.MESSAGES=expireAfterWrite=PT1S",
+    }
+)
 @Slf4j
 class CaffeineCacheTest {
 
   @Configuration
   @EnableCaching
   @Import({CachedCalculationService.class, ExpensiveCalculationApi.class})
+  @EnableConfigurationProperties(CacheProperties.class)
   static class Config {
 
-    @Bean
-    public Caffeine<Object, Object> caffeineConfig() {
-      return Caffeine.newBuilder()
-          .expireAfterWrite(500, TimeUnit.MILLISECONDS)
-          .recordStats();
+    @ConfigurationProperties(prefix = "app.cache")
+    @Data
+    @RequiredArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class CacheProperties {
+
+      private String templateSpec;
+      private Map<String, String> specs;
     }
 
     @Bean
-    public CacheManager cacheManager(Caffeine<Object, Object> caffeine) {
+    public Caffeine<Object, Object> templateCaffeineConfig(CacheProperties properties) {
+      return Caffeine.from(properties.getTemplateSpec());
+    }
+
+    @Bean
+    public CacheManager cacheManager(
+        Caffeine<Object, Object> caffeine,
+        CacheProperties properties) {
       var cacheManager = new CaffeineCacheManager();
       cacheManager.setCaffeine(caffeine);
+      properties.getSpecs().forEach((key, value) -> {
+        var cache = new CaffeineCache(
+            key,
+            Caffeine.from(value).build()
+        );
+        cacheManager.registerCustomCache(key, cache.getNativeCache());
+      });
       return cacheManager;
     }
-
   }
 
   @Autowired
@@ -58,8 +92,9 @@ class CaffeineCacheTest {
 
   @BeforeEach
   void clearCashes() {
-    cacheManager.getCacheNames()
-        .forEach(name -> cacheManager.getCache(name).clear());
+    cacheManager.getCacheNames().stream()
+        .flatMap(name -> Stream.ofNullable(cacheManager.getCache(name)))
+        .forEach(Cache::clear);
   }
 
   @Test

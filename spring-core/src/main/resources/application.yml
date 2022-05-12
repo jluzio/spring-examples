@@ -19,3 +19,8 @@ app:
   merged-profile-bean:
     name: property1
     value: value1
+  cache:
+    templateSpec: expireAfterWrite=P1d
+    specs:
+      CALCULATIONS: expireAfterWrite=PT30m
+      MESSAGES: expireAfterWrite=PT30m
