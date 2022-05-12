@@ -62,16 +62,9 @@ class CaffeineCacheTest {
     }
 
     @Bean
-    public Caffeine<Object, Object> templateCaffeineConfig(CacheProperties properties) {
-      return Caffeine.from(properties.getTemplateSpec());
-    }
-
-    @Bean
-    public CacheManager cacheManager(
-        Caffeine<Object, Object> caffeine,
-        CacheProperties properties) {
+    public CacheManager cacheManager(CacheProperties properties) {
       var cacheManager = new CaffeineCacheManager();
-      cacheManager.setCaffeine(caffeine);
+      cacheManager.setCaffeine(Caffeine.from(properties.getTemplateSpec()));
       properties.getSpecs().forEach((key, value) -> {
         var cache = new CaffeineCache(
             key,
