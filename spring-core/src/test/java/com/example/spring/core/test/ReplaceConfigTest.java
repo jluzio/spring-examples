@@ -1,5 +1,7 @@
 package com.example.spring.core.test;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -10,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 @SpringBootTest
 @Slf4j
-public class ReplaceConfigTest {
+class ReplaceConfigTest {
 
   @Autowired
   @Qualifier("appVersion")
@@ -19,6 +21,8 @@ public class ReplaceConfigTest {
   @Test
   void test() {
     log.info("appVersion: {}", appVersion);
+    assertThat(appVersion)
+        .isEmpty();
   }
 
   @Configuration
