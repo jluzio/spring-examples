@@ -26,10 +26,10 @@ class HttpUtilFunctionsTest {
 
   @Test
   void log() throws Exception {
-    ResponseEntity<String> result = this.rest.exchange(
+    ResponseEntity<String> result = rest.exchange(
         RequestEntity.get(new URI("/users,username,log")).build(),
         String.class);
     assertThat(result.getStatusCode())
-        .isEqualTo(HttpStatus.ACCEPTED);
+        .isEqualTo(HttpStatus.OK);
   }
 }
