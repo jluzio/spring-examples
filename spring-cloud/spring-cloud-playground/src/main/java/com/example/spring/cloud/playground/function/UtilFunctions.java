@@ -13,17 +13,17 @@ import org.springframework.messaging.support.MessageBuilder;
 public class UtilFunctions {
 
   @Bean
-  public Consumer<?> devNull() {
+  public Consumer<Object> devNull() {
     return log();
   }
 
   @Bean
-  public Consumer<?> log() {
+  public Consumer<Object> log() {
     return value -> log.info("log :: {}", value);
   }
 
   @Bean
-  public Function<?, ?> logAndReturn() {
+  public <T> Function<T, T> logAndReturn() {
     return value -> {
       log.info("log :: {}", value);
       return value;
@@ -31,7 +31,7 @@ public class UtilFunctions {
   }
 
   @Bean
-  public Function<Message<?>, Message<?>> enrichMessage() {
+  public <T> Function<Message<T>, Message<T>> enrichMessage() {
     return message -> MessageBuilder.fromMessage(message)
         .setHeader("foo", "bar")
         .build();
