@@ -4,12 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
     }
 )
 @Slf4j
-class OrderOverrideTest {
+class OverrideTest {
 
   record Item(String id) {
 
@@ -39,25 +39,7 @@ class OrderOverrideTest {
   @Order(1)
   static class Config {
 
-    @Bean
-    @Order(2)
-    Item item2() {
-      return new Item("2");
-    }
-
-    @Bean
-    @Order(1)
-    Item item1() {
-      return new Item("1");
-    }
-
-    @Bean
-    Item item3() {
-      return new Item("3");
-    }
-
-    @Component
-    @Order(1)
+    @Component("masterFoo")
     static class MasterFoo implements Foo {
 
       @Override
@@ -66,8 +48,8 @@ class OrderOverrideTest {
       }
     }
 
-    @Component
-    static class DiscipleFoo implements Foo {
+    @Component("discipleFoo")
+    static class DiscipleFooFoo implements Foo {
 
       @Override
       public String bar() {
@@ -80,13 +62,7 @@ class OrderOverrideTest {
   @Order(2)
   static class OverrideConfig {
 
-    @Bean
-    Item item3() {
-      return new Item("3-override");
-    }
-
-    @Component("com.example.spring.core.beans.OrderOverrideTest$Config$MasterFoo")
-    @Order(1)
+    @Component("masterFoo")
     static class MasterFoo implements Foo {
 
       @Override
@@ -94,41 +70,26 @@ class OrderOverrideTest {
         return "kung-foo-bar";
       }
     }
-
-    // Does not get special treatment while getting all Foo instances
-    // But can replace direct injection of DiscipleFoo
-    @Component
-    static class DiscipleFoo extends Config.DiscipleFoo {
-
-      @Override
-      public String bar() {
-        return "trainee-foo-bar";
-      }
-    }
   }
 
   @Autowired
   ApplicationContext context;
   @Autowired
-  List<Item> items;
-  @Autowired
   List<Foo> foos;
+  @Autowired
+  Foo masterFoo;
 
 
   @Test
   void test() {
     log.info("beans: {}", Arrays.stream(context.getBeanDefinitionNames()).toList());
 
-    // gives first beans with @Order/@Priority/impl Ordered, then others by order of registration
-    log.info("items: {}", items);
-    assertThat(items)
-        .map(Item::id)
-        .isEqualTo(List.of("1", "2", "3-override"));
-
     log.info("foos: {}", foos);
     assertThat(foos)
         .map(Foo::bar)
-        .isEqualTo(List.of("kung-foo-bar", "disciple-foo-bar", "trainee-foo-bar"));
+        .containsExactlyInAnyOrder("kung-foo-bar", "disciple-foo-bar");
+    assertThat(Stream.of(masterFoo))
+        .map(Foo::bar)
+        .containsExactly("kung-foo-bar");
   }
-
 }
