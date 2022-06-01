@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 
-@SpringBootTest(classes = OrderTest.Config.class)
+@SpringBootTest
 @Slf4j
 class OrderTest {
 

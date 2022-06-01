@@ -56,7 +56,8 @@ class OrderOverrideTest {
       return new Item("3");
     }
 
-    @Component
+    @Component("masterFoo")
+    // NOTE: default bean id would be "<package>.OrderOverrideTest$Config$MasterFoo"
     @Order(1)
     static class MasterFoo implements Foo {
 
@@ -85,7 +86,7 @@ class OrderOverrideTest {
       return new Item("3-override");
     }
 
-    @Component("com.example.spring.core.beans.OrderOverrideTest$Config$MasterFoo")
+    @Component("masterFoo")
     @Order(1)
     static class MasterFoo implements Foo {
 
