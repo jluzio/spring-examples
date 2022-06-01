@@ -3,11 +3,13 @@ package com.example.spring.core.beans;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.spring.core.beans.OrderOverrideTest.OverrideConfig;
+import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -106,6 +108,8 @@ class OrderOverrideTest {
   }
 
   @Autowired
+  ApplicationContext context;
+  @Autowired
   List<Item> items;
   @Autowired
   List<Foo> foos;
@@ -113,6 +117,8 @@ class OrderOverrideTest {
 
   @Test
   void test() {
+    log.info("beans: {}", Arrays.stream(context.getBeanDefinitionNames()).toList());
+
     // gives first beans with @Order/@Priority/impl Ordered, then others by order of registration
     log.info("items: {}", items);
     assertThat(items)
