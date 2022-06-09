@@ -9,10 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
-@SpringBootTest(classes = {
-    ConfigurationOrderTest.Config2.class,
-    ConfigurationOrderTest.Config1.class})
+@SpringBootTest
 @Slf4j
 class ConfigurationOrderTest {
 
@@ -21,9 +20,11 @@ class ConfigurationOrderTest {
   }
 
   @Configuration
+  @Order(2)
   static class Config1 {
 
     @Bean
+    @Order(0)
     Item item_cfg1_1() {
       return new Item("cfg1_1");
     }
@@ -32,12 +33,20 @@ class ConfigurationOrderTest {
     Item item_cfg1_2() {
       return new Item("cfg1_2");
     }
+
+    @Bean
+    @Order
+    Item item_cfg1_3() {
+      return new Item("cfg1_3");
+    }
   }
 
   @Configuration
+  @Order(1)
   static class Config2 {
 
     @Bean
+    @Order(1)
     Item item_cfg2_1() {
       return new Item("cfg2_1");
     }
@@ -45,6 +54,12 @@ class ConfigurationOrderTest {
     @Bean
     Item item_cfg2_2() {
       return new Item("cfg2_2");
+    }
+
+    @Bean
+    @Order
+    Item item_cfg2_3() {
+      return new Item("cfg2_3");
     }
   }
 
@@ -58,7 +73,7 @@ class ConfigurationOrderTest {
     log.info("items: {}", items);
     assertThat(items)
         .map(Item::id)
-        .isEqualTo(List.of("cfg2_1", "cfg2_2", "cfg1_1", "cfg1_2"));
+        .containsExactly("cfg1_1", "cfg2_1", "cfg2_2", "cfg2_3", "cfg1_2", "cfg1_3");
   }
 
 }
