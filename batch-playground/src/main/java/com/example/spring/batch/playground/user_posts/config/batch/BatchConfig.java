@@ -1,7 +1,8 @@
-package com.example.spring.batch.playground.guide.job;
+package com.example.spring.batch.playground.user_posts.config.batch;
 
-import com.example.spring.batch.playground.guide.entity.Post;
-import com.example.spring.batch.playground.guide.entity.User;
+import com.example.spring.batch.playground.user_posts.entity.Post;
+import com.example.spring.batch.playground.user_posts.entity.User;
+import com.example.spring.batch.playground.user_posts.job.JobCompletionNotificationListener;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
@@ -13,11 +14,14 @@ import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
 @EnableBatchProcessing
+@ConditionalOnProperty("app.batch.auto.enabled")
 public class BatchConfig {
 
   @Autowired

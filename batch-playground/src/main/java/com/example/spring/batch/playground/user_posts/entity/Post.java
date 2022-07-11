@@ -1,4 +1,4 @@
-package com.example.spring.batch.playground.guide.entity;
+package com.example.spring.batch.playground.user_posts.entity;
 
 
 import javax.persistence.Entity;

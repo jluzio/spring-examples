@@ -1,13 +1,13 @@
 [
   {
-    "_class": "com.example.spring.batch.playground.guide.entity.User",
+    "_class": "com.example.spring.batch.playground.user_posts.entity.User",
     "id": 1,
     "name": "Foo",
     "username": "foo",
     "email": "foo@mail.org"
   },
   {
-    "_class": "com.example.spring.batch.playground.guide.entity.User",
+    "_class": "com.example.spring.batch.playground.user_posts.entity.User",
     "id": 2,
     "name": "Bar",
     "username": "bar",

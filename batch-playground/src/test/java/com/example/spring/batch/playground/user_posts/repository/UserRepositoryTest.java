@@ -1,6 +1,6 @@
-package com.example.spring.batch.playground.guide.repository;
+package com.example.spring.batch.playground.user_posts.repository;
 
-import com.example.spring.batch.playground.guide.entity.User;
+import com.example.spring.batch.playground.user_posts.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

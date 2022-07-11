@@ -1,0 +1,4 @@
+app:
+  batch:
+    auto:
+      enabled: false

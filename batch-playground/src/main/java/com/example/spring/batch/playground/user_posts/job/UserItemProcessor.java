@@ -1,7 +1,7 @@
-package com.example.spring.batch.playground.guide.job;
+package com.example.spring.batch.playground.user_posts.job;
 
 
-import com.example.spring.batch.playground.guide.entity.User;
+import com.example.spring.batch.playground.user_posts.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.stereotype.Component;

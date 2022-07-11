@@ -1,27 +1,27 @@
-package com.example.spring.batch.playground.guide.job;
+package com.example.spring.batch.playground.user_posts.config.batch;
 
-import com.example.spring.batch.playground.guide.entity.Post;
-import com.example.spring.batch.playground.guide.entity.User;
-import com.example.spring.batch.playground.guide.repository.PostRepository;
-import com.example.spring.batch.playground.guide.repository.UserRepository;
+import com.example.spring.batch.playground.user_posts.entity.Post;
+import com.example.spring.batch.playground.user_posts.entity.User;
+import com.example.spring.batch.playground.user_posts.repository.PostRepository;
+import com.example.spring.batch.playground.user_posts.repository.UserRepository;
 import java.net.MalformedURLException;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.data.RepositoryItemWriter;
 import org.springframework.batch.item.data.builder.RepositoryItemWriterBuilder;
-import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.json.JacksonJsonObjectReader;
-import org.springframework.batch.item.json.JsonItemReader;
 import org.springframework.batch.item.json.builder.JsonItemReaderBuilder;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.UrlResource;
 
 @Configuration
-public class ItemConfig {
+@ConditionalOnProperty("app.batch.auto.enabled")
+public class ItemIOConfig {
 
   @Bean
   public ItemReader<User> userItemReader() {

@@ -1,9 +1,8 @@
-package com.example.spring.batch.playground.guide.job;
+package com.example.spring.batch.playground.user_posts.job;
 
 
-import com.example.spring.batch.playground.guide.entity.Post;
-import com.example.spring.batch.playground.guide.entity.User;
-import com.example.spring.batch.playground.guide.repository.UserRepository;
+import com.example.spring.batch.playground.user_posts.entity.Post;
+import com.example.spring.batch.playground.user_posts.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.item.ItemProcessor;
