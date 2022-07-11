@@ -3,8 +3,11 @@ debug: true
 logging:
   level:
     com.example.spring: DEBUG
+#    org.springframework: DEBUG
     org.springframework: INFO
     org.springframework.boot.autoconfigure: DEBUG
+    org.springframework.context.annotation: DEBUG
+    org.springframework.core.io.support: DEBUG
 #    org.springframework.web: TRACE
 #    org.springframework.web.servlet.mvc.method.annotation: TRACE
 #  pattern:
