@@ -1,1 +1,15 @@
+debug: true
 
+logging:
+  level:
+    ROOT: INFO
+    com.example.spring.spring.batch: DEBUG
+    org.springframework: INFO
+    org.springframework.boot.autoconfigure: DEBUG
+    org.springframework.context.annotation: DEBUG
+#    org.springframework.core.io.support: DEBUG
+
+app:
+  batch:
+    auto:
+      enabled: true
