@@ -18,12 +18,15 @@ public class JobCompletionNotificationListener extends JobExecutionListenerSuppo
   private final UserRepository userRepository;
   private final PostRepository postRepository;
 
+  @Override
+  public void beforeJob(JobExecution jobExecution) {
+    log.info("### Job starting ###");
+  }
 
   @Override
   public void afterJob(JobExecution jobExecution) {
+    log.info("### Job finished with status {} ###", jobExecution.getStatus());
     if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
-      log.info("!!! JOB FINISHED! Time to verify the results");
-
       Flux.fromIterable(userRepository.findAll())
           .doOnNext(user -> log.info("Found user <{}> in the database.", user))
           .blockLast();

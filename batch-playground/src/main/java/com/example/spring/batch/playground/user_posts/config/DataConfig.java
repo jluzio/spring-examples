@@ -1,15 +1,12 @@
 package com.example.spring.batch.playground.user_posts.config;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import com.example.spring.batch.playground.annotation.ConditionalOnAutoConfigureApp;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.repository.init.Jackson2RepositoryPopulatorFactoryBean;
 
-@Configuration
-@ConditionalOnProperty("app.batch.auto.enabled")
 public class DataConfig {
 
   @Bean

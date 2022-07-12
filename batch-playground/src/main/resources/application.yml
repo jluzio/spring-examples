@@ -10,6 +10,4 @@ logging:
 #    org.springframework.core.io.support: DEBUG
 
 app:
-  batch:
-    auto:
-      enabled: true
+  auto-configure: true

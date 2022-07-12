@@ -1,4 +1,2 @@
 app:
-  batch:
-    auto:
-      enabled: false
+  auto-configure: false

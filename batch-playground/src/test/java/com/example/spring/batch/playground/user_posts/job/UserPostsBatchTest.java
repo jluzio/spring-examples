@@ -1,15 +1,14 @@
-package com.example.spring.batch.playground.user_posts.repository;
+package com.example.spring.batch.playground.user_posts.job;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
 
 import com.example.spring.batch.playground.user_posts.config.DataConfig;
 import com.example.spring.batch.playground.user_posts.config.batch.ItemIOConfig;
 import com.example.spring.batch.playground.user_posts.entity.Post;
 import com.example.spring.batch.playground.user_posts.entity.User;
 import com.example.spring.batch.playground.user_posts.job.JobCompletionNotificationListener;
-import com.example.spring.batch.playground.user_posts.repository.ErrorHandlingBatchTest.Config.BatchConfig.ExecutionContextJobExecutionListener;
+import com.example.spring.batch.playground.user_posts.job.UserItemProcessor;
+import com.example.spring.batch.playground.user_posts.repository.UserRepository;
 import com.google.common.collect.Lists;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
@@ -25,27 +24,22 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
-import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 @SpringBootTest
 @Slf4j
-class ErrorHandlingBatchTest {
+class UserPostsBatchTest {
 
   @TestConfiguration
   static class Config {
@@ -72,7 +66,7 @@ class ErrorHandlingBatchTest {
 
       @Bean
       public Supplier<Job> importUserJobSupplier(
-          ExecutionContextJobExecutionListener listener,
+          JobCompletionNotificationListener listener,
           @Qualifier("userStep") Step userStep,
           @Qualifier("postStep") Step postStep) {
         return () -> jobBuilderFactory.get("importPersonJob")
@@ -86,11 +80,9 @@ class ErrorHandlingBatchTest {
 
       @Bean
       public Step userStep(
+          ItemReader<User> reader,
           ItemProcessor<User, User> processor,
           ItemWriter<User> writer) {
-        ItemReader<User> reader = () -> {
-          throw new UnexpectedInputException("Random read error");
-        };
         return stepBuilderFactory.get("userStep")
             .<User, User>chunk(10)
             .reader(reader)
@@ -111,22 +103,6 @@ class ErrorHandlingBatchTest {
             .writer(writer)
             .build();
       }
-
-      @Component
-      static class ExecutionContextJobExecutionListener extends JobExecutionListenerSupport {
-
-        @Override
-        public void beforeJob(JobExecution jobExecution) {
-         jobExecution.getExecutionContext().put("dataKey1", "value1");
-        }
-
-        @Override
-        public void afterJob(JobExecution jobExecution) {
-          log.info("{}", jobExecution.getExecutionContext());
-          log.info("clearing ExecutionContext");
-          jobExecution.setExecutionContext(new ExecutionContext());
-        }
-      }
     }
   }
 
@@ -136,8 +112,6 @@ class ErrorHandlingBatchTest {
   Supplier<Job> importUserJobSupplier;
   @Autowired
   JobLauncher jobLauncher;
-  @SpyBean
-  ExecutionContextJobExecutionListener executionContextJobExecutionListener;
 
   @Test
   void test() {
@@ -150,14 +124,11 @@ class ErrorHandlingBatchTest {
     try {
       var execution = jobLauncher.run(importUserJobSupplier.get(), jobParameters);
       assertThat(execution.getStatus())
-          .isEqualTo(BatchStatus.FAILED);
+          .isEqualTo(BatchStatus.COMPLETED);
 
       var finalUsers = Lists.newArrayList(userRepository.findAll());
       log.info("{}", finalUsers);
-      assertThat(finalUsers).hasSize(2);
-
-      verify(executionContextJobExecutionListener).beforeJob(any());
-      verify(executionContextJobExecutionListener).afterJob(any());
+      assertThat(finalUsers).hasSize(7);
     } catch (JobExecutionAlreadyRunningException | JobRestartException |
              JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
       throw new RuntimeException(e);

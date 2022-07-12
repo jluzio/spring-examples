@@ -1,13 +1,16 @@
-package com.example.spring.batch.playground.user_posts.repository;
+package com.example.spring.batch.playground.user_posts.job;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import com.example.spring.batch.playground.user_posts.config.DataConfig;
 import com.example.spring.batch.playground.user_posts.config.batch.ItemIOConfig;
 import com.example.spring.batch.playground.user_posts.entity.Post;
 import com.example.spring.batch.playground.user_posts.entity.User;
-import com.example.spring.batch.playground.user_posts.job.JobCompletionNotificationListener;
-import com.example.spring.batch.playground.user_posts.job.UserItemProcessor;
+import com.example.spring.batch.playground.user_posts.job.ErrorHandlingBatchTest.Config.BatchConfig.ExecutionContextJobExecutionListener;
+import com.example.spring.batch.playground.user_posts.repository.UserRepository;
 import com.google.common.collect.Lists;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
@@ -23,22 +26,28 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.listener.JobExecutionListenerSupport;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.item.ExecutionContext;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.UnexpectedInputException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 @SpringBootTest
 @Slf4j
-class UserPostsBatchTest {
+class ErrorHandlingBatchTest {
 
   @TestConfiguration
   static class Config {
@@ -65,7 +74,7 @@ class UserPostsBatchTest {
 
       @Bean
       public Supplier<Job> importUserJobSupplier(
-          JobCompletionNotificationListener listener,
+          ExecutionContextJobExecutionListener listener,
           @Qualifier("userStep") Step userStep,
           @Qualifier("postStep") Step postStep) {
         return () -> jobBuilderFactory.get("importPersonJob")
@@ -102,6 +111,23 @@ class UserPostsBatchTest {
             .writer(writer)
             .build();
       }
+
+      @Component
+      static class ExecutionContextJobExecutionListener extends JobExecutionListenerSupport {
+
+        @Override
+        public void beforeJob(JobExecution jobExecution) {
+         jobExecution.getExecutionContext().put("dataKey1", "value1");
+        }
+
+        @Override
+        public void afterJob(JobExecution jobExecution) {
+          log.info("{}", jobExecution.getExecutionContext());
+          log.info("clearing ExecutionContext");
+          jobExecution.setExecutionContext(new ExecutionContext());
+        }
+      }
+
     }
   }
 
@@ -111,9 +137,16 @@ class UserPostsBatchTest {
   Supplier<Job> importUserJobSupplier;
   @Autowired
   JobLauncher jobLauncher;
+  @SpyBean
+  ExecutionContextJobExecutionListener executionContextJobExecutionListener;
+  @MockBean
+  ItemReader<User> userItemReader;
 
   @Test
-  void test() {
+  void test_declared_exception() throws Exception {
+    when(userItemReader.read())
+        .thenThrow(new UnexpectedInputException("Random read error"));
+
     var users = Lists.newArrayList(userRepository.findAll());
     log.info("{}", users);
     assertThat(users).hasSize(2);
@@ -123,11 +156,42 @@ class UserPostsBatchTest {
     try {
       var execution = jobLauncher.run(importUserJobSupplier.get(), jobParameters);
       assertThat(execution.getStatus())
-          .isEqualTo(BatchStatus.COMPLETED);
+          .isEqualTo(BatchStatus.FAILED);
 
       var finalUsers = Lists.newArrayList(userRepository.findAll());
       log.info("{}", finalUsers);
-      assertThat(finalUsers).hasSize(7);
+      assertThat(finalUsers).hasSize(2);
+
+      verify(executionContextJobExecutionListener).beforeJob(any());
+      verify(executionContextJobExecutionListener).afterJob(any());
+    } catch (JobExecutionAlreadyRunningException | JobRestartException |
+             JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Test
+  void test_undeclared_exception() throws Exception {
+    when(userItemReader.read())
+        .thenThrow(new RuntimeException("Random read error"));
+
+    var users = Lists.newArrayList(userRepository.findAll());
+    log.info("{}", users);
+    assertThat(users).hasSize(2);
+
+    log.info("{}", importUserJobSupplier);
+    var jobParameters = new JobParameters();
+    try {
+      var execution = jobLauncher.run(importUserJobSupplier.get(), jobParameters);
+      assertThat(execution.getStatus())
+          .isEqualTo(BatchStatus.FAILED);
+
+      var finalUsers = Lists.newArrayList(userRepository.findAll());
+      log.info("{}", finalUsers);
+      assertThat(finalUsers).hasSize(2);
+
+      verify(executionContextJobExecutionListener).beforeJob(any());
+      verify(executionContextJobExecutionListener).afterJob(any());
     } catch (JobExecutionAlreadyRunningException | JobRestartException |
              JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
       throw new RuntimeException(e);
