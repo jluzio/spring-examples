@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @ConditionalOnAutoConfigureApp
-@Import({DataConfig.class, BatchConfig.class, ItemIOConfig.class})
+@Import({DataPopulatorConfig.class, BatchConfig.class, ItemIOConfig.class})
 public class UserPostsConfig {
 
 }

@@ -2,12 +2,10 @@ package com.example.spring.batch.playground.user_posts.job;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.spring.batch.playground.user_posts.config.DataConfig;
+import com.example.spring.batch.playground.user_posts.config.DataPopulatorConfig;
 import com.example.spring.batch.playground.user_posts.config.batch.ItemIOConfig;
 import com.example.spring.batch.playground.user_posts.entity.Post;
 import com.example.spring.batch.playground.user_posts.entity.User;
-import com.example.spring.batch.playground.user_posts.job.JobCompletionNotificationListener;
-import com.example.spring.batch.playground.user_posts.job.UserItemProcessor;
 import com.example.spring.batch.playground.user_posts.repository.UserRepository;
 import com.google.common.collect.Lists;
 import java.util.function.Supplier;
@@ -15,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersInvalidException;
 import org.springframework.batch.core.Step;
@@ -36,23 +33,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @SpringBootTest
 @Slf4j
 class UserPostsBatchTest {
 
   @TestConfiguration
+  @Import({DataPopulatorConfig.class, ItemIOConfig.class})
   static class Config {
-
-    @Configuration
-    static class TestDataConfig extends DataConfig {
-
-    }
-
-    @Configuration
-    static class TestItemIOConfig extends ItemIOConfig {
-
-    }
 
     @Configuration
     @EnableBatchProcessing

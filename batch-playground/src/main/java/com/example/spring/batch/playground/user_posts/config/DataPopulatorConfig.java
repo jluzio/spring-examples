@@ -1,13 +1,11 @@
 package com.example.spring.batch.playground.user_posts.config;
 
-import com.example.spring.batch.playground.annotation.ConditionalOnAutoConfigureApp;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.repository.init.Jackson2RepositoryPopulatorFactoryBean;
 
-public class DataConfig {
+public class DataPopulatorConfig {
 
   @Bean
   public Jackson2RepositoryPopulatorFactoryBean getDataPopulator() {

@@ -5,13 +5,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.example.spring.batch.playground.user_posts.config.DataConfig;
+import com.example.spring.batch.playground.user_posts.config.DataPopulatorConfig;
 import com.example.spring.batch.playground.user_posts.config.batch.ItemIOConfig;
 import com.example.spring.batch.playground.user_posts.entity.Post;
 import com.example.spring.batch.playground.user_posts.entity.User;
 import com.example.spring.batch.playground.user_posts.job.ErrorHandlingBatchTest.Config.BatchConfig.ExecutionContextJobExecutionListener;
 import com.example.spring.batch.playground.user_posts.repository.UserRepository;
 import com.google.common.collect.Lists;
+import java.io.IOError;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
 @SpringBootTest
@@ -50,17 +52,8 @@ import org.springframework.stereotype.Component;
 class ErrorHandlingBatchTest {
 
   @TestConfiguration
+  @Import({DataPopulatorConfig.class, ItemIOConfig.class})
   static class Config {
-
-    @Configuration
-    static class TestDataConfig extends DataConfig {
-
-    }
-
-    @Configuration
-    static class TestItemIOConfig extends ItemIOConfig {
-
-    }
 
     @Configuration
     @EnableBatchProcessing
@@ -174,6 +167,34 @@ class ErrorHandlingBatchTest {
   void test_undeclared_exception() throws Exception {
     when(userItemReader.read())
         .thenThrow(new RuntimeException("Random read error"));
+
+    var users = Lists.newArrayList(userRepository.findAll());
+    log.info("{}", users);
+    assertThat(users).hasSize(2);
+
+    log.info("{}", importUserJobSupplier);
+    var jobParameters = new JobParameters();
+    try {
+      var execution = jobLauncher.run(importUserJobSupplier.get(), jobParameters);
+      assertThat(execution.getStatus())
+          .isEqualTo(BatchStatus.FAILED);
+
+      var finalUsers = Lists.newArrayList(userRepository.findAll());
+      log.info("{}", finalUsers);
+      assertThat(finalUsers).hasSize(2);
+
+      verify(executionContextJobExecutionListener).beforeJob(any());
+      verify(executionContextJobExecutionListener).afterJob(any());
+    } catch (JobExecutionAlreadyRunningException | JobRestartException |
+             JobInstanceAlreadyCompleteException | JobParametersInvalidException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  @Test
+  void test_undeclared_error() throws Exception {
+    when(userItemReader.read())
+        .thenThrow(new IOError(new RuntimeException("Random read error")));
 
     var users = Lists.newArrayList(userRepository.findAll());
     log.info("{}", users);
