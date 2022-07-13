@@ -47,7 +47,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -59,7 +58,7 @@ import reactor.core.scheduler.Schedulers;
 
 @SpringBootTest
 @Slf4j
-class ConcurrencyBatchTest {
+class ThreadUnsafeConcurrencyBatchTest {
 
   public static final String USER_IDS = "USER_IDS";
 
@@ -82,7 +81,7 @@ class ConcurrencyBatchTest {
         return () -> {
           var nonUniqueId = "importPersonJob";
           var uniqueId = "importPersonJob-" + UUID.randomUUID();
-          var id = uniqueId;
+          var id = nonUniqueId;
           return jobBuilderFactory.get(id)
               .incrementer(new RunIdIncrementer())
               .listener(listener)
@@ -233,7 +232,7 @@ class ConcurrencyBatchTest {
           try {
             var uniqueJobParameters = new JobParameters(Map.of("ID", new JobParameter(jobId)));
             var nonUniqueJobParameters = new JobParameters();
-            var jobParameters = nonUniqueJobParameters;
+            var jobParameters = uniqueJobParameters;
             var execution = jobLauncher.run(importUserJobSupplier.get(), jobParameters);
             assertThat(execution.getStatus())
                 .isEqualTo(BatchStatus.COMPLETED);
