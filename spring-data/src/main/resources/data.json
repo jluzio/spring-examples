@@ -1,0 +1,14 @@
+[
+  {
+    "_class": "org.example.spring.data.model.User",
+    "id": 1,
+    "name": "John Doe",
+    "email": "john.doe@mail.org"
+  },
+  {
+    "_class": "org.example.spring.data.model.User",
+    "id": 2,
+    "name": "Jane Doe",
+    "email": "jane.doe@mail.org"
+  }
+]
