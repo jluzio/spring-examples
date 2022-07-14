@@ -1,13 +1,14 @@
 package com.example.spring.batch.playground.concurrency;
 
+import static com.example.spring.batch.playground.util.LogExecutionContextHelper.logData;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.spring.batch.playground.listener.LogExecutionContextJobExecutionListener;
+import com.example.spring.batch.playground.listener.LogExecutionContextStepExecutionListener;
 import com.example.spring.batch.playground.user_posts.entity.User;
 import com.example.spring.batch.playground.user_posts.job.JobCompletionNotificationListener;
 import com.example.spring.batch.playground.user_posts.repository.UserRepository;
 import com.google.common.collect.Lists;
-import java.io.IOException;
-import java.nio.file.Files;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,6 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.launch.JobLauncher;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.listener.StepExecutionListenerSupport;
 import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
 import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
 import org.springframework.batch.core.repository.JobRestartException;
@@ -42,12 +42,10 @@ import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
 import org.springframework.batch.item.support.PassThroughItemProcessor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import reactor.core.publisher.Flux;
@@ -89,15 +87,26 @@ class ThreadSafeConcurrencyBatchTest {
           return jobBuilderFactory.get(id)
               .incrementer(new RunIdIncrementer())
               .listener(listener)
+              .listener(new LogExecutionContextJobExecutionListener())
               .flow(userStep)
               .end()
               .build();
         };
       }
 
-//      @Bean
-      public ItemReader<User> userItemReader(
-          @Qualifier("userDataResource") Resource userDataResource) {
+      public Step userStep(
+          ItemReader<User> reader,
+          ItemWriter<User> writer) {
+        return stepBuilderFactory.get("userStep")
+            .<User, User>chunk(1)
+            .reader(reader)
+            .processor(new PassThroughItemProcessor<>())
+            .writer(writer)
+            .listener(new LogExecutionContextStepExecutionListener(true))
+            .build();
+      }
+
+      public ItemReader<User> userItemReader(Resource userDataResource) {
         return new FlatFileItemReaderBuilder<User>()
             .name("userItemReader")
             .resource(userDataResource)
@@ -109,13 +118,6 @@ class ThreadSafeConcurrencyBatchTest {
             .build();
       }
 
-      @Bean
-      Resource userDataResource() throws IOException {
-        var resourcePath = new ClassPathResource("sample-data.csv").getFile().toPath();
-        return new ByteArrayResource(Files.readAllBytes(resourcePath));
-      }
-
-//      @Component
       static class UserRepositoryItemWriter implements ItemWriter<User>, StepExecutionListener {
 
         private final ItemWriter<User> delegate;
@@ -132,7 +134,7 @@ class ThreadSafeConcurrencyBatchTest {
         public void write(List<? extends User> items) throws Exception {
           delegate.write(items);
 
-          logData(stepExecution, "writer-before");
+          logDataExecutions(stepExecution, "writer-before");
 
           var stepExecutionCtx = stepExecution.getExecutionContext();
           if (!stepExecutionCtx.containsKey(USER_IDS)) {
@@ -146,7 +148,7 @@ class ThreadSafeConcurrencyBatchTest {
           var jobExecutionCtx = stepExecution.getJobExecution().getExecutionContext();
           jobExecutionCtx.put(USER_IDS, userIds);
 
-          logData(stepExecution, "writer-after");
+          logDataExecutions(stepExecution, "writer-after");
         }
 
         @Override
@@ -159,48 +161,13 @@ class ThreadSafeConcurrencyBatchTest {
           return stepExecution.getExitStatus();
         }
       }
-
-      @Bean
-      StepExecutionListener loggingStepExecutionListener() {
-        return new StepExecutionListenerSupport() {
-          @Override
-          public void beforeStep(StepExecution stepExecution) {
-            logData(stepExecution, "listener-beforeStep");
-          }
-
-          @Override
-          public ExitStatus afterStep(StepExecution stepExecution) {
-            logData(stepExecution, "listener-afterStep");
-            return stepExecution.getExitStatus();
-          }
-        };
-      }
-
-//      @Bean
-      public Step userStep(
-          ItemReader<User> reader,
-          ItemWriter<User> writer) {
-        return stepBuilderFactory.get("userStep")
-            .<User, User>chunk(1)
-            .reader(reader)
-            .processor(new PassThroughItemProcessor<>())
-            .writer(writer)
-            .listener(loggingStepExecutionListener())
-            .build();
-      }
     }
   }
 
-  static void logData(StepExecution stepExecution, String tag) {
-    log.info("Step :: Context :: {} | {} | {}",
-        tag,
-        stepExecution.getExecutionContext(),
-        stepExecution);
+  static void logDataExecutions(StepExecution stepExecution, String tag) {
+    logData(stepExecution, stepExecution.getExecutionContext(), tag);
     var jobExecution = stepExecution.getJobExecution();
-    log.info(" Job :: Context :: {} | {} | {}",
-        tag,
-        jobExecution.getExecutionContext(),
-        jobExecution);
+    logData(jobExecution, jobExecution.getExecutionContext(), tag);
   }
 
   @Autowired
