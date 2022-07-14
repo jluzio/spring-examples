@@ -8,12 +8,9 @@ import com.example.spring.batch.playground.listener.LogExecutionContextStepExecu
 import com.example.spring.batch.playground.user_posts.entity.User;
 import com.example.spring.batch.playground.user_posts.job.JobCompletionNotificationListener;
 import com.example.spring.batch.playground.user_posts.repository.UserRepository;
-import com.google.common.collect.Lists;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
@@ -50,8 +47,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
 
 @SpringBootTest
 @Slf4j
@@ -176,28 +171,23 @@ class ThreadSafeConcurrencyBatchTest {
   Supplier<Job> importUserJobSupplier;
   @Autowired
   JobLauncher jobLauncher;
-  Scheduler jobWorkerPool = Schedulers.newBoundedElastic(5, 100, "job");
-  //  Scheduler jobWorkerPool = Schedulers.newBoundedElastic(1, 100, "job");
-  Random random = new Random();
 
   @Test
   void test() {
-    var users = Lists.newArrayList(userRepository.findAll());
-    log.info("{}", users);
-    assertThat(users).hasSize(0);
+    var jobRunner = new BatchJobRunner(5, BatchJobRunner::randomSmallDelay);
 
     log.info("{}", importUserJobSupplier);
     Flux.range(1, 10)
         .map(Object::toString)
-//        .flatMap(this::runTestJob)
-        .flatMap(this::runJob)
+        .flatMap(jobId -> runJob(jobId, jobRunner))
         .blockLast();
 
     log.info("Jobs completed");
   }
 
-  private Mono<String> runJob(String jobId) {
-    return newJob(jobId, randomSmallDelay(jobId))
+  private Mono<String> runJob(String jobId, BatchJobRunner jobRunner) {
+    log.info("Creating job: {}", jobId);
+    return jobRunner.job(jobId)
         .doOnNext(id -> {
           log.info("Processing job: {}", id);
           try {
@@ -214,30 +204,9 @@ class ThreadSafeConcurrencyBatchTest {
         });
   }
 
-  private Mono<String> runTestJob(String jobId) {
-    return newJob(jobId, randomDelay(jobId))
-        .doOnNext(id -> log.info("Processing job: {}", id));
-  }
-
-  private Mono<String> newJob(String jobId, int delay) {
+  private Mono<String> runTestJob(String jobId, BatchJobRunner jobRunner) {
     log.info("Creating job: {}", jobId);
-    return Mono.just(jobId)
-        .delayElement(Duration.ofMillis(delay), jobWorkerPool);
-  }
-
-  private int noDelay(String jobId) {
-    return 0;
-  }
-
-  private int randomDelay(String jobId) {
-    return 200 + random.nextInt(200);
-  }
-
-  private int randomSmallDelay(String jobId) {
-    return 50 + random.nextInt(100);
-  }
-
-  private int fixedDelay(String jobId) {
-    return Integer.valueOf(jobId) * 200;
+    return jobRunner.job(jobId)
+        .doOnNext(id -> log.info("Processing job: {}", id));
   }
 }
