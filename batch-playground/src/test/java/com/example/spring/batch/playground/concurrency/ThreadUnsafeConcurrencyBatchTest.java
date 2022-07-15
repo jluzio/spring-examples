@@ -1,10 +1,10 @@
 package com.example.spring.batch.playground.concurrency;
 
-import static com.example.spring.batch.playground.util.LogExecutionContextHelper.logData;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.spring.batch.playground.listener.LogExecutionContextJobExecutionListener;
-import com.example.spring.batch.playground.listener.LogExecutionContextStepExecutionListener;
+import com.example.spring.batch.playground.listener.log.LogContextItemWriterListener;
+import com.example.spring.batch.playground.listener.log.LogContextJobExecutionListener;
+import com.example.spring.batch.playground.listener.log.LogContextStepExecutionListener;
 import com.example.spring.batch.playground.user_posts.entity.User;
 import com.example.spring.batch.playground.user_posts.job.JobCompletionNotificationListener;
 import com.example.spring.batch.playground.user_posts.repository.UserRepository;
@@ -82,7 +82,7 @@ class ThreadUnsafeConcurrencyBatchTest {
           return jobBuilderFactory.get(id)
               .incrementer(new RunIdIncrementer())
               .listener(listener)
-              .listener(new LogExecutionContextJobExecutionListener())
+              .listener(new LogContextJobExecutionListener())
               .flow(userStep)
               .end()
               .build();
@@ -99,7 +99,8 @@ class ThreadUnsafeConcurrencyBatchTest {
             .reader(reader)
             .processor(new PassThroughItemProcessor<>())
             .writer(writer)
-            .listener(new LogExecutionContextStepExecutionListener(true))
+            .listener(new LogContextStepExecutionListener())
+            .listener(new LogContextItemWriterListener())
             .build();
       }
       @Bean
@@ -139,8 +140,6 @@ class ThreadUnsafeConcurrencyBatchTest {
         public void write(List<? extends User> items) throws Exception {
           delegate.write(items);
 
-          logDataExecutions(stepExecution, "writer-before");
-
           var stepExecutionCtx = stepExecution.getExecutionContext();
           if (!stepExecutionCtx.containsKey(USER_IDS)) {
             stepExecutionCtx.put(USER_IDS, new ArrayList<>());
@@ -152,8 +151,6 @@ class ThreadUnsafeConcurrencyBatchTest {
 
           var jobExecutionCtx = stepExecution.getJobExecution().getExecutionContext();
           jobExecutionCtx.put(USER_IDS, userIds);
-
-          logDataExecutions(stepExecution, "writer-after");
         }
 
         @Override
@@ -167,12 +164,6 @@ class ThreadUnsafeConcurrencyBatchTest {
         }
       }
     }
-  }
-
-  static void logDataExecutions(StepExecution stepExecution, String tag) {
-    logData(stepExecution, stepExecution.getExecutionContext(), tag);
-    var jobExecution = stepExecution.getJobExecution();
-    logData(jobExecution, jobExecution.getExecutionContext(), tag);
   }
 
   @Autowired
