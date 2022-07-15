@@ -22,7 +22,7 @@ public class LogContextHelper {
 
   private static void logContext(Logger log, Object execution, String tag,
       ExecutionContext executionContext, Object parentExecution) {
-    log.info(LOG_FORMAT,
+    log.debug(LOG_FORMAT,
         execution.getClass().getSimpleName(),
         tag,
         executionContext,
