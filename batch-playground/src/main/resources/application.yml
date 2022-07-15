@@ -4,6 +4,7 @@ logging:
   level:
     ROOT: INFO
     com.example.spring.spring.batch: DEBUG
+    com.example.spring.spring.batch.listener.log: DEBUG
     org.springframework: INFO
     org.springframework.boot.autoconfigure: DEBUG
     org.springframework.context.annotation: DEBUG
