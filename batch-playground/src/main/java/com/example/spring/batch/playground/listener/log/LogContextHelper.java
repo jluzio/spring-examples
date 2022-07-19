@@ -9,7 +9,7 @@ import org.springframework.batch.item.ExecutionContext;
 @UtilityClass
 public class LogContextHelper {
 
-  public static final String LOG_FORMAT = "{}[{}] :: Context = {} | Execution = {} | ParentExecution = {}";
+  public static final String LOG_FORMAT = "{}[{}] :: Context={} | Execution=({}) | ParentExecution={}";
 
   public static void logContext(Logger log, JobExecution jobExecution, String tag) {
     logContext(log, jobExecution, tag, jobExecution.getExecutionContext(), null);
