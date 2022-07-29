@@ -6,12 +6,21 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/demo/users")
 public class DemoUserResource {
+
   @Autowired
   private UserRepository userRepository;
 
@@ -43,6 +52,11 @@ public class DemoUserResource {
     return userRepository.save(user);
   }
 
+  @PatchMapping("{id}")
+  public User patchUser(@PathVariable("id") Integer id, @RequestBody User user) {
+    throw new UnsupportedOperationException("TODO");
+  }
+
   @DeleteMapping("{id}")
   public void deleteUser(@PathVariable("id") Integer id) {
     userRepository.deleteById(id);
@@ -51,7 +65,8 @@ public class DemoUserResource {
   @GetMapping("search")
   public Page<User> searchUsers(UserFilter userFilter) {
     var example = Example.of(userFilter.getUser());
-    var page = userFilter.getPage() != null ? userFilter.getPage().toPageable() : Pageable.unpaged();
+    var page =
+        userFilter.getPage() != null ? userFilter.getPage().toPageable() : Pageable.unpaged();
     return userRepository.findAll(example, page);
   }
 
