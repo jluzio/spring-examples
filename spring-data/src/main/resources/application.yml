@@ -2,3 +2,8 @@
 #  data:
 #    rest:
 #      base-path: /api
+
+logging:
+  level:
+    root: INFO
+    org.example.spring.data: DEBUG
