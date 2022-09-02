@@ -1,25 +1,28 @@
 package org.example.spring.data.model;
 
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
-public class User {
+@Table(
+    uniqueConstraints = @UniqueConstraint(columnNames = "value")
+)
+@NoArgsConstructor
+public class Role {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private String name;
-  private String email;
-  @ManyToOne(optional = false)
-  @JoinColumn(name = "fk_role_id", referencedColumnName = "ID")
-  private Role role;
+  private String value;
 
+  public Role(Long id) {
+    this.id = id;
+  }
 }

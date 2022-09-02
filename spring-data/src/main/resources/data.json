@@ -1,14 +1,33 @@
 [
   {
+    "_class": "org.example.spring.data.model.Role",
+    "id": 1,
+    "value": "USER"
+  },
+  {
+    "_class": "org.example.spring.data.model.Role",
+    "id": 2,
+    "value": "ADMIN"
+  },
+  {
     "_class": "org.example.spring.data.model.User",
     "id": 1,
     "name": "John Doe",
-    "email": "john.doe@mail.org"
+    "email": "john.doe@mail.org",
+    "role": { "id": 1 }
   },
   {
     "_class": "org.example.spring.data.model.User",
     "id": 2,
     "name": "Jane Doe",
-    "email": "jane.doe@mail.org"
+    "email": "jane.doe@mail.org",
+    "role": { "id": 1 }
+  },
+  {
+    "_class": "org.example.spring.data.model.User",
+    "id": 3,
+    "name": "Tom Doe",
+    "email": "tom.doe@othermail.org",
+    "role": { "id": 2 }
   }
 ]

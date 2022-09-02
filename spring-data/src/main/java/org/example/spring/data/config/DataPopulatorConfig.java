@@ -1,5 +1,6 @@
 package org.example.spring.data.config;
 
+import java.util.Arrays;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -10,9 +11,16 @@ import org.springframework.data.repository.init.Jackson2RepositoryPopulatorFacto
 public class DataPopulatorConfig {
 
   @Bean
-  public Jackson2RepositoryPopulatorFactoryBean getDataPopulator() {
+  public Jackson2RepositoryPopulatorFactoryBean dataDataPopulator() {
+    return dataPopulator("data.json");
+  }
+
+  private Jackson2RepositoryPopulatorFactoryBean dataPopulator(String... resources) {
     Jackson2RepositoryPopulatorFactoryBean factoryBean = new Jackson2RepositoryPopulatorFactoryBean();
-    factoryBean.setResources(new Resource[]{new ClassPathResource("data.json")});
+    factoryBean.setResources(
+        Arrays.stream(resources)
+            .map(ClassPathResource::new)
+            .toArray(Resource[]::new));
     return factoryBean;
   }
 }
