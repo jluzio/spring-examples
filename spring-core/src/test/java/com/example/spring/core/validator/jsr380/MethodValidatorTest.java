@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.example.spring.core.validator.jsr380.MethodValidatorTest.ConsumerService;
 import com.example.spring.core.validator.jsr380.MethodValidatorTest.TestConfig;
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;

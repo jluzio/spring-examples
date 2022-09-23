@@ -12,7 +12,8 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
-    <bb.version>2021.07</bb.version>
+    <bb.version>2021.08</bb.version>
+<!--    <bb.version>2021.07</bb.version>-->
     <identity.version>1.8.0.1</identity.version>
 <!--    <identity.version>1.7.0</identity.version>-->
     <dbs.version>2.20.1.1</dbs.version>
@@ -98,6 +99,17 @@
       <properties>
         <changelog.groupId>com.backbase.dbs.notifications</changelog.groupId>
         <changelog.artifactId>notifications-service</changelog.artifactId>
+        <changelog.version></changelog.version>
+        <changelog.type>jar</changelog.type>
+        <changelog.classifier>classes</changelog.classifier>
+        <changelog.includes>db/**/*</changelog.includes>
+      </properties>
+    </profile>
+    <profile>
+      <id>payment-order-service</id>
+      <properties>
+        <changelog.groupId>com.backbase.dbs.paymentorder</changelog.groupId>
+        <changelog.artifactId>payment-order-service</changelog.artifactId>
         <changelog.version></changelog.version>
         <changelog.type>jar</changelog.type>
         <changelog.classifier>classes</changelog.classifier>

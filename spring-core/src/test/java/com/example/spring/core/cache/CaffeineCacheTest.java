@@ -35,7 +35,6 @@ import org.springframework.context.annotation.Import;
 import reactor.core.publisher.Mono;
 
 @SpringBootTest(
-    classes = {CaffeineCacheTest.Config.class},
     properties = {
         "app.cache.specs.CALCULATIONS=expireAfterWrite=PT0.1S",
         "app.cache.specs.MESSAGES=expireAfterWrite=PT1S",
