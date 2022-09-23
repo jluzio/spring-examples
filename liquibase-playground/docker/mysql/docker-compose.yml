@@ -1,10 +1,7 @@
-volumes:
-  liquibase_mysql_data:
-    driver: local
-
 services:
   mysql:
-    image: mysql:5.7.18
+    image: mysql:5.7
+#    image: mysql:5.7.18
     container_name: mysql-liquibase
     ports:
       - 3306:3306
@@ -15,4 +12,8 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: liquibase
       MYSQL_USER: liquibase
-      MYSQL_PASSWORD: password
+      MYSQL_PASSWORD: liquibase
+
+volumes:
+  liquibase_mysql_data:
+    driver: local

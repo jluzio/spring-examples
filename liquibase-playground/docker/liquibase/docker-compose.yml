@@ -1,0 +1,11 @@
+services:
+  liquibase:
+    image: liquibase/liquibase
+    container_name: liquibase
+    volumes:
+      - ./changelog:/liquibase/changelog
+    networks:
+
+networks:
+  - liquibase_database:
+      external: true

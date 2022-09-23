@@ -12,7 +12,7 @@
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
 
-    <bb.version>2021.08</bb.version>
+    <bb.version>2021.07</bb.version>
 <!--    <bb.version>2021.07</bb.version>-->
     <identity.version>1.8.0.1</identity.version>
 <!--    <identity.version>1.7.0</identity.version>-->
@@ -129,7 +129,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.1.2</version>
+        <version>3.3.0</version>
         <executions>
           <execution>
             <id>unpack</id>
