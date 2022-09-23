@@ -20,14 +20,18 @@ cp -R unpack/target/generated-resources/* docker/liquibase/changelog
 ~~~
 
 ## Liquibase commands
-Note: Git Bash seems to have issues with volumes, executing using PowerBash
+Notes: 
+- Git Bash seems to have issues with volumes, executing using PowerBash
+- Using Rancher Desktop might require to:
+  - add a firewall rule to enable host.docker.internal for accessing host services (https://docs.rancherdesktop.io/faq/#q-can-containers-reach-back-to-host-services-via-hostdockerinternal) 
+  - configure an extra host on docker command to access other docker containers: --add-host=bridge.docker:host-gateway
 
 ### Update
 - Git Bash
 ~~~bash
 win_pwd=$(cygpath -w $(pwd))
 lb_files=$win_pwd/docker/liquibase
-cmd="docker run --rm -v $lb_files/changelog:/liquibase/changelog -v $lb_files/classpath:/liquibase/classpath --add-host=bridge.docker:host-gateway liquibase/liquibase '--defaultsFile=/liquibase/changelog/liquibase.docker.properties' update"
+cmd="docker run --rm -v $lb_files/changelog:/liquibase/changelog -v $lb_files/classpath:/liquibase/classpath liquibase/liquibase '--defaultsFile=/liquibase/changelog/liquibase.docker.properties' update"
 powershell -c $cmd 
 ~~~
 
@@ -37,10 +41,17 @@ docker run --rm -v ${pwd}/docker/liquibase/changelog:/liquibase/changelog -v ${p
 ~~~
 
 ### changelog-sync
-- Git Bash
 ~~~bash
 win_pwd=$(cygpath -w $(pwd))
 lb_files=$win_pwd/docker/liquibase
 cmd="docker run --rm -v $lb_files/changelog:/liquibase/changelog -v $lb_files/classpath:/liquibase/classpath --add-host=bridge.docker:host-gateway liquibase/liquibase '--defaultsFile=/liquibase/changelog/liquibase.docker.properties' changelog-sync"
+powershell -c $cmd 
+~~~
+
+### Debug container
+~~~bash
+win_pwd=$(cygpath -w $(pwd))
+lb_files=$win_pwd/docker/liquibase
+cmd="docker run --rm -v $lb_files/changelog:/liquibase/changelog -v $lb_files/classpath:/liquibase/classpath --add-host=bridge.docker:host-gateway -it wbitt/network-multitool bash"
 powershell -c $cmd 
 ~~~
