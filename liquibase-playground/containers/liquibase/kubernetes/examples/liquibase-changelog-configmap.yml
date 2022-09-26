@@ -1,0 +1,9 @@
+apiVersion: v1
+binaryData:
+  db.zip: _CHANGELOG_BINARY_CONTENTS_BASE64_ENCODED_
+data:
+  liquibase.docker.properties: "_PROPERTIES_VALUES_"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: liquibase-changelog-configmap

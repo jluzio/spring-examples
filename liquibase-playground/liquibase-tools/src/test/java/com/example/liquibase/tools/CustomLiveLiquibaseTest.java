@@ -26,13 +26,13 @@ class CustomLiveLiquibaseTest {
   private LiquibaseTasksProperties tasksProperties;
   @Autowired
   private LiquibaseDataService liquibaseDataService;
-  private PrintWriter writer = new PrintWriter(System.out);
+  private final PrintWriter writer = new PrintWriter(System.out);
 
   @Test
   void custom() throws LiquibaseException {
     Liquibase liquibase = liquibaseFactory.get(tasksProperties.getDefaultChangeLog());
     Task task = tasksProperties.getTasks().get(0);
-    Command command = Command.CLEAR_CHANGE_LOG;
+    Command command = Command.CHANGE_LOG_SYNC;
 
     if (command == Command.VALIDATE) {
       liquibase.validate();

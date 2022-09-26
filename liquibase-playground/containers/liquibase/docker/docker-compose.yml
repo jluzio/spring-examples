@@ -4,8 +4,9 @@ services:
     container_name: liquibase
     volumes:
       - ./changelog:/liquibase/changelog
-    networks:
+#    networks:
+#      - liquibase_database
 
-networks:
-  - liquibase_database:
-      external: true
+#networks:
+#  - liquibase_database:
+#      external: true
