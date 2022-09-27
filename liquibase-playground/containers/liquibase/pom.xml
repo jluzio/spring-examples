@@ -99,6 +99,10 @@
                   <includes>*changelog.zip</includes>
                   <filtering>false</filtering>
                 </resource>
+                <resource>
+                  <directory>${dependencies.source}/generated-resources</directory>
+                  <filtering>false</filtering>
+                </resource>
               </resources>
             </configuration>
           </execution>

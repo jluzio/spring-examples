@@ -30,77 +30,44 @@ Notes:
   - add a firewall rule to enable host.docker.internal for accessing host services (https://docs.rancherdesktop.io/faq/#q-can-containers-reach-back-to-host-services-via-hostdockerinternal) 
   - configure an extra host on docker command to access other docker containers: --add-host=bridge.docker:host-gateway
 
-### Update
-- Git Bash
+### Docker
 ~~~bash
-win_pwd=$(cygpath -w $(pwd))
-lb_files=$win_pwd/containers/liquibase/target/
-cmd="docker run --rm -v $lb_files/changelog:/liquibase/changelog -v $lb_files/classpath:/liquibase/classpath liquibase/liquibase '--defaultsFile=/liquibase/changelog/liquibase.docker.properties' update"
-powershell -c $cmd 
-~~~
-
-- Powershell
-~~~bash
-docker run --rm -v ${pwd}/containers/liquibase/target/changelog:/liquibase/changelog -v ${pwd}/containers/liquibase/target/classpath:/liquibase/classpath --add-host=bridge.docker:host-gateway liquibase/liquibase '--defaultsFile=/liquibase/changelog/liquibase.docker.properties' update 
-~~~
-
-### changelog-sync
-~~~bash
-win_pwd=$(cygpath -w $(pwd))
-lb_files=$win_pwd/containers/liquibase/target/
-cmd="docker run --rm -v $lb_files/changelog:/liquibase/changelog -v $lb_files/classpath:/liquibase/classpath --add-host=bridge.docker:host-gateway liquibase/liquibase '--defaultsFile=/liquibase/changelog/liquibase.docker.properties' changelog-sync"
-powershell -c $cmd 
+./containers/liquibase/docker/run-liquibase.sh --help
 ~~~
 
 ### Debug container
 ~~~bash
-win_pwd=$(cygpath -w $(pwd))
-lb_files=$win_pwd/containers/liquibase/target/
-cmd="docker run --rm -v $lb_files/changelog:/liquibase/changelog -v $lb_files/classpath:/liquibase/classpath --add-host=bridge.docker:host-gateway -it wbitt/network-multitool bash"
-powershell -c $cmd 
+./containers/liquibase/docker/debug-container.sh
 ~~~
-
 
 ## Kubernetes
+- deploy
 ~~~bash
-kubectl create configmap liquibase-changelog-configmap --from-file containers/liquibase/target/changelog --dry-run=client -o yaml > containers/liquibase/target/liquibase-changelog-configmap.yml
+./containers/liquibase/kubernetes/deploy-liquibase.sh
 ~~~
 
+- run in container
 ~~~bash
-kubectl delete -f containers/liquibase/kubernetes/liquibase.yml
+./containers/liquibase/kubernetes/run-liquibase.sh
 ~~~
 
+- undeploy
 ~~~bash
-kubectl apply -f containers/liquibase/target/liquibase-changelog-configmap.yml
-kubectl apply -f containers/liquibase/kubernetes/liquibase.yml
+./containers/liquibase/kubernetes/undeploy-liquibase.sh
 ~~~
 
+- create/update configmaps
 ~~~bash
-kubectl exec liquibase -it -- bash
+./containers/liquibase/kubernetes/apply-configmaps.sh
 ~~~
 
 ### Container commands
+- configure
 ~~~bash
-cd /liquibase
-cp -R data my-changelog
-cd my-changelog
-unzip changelog.zip
-cd ..
+. scripts/configure.sh
 ~~~
 
+- liquibase with configured data
 ~~~bash
-liquibase --help
-~~~
-
-- update
-~~~bash
-liquibase --defaultsFile=/liquibase/my-changelog/liquibase.docker.properties update
-~~~
--changelog-sync
-~~~bash
-liquibase --defaultsFile=/liquibase/my-changelog/liquibase.docker.properties changelog-sync 
-~~~
--changelog-sync-sql
-~~~bash
-liquibase --defaultsFile=/liquibase/my-changelog/liquibase.docker.properties changelog-sync-sql 
+lb --help
 ~~~

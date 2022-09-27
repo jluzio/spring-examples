@@ -1,23 +1,38 @@
-apiVersion: v1
-kind: Pod
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: liquibase
+  name: liquibase-tools
+  labels:
+    app: liquibase
 spec:
-  containers:
-    - name: liquibase
-      image: liquibase/liquibase:latest
-      command:
-        - "sh"
-        - "-c"
-        - "trap : TERM INT; sleep infinity & wait"
-      volumeMounts:
-        - name: configmap
-          mountPath: /liquibase/data
-#        - name: changelog
-#          mountPath: /liquibase/changelog
-  volumes:
-    - name: configmap
-      configMap:
-        name: liquibase-changelog-configmap
-#    - name: changelog
-#      emptyDir: {}
+  selector:
+    matchLabels:
+      app: liquibase
+  template:
+    metadata:
+      labels:
+        app: liquibase
+    spec:
+      containers:
+        - name: liquibase
+          image: liquibase/liquibase:latest
+          command:
+            - "sh"
+            - "-c"
+            - "trap : TERM INT; sleep infinity & wait"
+          volumeMounts:
+            - name: changelog-configmap
+              mountPath: /liquibase/data
+            - name: scripts-configmap
+              mountPath: /liquibase/scripts
+      #        - name: changelog
+      #          mountPath: /liquibase/changelog
+      volumes:
+        - name: changelog-configmap
+          configMap:
+            name: liquibase-changelog-configmap
+        - name: scripts-configmap
+          configMap:
+            name: liquibase-scripts-configmap
+    #    - name: changelog
+    #      emptyDir: {}
