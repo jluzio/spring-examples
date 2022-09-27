@@ -8,16 +8,18 @@ Note: Using Bash unless stated
 
 ## Install dependencies
 ~~~bash
-mvn clean dependency:copy -Dartifact=mysql:mysql-connector-java:8.0.30:jar -DoutputDirectory=containers/liquibase/target/classpath 
+mvn -f dependencies -P changelog,copy-dependencies,backbase-app,payment-order-service, clean package 
 ~~~
 
+## Prepare Liquibase files
 ~~~bash
-mvn -f unpack -P payment-order-service clean compile 
+mvn -f container/liquibase -P mysql clean package 
 ~~~
 
+## Reference for installing other dependencies if needed
+Example:
 ~~~bash
-cp -R unpack/target/generated-resources/* containers/liquibase/target/changelog
-cd unpack/target/generated-resources && zip -r ../../../containers/liquibase/target/changelog/changelog.zip . && cd ../../..
+mvn clean dependency:copy -Dartifact=mysql:mysql-connector-java:8.0.30:jar -DoutputDirectory=containers/liquibase/target/dependency 
 ~~~
 
 

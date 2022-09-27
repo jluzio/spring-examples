@@ -1,0 +1,32 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.1 http://maven.apache.org/xsd/assembly-2.1.1.xsd">
+  <id>changelog</id>
+  <formats>
+    <format>dir</format>
+  </formats>
+  <fileSets>
+    <fileSet>
+      <directory>src/changelog</directory>
+      <includes>
+        <include>liquibase.docker*</include>
+      </includes>
+      <outputDirectory>changelog</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>src/dependency</directory>
+      <outputDirectory>classpath</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>target/dependency</directory>
+      <outputDirectory>classpath</outputDirectory>
+    </fileSet>
+  </fileSets>
+  <files>
+    <file>
+      <source>target/changelog/dependencies-1.0.0-changelog.zip</source>
+      <outputDirectory>/changelog</outputDirectory>
+      <destName>changelog.zip</destName>
+    </file>
+  </files>
+</assembly>
