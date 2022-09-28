@@ -13,7 +13,6 @@
     <maven.compiler.target>11</maven.compiler.target>
     <dependencies.home>../../dependencies</dependencies.home>
     <dependencies.source>${dependencies.home}/target</dependencies.source>
-    <dependencies.changelog>dependencies-1.0.0-changelog.zip</dependencies.changelog>
   </properties>
 
   <profiles>
@@ -96,7 +95,7 @@
               <resources>
                 <resource>
                   <directory>${dependencies.source}</directory>
-                  <includes>*changelog.zip</includes>
+                  <includes>*changelog.*</includes>
                   <filtering>false</filtering>
                 </resource>
                 <resource>

@@ -16,6 +16,7 @@ spec:
       containers:
         - name: liquibase
           image: liquibase/liquibase:latest
+#          image: liquibase/liquibase:3.10.3
           command:
             - "sh"
             - "-c"

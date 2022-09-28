@@ -3,8 +3,8 @@
 cd /liquibase
 cp -R data my-changelog
 cd my-changelog
-unzip changelog.zip
+tar -xvf changelog.tar.gz
 
 cd /liquibase
 
-alias lb="liquibase --defaultsFile=/liquibase/my-changelog/liquibase.docker.properties"
+alias lb="/liquibase/liquibase --defaultsFile=/liquibase/my-changelog/liquibase.docker.properties"

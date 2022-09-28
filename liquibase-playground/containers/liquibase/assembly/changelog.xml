@@ -17,6 +17,7 @@
       <directory>target/changelog</directory>
       <excludes>
         <exclude>*.zip</exclude>
+        <exclude>*.tar.gz</exclude>
       </excludes>
       <outputDirectory>changelog</outputDirectory>
     </fileSet>
@@ -31,9 +32,9 @@
   </fileSets>
   <files>
     <file>
-      <source>target/changelog/dependencies-1.0.0-changelog.zip</source>
+      <source>target/changelog/dependencies-1.0.0-changelog.tar.gz</source>
       <outputDirectory>/changelog</outputDirectory>
-      <destName>changelog.zip</destName>
+      <destName>changelog.tar.gz</destName>
     </file>
   </files>
 </assembly>
