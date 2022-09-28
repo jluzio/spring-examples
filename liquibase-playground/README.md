@@ -8,7 +8,7 @@ Note: Using Bash unless stated
 
 ## Install dependencies
 ~~~bash
-mvn -f dependencies -P changelog,copy-dependencies,backbase-app,payment-order-service, clean package 
+mvn -f dependencies -P backbase-app,payment-order-service, clean package 
 ~~~
 
 ## Prepare Liquibase files

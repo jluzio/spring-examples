@@ -11,119 +11,16 @@
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
+
+    <changelog.groupId></changelog.groupId>
+    <changelog.artifactId></changelog.artifactId>
+    <changelog.version></changelog.version>
+    <changelog.type>jar</changelog.type>
+    <changelog.classifier></changelog.classifier>
+    <changelog.includes>**</changelog.includes>
   </properties>
 
   <profiles>
-    <profile>
-      <id>changelog</id>
-      <properties>
-        <changelog.groupId></changelog.groupId>
-        <changelog.artifactId></changelog.artifactId>
-        <changelog.version></changelog.version>
-        <changelog.type>jar</changelog.type>
-        <changelog.classifier></changelog.classifier>
-        <changelog.includes>**</changelog.includes>
-      </properties>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>3.3.0</version>
-            <executions>
-              <execution>
-                <id>unpack</id>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>unpack</goal>
-                </goals>
-                <configuration>
-                  <artifactItems>
-                    <artifactItem>
-                      <groupId>${changelog.groupId}</groupId>
-                      <artifactId>${changelog.artifactId}</artifactId>
-                      <version>${changelog.version}</version>
-                      <type>${changelog.type}</type>
-                      <classifier>${changelog.classifier}</classifier>
-                      <includes>${changelog.includes}</includes>
-                    </artifactItem>
-                  </artifactItems>
-                  <includes>**/*.sql,**/*.xml,**/*.y*ml</includes>
-                  <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
-                </configuration>
-              </execution>
-              <execution>
-                <id>unpack-application-yaml</id>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>unpack</goal>
-                </goals>
-                <configuration>
-                  <artifactItems>
-                    <artifactItem>
-                      <groupId>${changelog.groupId}</groupId>
-                      <artifactId>${changelog.artifactId}</artifactId>
-                      <version>${changelog.version}</version>
-                      <type>${changelog.type}</type>
-                      <classifier>${changelog.classifier}</classifier>
-                      <includes>application*.y*ml</includes>
-                    </artifactItem>
-                  </artifactItems>
-                  <includes>**/*</includes>
-                  <outputDirectory>${project.build.directory}/application</outputDirectory>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
-            <version>3.4.2</version>
-            <executions>
-              <execution>
-                <id>assemble-zip</id>
-                <goals>
-                  <goal>single</goal>
-                </goals>
-                <phase>package</phase>
-                <configuration>
-                  <descriptors>
-                    <descriptor>assembly/changelog.xml</descriptor>
-                    <descriptor>assembly/changelog-app.xml</descriptor>
-                  </descriptors>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>copy-dependencies</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <version>3.3.0</version>
-            <executions>
-              <execution>
-                <id>copy-dependencies</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>copy-dependencies</goal>
-                </goals>
-                <configuration>
-                  <!-- configure the plugin here -->
-                  <excludeTransitive>true</excludeTransitive>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
     <!-- # Changelog and Dependency profiles # -->
 
     <!-- ## Backbase ## -->
@@ -223,5 +120,96 @@
       </properties>
     </profile>
   </profiles>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>unpack</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${changelog.groupId}</groupId>
+                  <artifactId>${changelog.artifactId}</artifactId>
+                  <version>${changelog.version}</version>
+                  <type>${changelog.type}</type>
+                  <classifier>${changelog.classifier}</classifier>
+                  <includes>${changelog.includes}</includes>
+                </artifactItem>
+              </artifactItems>
+              <includes>**/*.sql,**/*.xml,**/*.y*ml</includes>
+              <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>unpack-application-yaml</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack</goal>
+            </goals>
+            <configuration>
+              <artifactItems>
+                <artifactItem>
+                  <groupId>${changelog.groupId}</groupId>
+                  <artifactId>${changelog.artifactId}</artifactId>
+                  <version>${changelog.version}</version>
+                  <type>${changelog.type}</type>
+                  <classifier>${changelog.classifier}</classifier>
+                  <includes>application*.y*ml</includes>
+                </artifactItem>
+              </artifactItems>
+              <includes>**/*</includes>
+              <outputDirectory>${project.build.directory}/application</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <version>3.4.2</version>
+        <executions>
+          <execution>
+            <id>assemble-zip</id>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <phase>package</phase>
+            <configuration>
+              <descriptors>
+                <descriptor>assembly/changelog.xml</descriptor>
+                <descriptor>assembly/changelog-app.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>copy-dependencies</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <!-- configure the plugin here -->
+              <excludeTransitive>true</excludeTransitive>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>
