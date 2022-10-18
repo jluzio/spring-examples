@@ -9,13 +9,19 @@ import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
 
 @Configuration
-public class GreetingRouter {
+public class UserRouter {
 
   @Bean
-  public RouterFunction<ServerResponse> greetingRouterFunctions(GreetingHandler greetingHandler) {
+  public RouterFunction<ServerResponse> userRouterFunctions(UserHandler userHandler) {
     return RouterFunctions.route(
-        RequestPredicates.GET("/webflux/hello")
-            .and(RequestPredicates.accept(MediaType.TEXT_PLAIN)),
-        greetingHandler::hello);
+            RequestPredicates.GET("/webflux/users/{id}")
+                .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
+            userHandler::user)
+        .and(
+            RouterFunctions.route(
+                RequestPredicates.GET("/webflux/users")
+                    .and(RequestPredicates.accept(MediaType.APPLICATION_JSON)),
+                userHandler::users)
+        );
   }
 }

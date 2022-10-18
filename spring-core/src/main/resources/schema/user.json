@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2019-09/schema",
+  "type": "object",
+  "javaInterfaces": [
+    "com.example.spring.core.api.model.ModelBase"
+  ],
+  "allOf": [
+    {
+      "$ref": "common.json#/definitions/EntityId"
+    }
+  ],
+  "extends": {
+    "$ref": "common.json#/definitions/EntityId"
+  },
+  "properties": {
+    "username": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "javaJsonView": "com.example.spring.core.api.model.view.Detailed"
+    },
+    "fullName": {
+      "type": "string",
+      "javaJsonView": "com.example.spring.core.api.model.view.Detailed"
+    }
+  }
+}
