@@ -18,8 +18,8 @@ public class CommonPointcuts {
   public void logElapsedTimeAnnotation() {
   }
 
-  @Pointcut("appCode() && bean(someService)")
-  public void beanSomeService() {
+  @Pointcut("appCode() && target(com.example.spring.core.aop.spring.service.SomeService)")
+  public void targetSomeService() {
   }
 
 }

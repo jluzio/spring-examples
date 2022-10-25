@@ -15,16 +15,14 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
-@SpringBootTest
+@SpringBootTest(classes = {
+    AopAutoConfiguration.class, ServicesConfig.class, AroundBeanLogAspect.class})
 @Slf4j
-@EnableAspectJAutoProxy
-@Import({ServicesConfig.class, AroundBeanLogAspect.class})
 class BeanAspectTest {
 
   @Component
@@ -34,11 +32,11 @@ class BeanAspectTest {
     @Autowired
     private LoggingAspectService service;
 
-    @Around("bean(someService)")
+    // using default component name
+    @Around("bean(com.example.spring.core.aop.spring.service.SomeService)")
     public Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
       return service.logTimeElapsed(joinPoint, this);
     }
-
   }
 
   @Autowired

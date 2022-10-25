@@ -17,16 +17,15 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
-@SpringBootTest
+@SpringBootTest(classes = {
+    AopAutoConfiguration.class, ServicesConfig.class, CommonPointcuts.class,
+    CommonPointcutAspect.class})
 @Slf4j
-@EnableAspectJAutoProxy
-@Import({ServicesConfig.class, CommonPointcuts.class, CommonPointcutAspect.class})
 class PointcutAspectTest {
 
   @Component
@@ -49,7 +48,7 @@ class PointcutAspectTest {
     }
 
     @AfterThrowing(
-        pointcut = "com.example.spring.core.aop.spring.CommonPointcuts.beanSomeService()",
+        pointcut = "com.example.spring.core.aop.spring.CommonPointcuts.targetSomeService()",
         throwing = "throwable")
     public void afterThrowing(Throwable throwable) {
       log.info("afterThrowing :: {}", throwable.getMessage());
