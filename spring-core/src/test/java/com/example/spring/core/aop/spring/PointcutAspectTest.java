@@ -42,7 +42,7 @@ class PointcutAspectTest {
     }
 
     @AfterReturning(
-        pointcut = "com.example.spring.core.aop.spring.CommonPointcuts.logElapsedTimeAnnotation()",
+        pointcut = "com.example.spring.core.aop.spring.CommonPointcuts.logInvocationAnnotation()",
         returning = "retVal")
     public void afterReturning(Object retVal) {
       log.info("afterReturning :: {}", retVal);
@@ -69,13 +69,11 @@ class PointcutAspectTest {
     someService.hello();
     verify(commonPointcutAspect, times(1))
         .handle(any());
-    verify(commonPointcutAspect, times(1))
-        .afterReturning(any());
 
     clearMockInvocations();
     someService.processData("1");
-    verify(commonPointcutAspect, times(0))
-        .handle(any());
+    verify(commonPointcutAspect, times(1))
+        .afterReturning(any());
 
     clearMockInvocations();
     assertThatThrownBy(() -> someService.throwError())
