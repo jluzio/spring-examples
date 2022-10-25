@@ -1,6 +1,7 @@
 package com.example.spring.core.aop.spring.service;
 
-import com.example.spring.core.aop.spring.LogInvocation;
+import com.example.spring.core.aop.spring.annotation.LogElapsedTime;
+import com.example.spring.core.aop.spring.annotation.LogInvocation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -9,11 +10,12 @@ import org.springframework.stereotype.Component;
 public class SomeService implements GreetingService {
 
   @Override
-  @LogInvocation
+  @LogElapsedTime
   public void hello() {
     log.info("Hello AOP!");
   }
 
+  @LogInvocation
   public String processData(String id) {
     log.info("Process data with id: {}", id);
     return "processed-data-%s".formatted(id);
@@ -21,7 +23,7 @@ public class SomeService implements GreetingService {
 
   public String throwError() {
     log.info("Throw error");
-    throw new UnsupportedOperationException("Can't process");
+    throw new UnsupportedOperationException("Some dummy unsupported exception");
   }
 
 }

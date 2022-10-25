@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class LoggingAspect {
+public class LoggingAspectService {
 
-  public Object logInvocation(ProceedingJoinPoint joinPoint, Object aspectCaller) throws Throwable {
+  public Object logTimeElapsed(ProceedingJoinPoint joinPoint, Object aspectCaller) throws Throwable {
     var start = LocalDateTime.now();
     Throwable throwable = null;
     Object output = null;
@@ -28,6 +28,33 @@ public class LoggingAspect {
         aspectCaller.getClass().getSimpleName(),
         joinPoint.getSignature(),
         invocationDuration.toMillis());
+    log.info("{} :: {} :: input={} | output={} | throwable={}",
+        aspectCaller.getClass().getSimpleName(),
+        joinPoint.getSignature(),
+        joinPoint.getArgs(),
+        output,
+        ofNullable(throwable).map(Throwable::toString).orElse(null));
+
+    if (throwable != null) {
+      throw throwable;
+    }
+    return output;
+  }
+
+  public Object logInvocation(ProceedingJoinPoint joinPoint, Object aspectCaller) throws Throwable {
+    log.info("{} :: {} :: input={}",
+        aspectCaller.getClass().getSimpleName(),
+        joinPoint.getSignature(),
+        joinPoint.getArgs());
+
+    Throwable throwable = null;
+    Object output = null;
+    try {
+      output = joinPoint.proceed();
+    } catch (Throwable e) {
+      throwable = e;
+    }
+
     log.info("{} :: {} :: input={} | output={} | throwable={}",
         aspectCaller.getClass().getSimpleName(),
         joinPoint.getSignature(),
