@@ -38,7 +38,7 @@ class TargetAspectTest {
       return service.logTimeElapsed(joinPoint, this);
     }
 
-    @Around("target(com.example.spring.core.aop.spring.service.GreetingService) and execution(* hello(..))")
+    @Around("target(com.example.spring.core.aop.spring.service.GreetingService) && execution(* hello(..))")
     public Object handleHello(ProceedingJoinPoint joinPoint) throws Throwable {
       return service.logTimeElapsed(joinPoint, this);
     }
