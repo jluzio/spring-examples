@@ -8,7 +8,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import com.example.spring.core.aop.spring.AnnotationAspectTest.AroundAnnotationLogAspect;
-import com.example.spring.core.aop.spring.AnnotationAspectTest.SimpleService;
+import com.example.spring.core.aop.spring.annotation.Auditable;
+import com.example.spring.core.aop.spring.annotation.Auditable.LogMode;
 import com.example.spring.core.aop.spring.service.AnotherService;
 import com.example.spring.core.aop.spring.service.SomeService;
 import java.util.Objects;
@@ -18,15 +19,13 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.stereotype.Component;
 
 @SpringBootTest(classes = {
-    AopAutoConfiguration.class, ServicesConfig.class, SimpleService.class,
-    AroundAnnotationLogAspect.class})
+    AopAutoConfiguration.class, ServicesConfig.class, AroundAnnotationLogAspect.class})
 @Slf4j
 class AnnotationAspectTest {
 
@@ -52,20 +51,13 @@ class AnnotationAspectTest {
       return service.logTimeElapsed(joinPoint, this);
     }
 
-    @Around("within(com.example.spring.core.aop.spring..*) && @annotation(qualifier)")
-    public Object handleAnnotationAsParam(ProceedingJoinPoint joinPoint, Qualifier qualifier)
+    @Around("within(com.example.spring.core.aop.spring..*) && @annotation(auditable)")
+    public Object capturingAnnotationAnnotation(ProceedingJoinPoint joinPoint, Auditable auditable)
         throws Throwable {
-      log.info("qualifier: {}", qualifier.value());
-      return service.logTimeElapsed(joinPoint, this);
-    }
-  }
-
-  @Component
-  static class SimpleService {
-
-    @Qualifier("SimpleServiceQualifier")
-    public void run() {
-      log.info("run");
+      return switch (auditable.mode()) {
+        case INVOCATION -> service.logInvocation(joinPoint, this);
+        case ELAPSED_TIME -> service.logTimeElapsed(joinPoint, this);
+      };
     }
   }
 
@@ -73,8 +65,6 @@ class AnnotationAspectTest {
   private SomeService someService;
   @Autowired
   private AnotherService anotherService;
-  @Autowired
-  private SimpleService simpleService;
   @SpyBean
   private AroundAnnotationLogAspect aroundAnnotationLogAspect;
 
@@ -111,10 +101,10 @@ class AnnotationAspectTest {
     verify(aroundAnnotationLogAspect, times(1))
         .handleType(any());
 
-    simpleService.run();
+    someService.processDataAuditable("42");
     verify(aroundAnnotationLogAspect, times(1))
-        .handleAnnotationAsParam(any(),
-            argThat(qualifier -> Objects.equals(qualifier.value(), "SimpleServiceQualifier")));
+        .capturingAnnotationAnnotation(any(),
+            argThat(auditable -> Objects.equals(auditable.mode(), LogMode.INVOCATION)));
   }
 
   private void clearMockInvocations() {
