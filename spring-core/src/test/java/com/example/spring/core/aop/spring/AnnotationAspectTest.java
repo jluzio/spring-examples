@@ -7,7 +7,7 @@ import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.example.spring.core.aop.spring.AnnotationAspectTest.AroundAnnotationLogAspect;
+import com.example.spring.core.aop.spring.AnnotationAspectTest.Config.AroundAnnotationLogAspect;
 import com.example.spring.core.aop.spring.annotation.Auditable;
 import com.example.spring.core.aop.spring.annotation.Auditable.LogMode;
 import com.example.spring.core.aop.spring.service.AnotherService;
@@ -22,42 +22,49 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
-@SpringBootTest(classes = {
-    AopAutoConfiguration.class, ServicesConfig.class, AroundAnnotationLogAspect.class})
+@SpringBootTest
 @Slf4j
 class AnnotationAspectTest {
 
-  @Component
-  @Aspect
-  public static class AroundAnnotationLogAspect {
+  @Configuration
+  @Import({AopAutoConfiguration.class, ServicesConfig.class})
+  static class Config {
 
-    @Autowired
-    private LoggingAspectService service;
+    @Component
+    @Aspect
+    public static class AroundAnnotationLogAspect {
 
-    // Note: simplified format only seems to works if annotation is in the same package of aspect
-    // @Around("@annotation(LogElapsedTime)")
-    @Around("@annotation(com.example.spring.core.aop.spring.annotation.LogElapsedTime)")
-    public Object handleMethod(ProceedingJoinPoint joinPoint) throws Throwable {
-      return service.logTimeElapsed(joinPoint, this);
-    }
+      @Autowired
+      private LoggingAspectService service;
 
-    /**
-     * Note: method must be declared in the class, not in the parent class
-     */
-    @Around("@within(com.example.spring.core.aop.spring.annotation.LogElapsedTime)")
-    public Object handleType(ProceedingJoinPoint joinPoint) throws Throwable {
-      return service.logTimeElapsed(joinPoint, this);
-    }
+      // Note: simplified format only seems to works if annotation is in the same package of aspect
+      // @Around("@annotation(LogElapsedTime)")
+      @Around("@annotation(com.example.spring.core.aop.spring.annotation.LogElapsedTime)")
+      public Object handleMethod(ProceedingJoinPoint joinPoint) throws Throwable {
+        return service.logTimeElapsed(joinPoint, this);
+      }
 
-    @Around("within(com.example.spring.core.aop.spring..*) && @annotation(auditable)")
-    public Object capturingAnnotationAnnotation(ProceedingJoinPoint joinPoint, Auditable auditable)
-        throws Throwable {
-      return switch (auditable.mode()) {
-        case INVOCATION -> service.logInvocation(joinPoint, this);
-        case ELAPSED_TIME -> service.logTimeElapsed(joinPoint, this);
-      };
+      /**
+       * Note: method must be declared in the class, not in the parent class
+       */
+      @Around("@within(com.example.spring.core.aop.spring.annotation.LogElapsedTime)")
+      public Object handleType(ProceedingJoinPoint joinPoint) throws Throwable {
+        return service.logTimeElapsed(joinPoint, this);
+      }
+
+      @Around("within(com.example.spring.core.aop.spring..*) && @annotation(auditable)")
+      public Object capturingAnnotationAnnotation(ProceedingJoinPoint joinPoint,
+          Auditable auditable)
+          throws Throwable {
+        return switch (auditable.mode()) {
+          case INVOCATION -> service.logInvocation(joinPoint, this);
+          case ELAPSED_TIME -> service.logTimeElapsed(joinPoint, this);
+        };
+      }
     }
   }
 

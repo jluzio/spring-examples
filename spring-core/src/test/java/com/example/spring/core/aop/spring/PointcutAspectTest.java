@@ -7,7 +7,7 @@ import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.example.spring.core.aop.spring.PointcutAspectTest.CommonPointcutAspect;
+import com.example.spring.core.aop.spring.PointcutAspectTest.Config.CommonPointcutAspect;
 import com.example.spring.core.aop.spring.annotation.Auditable;
 import com.example.spring.core.aop.spring.annotation.Auditable.LogMode;
 import com.example.spring.core.aop.spring.service.AnotherService;
@@ -26,51 +26,58 @@ import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
-@SpringBootTest(classes = {
-    AopAutoConfiguration.class, JacksonAutoConfiguration.class, ServicesConfig.class,
-    CommonPointcuts.class, CommonPointcutAspect.class})
+@SpringBootTest
 @Slf4j
 // For AOP Use @AopAutoConfiguration or @org.springframework.context.annotation.EnableAspectJAutoProxy
 // @EnableAspectJAutoProxy
 class PointcutAspectTest {
 
-  @Component
-  @Aspect
-  public static class CommonPointcutAspect {
+  @Configuration
+  @Import({AopAutoConfiguration.class, JacksonAutoConfiguration.class, ServicesConfig.class,
+      CommonPointcuts.class})
+  static class Config {
 
-    @Autowired
-    private LoggingAspectService service;
-    @Autowired
-    ObjectMapper objectMapper;
+    @Component
+    @Aspect
+    public static class CommonPointcutAspect {
 
-    @Around("com.example.spring.core.aop.spring.CommonPointcuts.logElapsedTimeAnnotation()")
-    public Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
-      return service.logTimeElapsed(joinPoint, this);
-    }
+      @Autowired
+      private LoggingAspectService service;
+      @Autowired
+      ObjectMapper objectMapper;
 
-    @AfterReturning(
-        pointcut = "com.example.spring.core.aop.spring.CommonPointcuts.logInvocationAnnotation()",
-        returning = "retVal")
-    public void afterReturning(Object retVal) {
-      log.info("afterReturning :: {}", retVal);
-    }
+      @Around("CommonPointcuts.logElapsedTimeAnnotation()")
+      public Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
+        return service.logTimeElapsed(joinPoint, this);
+      }
 
-    @AfterThrowing(
-        pointcut = "com.example.spring.core.aop.spring.CommonPointcuts.targetSomeService()",
-        throwing = "throwable")
-    public void afterThrowing(Throwable throwable) {
-      log.info("afterThrowing :: {}", throwable.getMessage());
-    }
+      @AfterReturning(
+          pointcut = "CommonPointcuts.logInvocationAnnotation()",
+          returning = "retVal")
+      public void afterReturning(Object retVal) {
+        log.info("afterReturning :: {}", retVal);
+      }
 
-    @Around("com.example.spring.core.aop.spring.CommonPointcuts.appCode() && @annotation(auditable)")
-    public Object capturingAnnotationAnnotation(ProceedingJoinPoint joinPoint, Auditable auditable)
-        throws Throwable {
-      return switch (auditable.mode()) {
-        case INVOCATION -> service.logInvocation(joinPoint, this);
-        case ELAPSED_TIME -> service.logTimeElapsed(joinPoint, this);
-      };
+      @AfterThrowing(
+          pointcut = "CommonPointcuts.targetSomeService()",
+          throwing = "throwable")
+      public void afterThrowing(Throwable throwable) {
+        log.info("afterThrowing :: {}", throwable.getMessage());
+      }
+
+      @Around("CommonPointcuts.auditable(auditable)")
+      public Object capturingAnnotationAnnotation(ProceedingJoinPoint joinPoint,
+          Auditable auditable)
+          throws Throwable {
+        return switch (auditable.mode()) {
+          case INVOCATION -> service.logInvocation(joinPoint, this);
+          case ELAPSED_TIME -> service.logTimeElapsed(joinPoint, this);
+        };
+      }
     }
   }
 

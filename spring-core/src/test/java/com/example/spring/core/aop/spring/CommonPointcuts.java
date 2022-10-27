@@ -1,5 +1,6 @@
 package com.example.spring.core.aop.spring;
 
+import com.example.spring.core.aop.spring.annotation.Auditable;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 
@@ -20,6 +21,10 @@ public class CommonPointcuts {
 
   @Pointcut("appCode() && target(com.example.spring.core.aop.spring.service.SomeService)")
   public void targetSomeService() {
+  }
+
+  @Pointcut("appCode() && @annotation(auditable)")
+  public void auditable(Auditable auditable) {
   }
 
 }

@@ -6,7 +6,7 @@ import static org.mockito.Mockito.clearInvocations;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.example.spring.core.aop.spring.BeanAspectTest.AroundBeanLogAspect;
+import com.example.spring.core.aop.spring.BeanAspectTest.Config.AroundBeanLogAspect;
 import com.example.spring.core.aop.spring.service.AnotherService;
 import com.example.spring.core.aop.spring.service.SomeService;
 import lombok.extern.slf4j.Slf4j;
@@ -18,24 +18,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
 
-@SpringBootTest(classes = {
-    AopAutoConfiguration.class, ServicesConfig.class, AroundBeanLogAspect.class})
+@SpringBootTest
 @Slf4j
 class BeanAspectTest {
 
-  @Component
-  @Aspect
-  public static class AroundBeanLogAspect {
+  @Configuration
+  @Import({AopAutoConfiguration.class, ServicesConfig.class})
+  static class Config {
 
-    @Autowired
-    private LoggingAspectService service;
+    @Component
+    @Aspect
+    public static class AroundBeanLogAspect {
 
-    // using default component name
-    @Around("bean(com.example.spring.core.aop.spring.service.SomeService)")
-    public Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
-      return service.logTimeElapsed(joinPoint, this);
+      @Autowired
+      private LoggingAspectService service;
+
+      // using default component name
+      @Around("bean(com.example.spring.core.aop.spring.service.SomeService)")
+      public Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
+        return service.logTimeElapsed(joinPoint, this);
+      }
     }
   }
 
