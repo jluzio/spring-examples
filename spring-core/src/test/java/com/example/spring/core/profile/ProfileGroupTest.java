@@ -25,6 +25,8 @@ class ProfileGroupTest {
   void test() {
     assertThat(environment.getActiveProfiles())
         .containsExactlyInAnyOrder("test-group", "test1", "test2");
+    assertThat(environment.getProperty("test-group.value"))
+        .isNotEmpty();
     assertThat(environment.getProperty("test1.value"))
         .isNotEmpty();
     assertThat(environment.getProperty("test2.value"))
