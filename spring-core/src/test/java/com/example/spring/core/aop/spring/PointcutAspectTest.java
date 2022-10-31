@@ -52,7 +52,7 @@ class PointcutAspectTest {
 
       @Around("CommonPointcuts.logElapsedTimeAnnotation()")
       public Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
-        return service.logTimeElapsed(joinPoint, this);
+        return service.logProfiling(joinPoint, this);
       }
 
       @AfterReturning(
@@ -75,7 +75,7 @@ class PointcutAspectTest {
           throws Throwable {
         return switch (auditable.mode()) {
           case INVOCATION -> service.logInvocation(joinPoint, this);
-          case ELAPSED_TIME -> service.logTimeElapsed(joinPoint, this);
+          case ELAPSED_TIME -> service.logProfiling(joinPoint, this);
         };
       }
     }

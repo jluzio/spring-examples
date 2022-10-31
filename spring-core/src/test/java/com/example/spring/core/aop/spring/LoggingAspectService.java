@@ -2,18 +2,20 @@ package com.example.spring.core.aop.spring;
 
 import static java.util.Optional.ofNullable;
 
+import com.google.common.base.Stopwatch;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 
 @Component
 @Slf4j
 public class LoggingAspectService {
 
-  public Object logTimeElapsed(ProceedingJoinPoint joinPoint, Object aspectCaller) throws Throwable {
-    var start = LocalDateTime.now();
+  public Object logProfiling(ProceedingJoinPoint joinPoint, Object aspectCaller) throws Throwable {
+    var stopwatch = Stopwatch.createStarted();
     Throwable throwable = null;
     Object output = null;
 
@@ -23,11 +25,11 @@ public class LoggingAspectService {
       throwable = e;
     }
 
-    var invocationDuration = Duration.between(start, LocalDateTime.now());
-    log.info("{} :: {} executed in {}ms",
+    stopwatch.stop();
+    log.info("{} :: {} executed in {}",
         aspectCaller.getClass().getSimpleName(),
         joinPoint.getSignature(),
-        invocationDuration.toMillis());
+        stopwatch);
     log.info("{} :: {} :: input={} | output={} | throwable={}",
         aspectCaller.getClass().getSimpleName(),
         joinPoint.getSignature(),

@@ -39,12 +39,12 @@ class ExecutionAspectTest {
 
       @Around("execution(* hello(..))")
       public Object handleMethod(ProceedingJoinPoint joinPoint) throws Throwable {
-        return service.logTimeElapsed(joinPoint, this);
+        return service.logProfiling(joinPoint, this);
       }
 
       @Around("execution(* com.example.spring.core.aop.spring.service..*.processData(..))")
       public Object handleMethodInPackage(ProceedingJoinPoint joinPoint) throws Throwable {
-        return service.logTimeElapsed(joinPoint, this);
+        return service.logProfiling(joinPoint, this);
       }
     }
   }

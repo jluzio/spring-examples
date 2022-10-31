@@ -49,7 +49,7 @@ class ShorthandPointcutAspectTest {
       // Omitted package, since it's visible in the same package.
       @Around("ShorthandCommonPointcuts.logStuffAnnotation()")
       public Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
-        return service.logTimeElapsed(joinPoint, this);
+        return service.logProfiling(joinPoint, this);
       }
     }
   }

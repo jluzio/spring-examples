@@ -40,7 +40,7 @@ class WithinAspectTest {
 
       @Around("within(com.example.spring.core.aop.spring.service..*)")
       public Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
-        return service.logTimeElapsed(joinPoint, this);
+        return service.logProfiling(joinPoint, this);
       }
     }
   }

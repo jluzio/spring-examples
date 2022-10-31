@@ -45,7 +45,7 @@ class AnnotationAspectTest {
       // @Around("@annotation(LogElapsedTime)")
       @Around("@annotation(com.example.spring.core.aop.spring.annotation.LogElapsedTime)")
       public Object handleMethod(ProceedingJoinPoint joinPoint) throws Throwable {
-        return service.logTimeElapsed(joinPoint, this);
+        return service.logProfiling(joinPoint, this);
       }
 
       /**
@@ -53,7 +53,7 @@ class AnnotationAspectTest {
        */
       @Around("@within(com.example.spring.core.aop.spring.annotation.LogElapsedTime)")
       public Object handleType(ProceedingJoinPoint joinPoint) throws Throwable {
-        return service.logTimeElapsed(joinPoint, this);
+        return service.logProfiling(joinPoint, this);
       }
 
       @Around("within(com.example.spring.core.aop.spring..*) && @annotation(auditable)")
@@ -62,7 +62,7 @@ class AnnotationAspectTest {
           throws Throwable {
         return switch (auditable.mode()) {
           case INVOCATION -> service.logInvocation(joinPoint, this);
-          case ELAPSED_TIME -> service.logTimeElapsed(joinPoint, this);
+          case ELAPSED_TIME -> service.logProfiling(joinPoint, this);
         };
       }
     }

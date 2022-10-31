@@ -1,3 +1,8 @@
 app:
   merged-profile-bean:
     value: value2
+
+spring:
+  profiles:
+    group:
+      test-group: test1, test2

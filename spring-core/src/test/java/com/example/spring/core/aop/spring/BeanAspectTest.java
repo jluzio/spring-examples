@@ -40,7 +40,7 @@ class BeanAspectTest {
       // using default component name
       @Around("bean(com.example.spring.core.aop.spring.service.SomeService)")
       public Object handle(ProceedingJoinPoint joinPoint) throws Throwable {
-        return service.logTimeElapsed(joinPoint, this);
+        return service.logProfiling(joinPoint, this);
       }
     }
   }
