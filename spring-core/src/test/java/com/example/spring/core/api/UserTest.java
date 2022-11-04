@@ -1,4 +1,4 @@
-package com.example.spring.core.webtest;
+package com.example.spring.core.api;
 
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
@@ -122,6 +122,5 @@ class UserTest {
         .withId(user.getId())
         .withUsername(user.getUsername());
   }
-
 
 }
