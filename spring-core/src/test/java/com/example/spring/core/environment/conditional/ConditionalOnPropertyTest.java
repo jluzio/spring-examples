@@ -3,6 +3,7 @@ package com.example.spring.core.environment.conditional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static uk.org.webcompere.systemstubs.SystemStubs.withEnvironmentVariables;
 
 import com.example.spring.core.environment.conditional.ConditionalOnPropertyTest.Config.ConfigProps;
 import lombok.Data;
@@ -26,8 +27,8 @@ class ConditionalOnPropertyTest {
 
     @Bean
     @ConditionalOnProperty(value = "config.stringBean1", havingValue = "true")
-    // Same as
-    // @ConditionalOnProperty(prefix = "config", value = "stringBean1", havingValue = "true")
+      // Same as
+      // @ConditionalOnProperty(prefix = "config", value = "stringBean1", havingValue = "true")
     String stringBean1() {
       return "stringBean1";
     }
@@ -80,42 +81,42 @@ class ConditionalOnPropertyTest {
 
   @Test
   void test_defined_env_screaming_case() throws Exception {
-    EnvironmentVariables envVars = new EnvironmentVariables()
+    withEnvironmentVariables()
         .set("CONFIG_STRINGBEAN1", "true")
-        .set("CONFIG_STRINGBEAN2", "true");
-    envVars.execute(() -> {
-      runner()
-          .run(context -> {
-            assertThatNoException()
-                .isThrownBy(() -> context.getBean("stringBean1"));
-            assertThatNoException()
-                .isThrownBy(() -> context.getBean("stringBean2"));
-            var configProps = context.getBean(ConfigProps.class);
-            assertThat(configProps.getStringBean1())
-                .isEqualTo("true");
-          });
-    });
+        .set("CONFIG_STRINGBEAN2", "true")
+        .execute(() -> {
+          runner()
+              .run(context -> {
+                assertThatNoException()
+                    .isThrownBy(() -> context.getBean("stringBean1"));
+                assertThatNoException()
+                    .isThrownBy(() -> context.getBean("stringBean2"));
+                var configProps = context.getBean(ConfigProps.class);
+                assertThat(configProps.getStringBean1())
+                    .isEqualTo("true");
+              });
+        });
   }
 
 
   @Test
   void test_defined_env_screaming_case_usual_naming_for_props() throws Exception {
-    EnvironmentVariables envVars = new EnvironmentVariables()
+    withEnvironmentVariables()
         .set("CONFIG_STRING_BEAN1", "true")
-        .set("CONFIG_STRING_BEAN2", "true");
-    envVars.execute(() -> {
-      runner()
-          .run(context -> {
-            // camelCase vars aren't handled the same way ConfigurationProperties are
-            assertThatThrownBy(() -> context.getBean("stringBean1"))
-                .isInstanceOf(NoSuchBeanDefinitionException.class);
-            assertThatNoException()
-                .isThrownBy(() -> context.getBean("stringBean2"));
-            var configProps = context.getBean(ConfigProps.class);
-            assertThat(configProps.getStringBean1())
-                .isEqualTo("true");
-          });
-    });
+        .set("CONFIG_STRING_BEAN2", "true")
+        .execute(() -> {
+          runner()
+              .run(context -> {
+                // camelCase vars aren't handled the same way ConfigurationProperties are
+                assertThatThrownBy(() -> context.getBean("stringBean1"))
+                    .isInstanceOf(NoSuchBeanDefinitionException.class);
+                assertThatNoException()
+                    .isThrownBy(() -> context.getBean("stringBean2"));
+                var configProps = context.getBean(ConfigProps.class);
+                assertThat(configProps.getStringBean1())
+                    .isEqualTo("true");
+              });
+        });
   }
 
   private ApplicationContextRunner runner() {
