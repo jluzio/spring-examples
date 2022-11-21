@@ -32,6 +32,12 @@ class ConditionalOnPropertyTest {
       return "stringBean1";
     }
 
+    @Bean
+    @ConditionalOnProperty(value = "config.string-bean2", havingValue = "true")
+    String stringBean2() {
+      return "stringBean2";
+    }
+
     @ConfigurationProperties(prefix = "config")
     @Data
     static class ConfigProps {
@@ -75,12 +81,15 @@ class ConditionalOnPropertyTest {
   @Test
   void test_defined_env_screaming_case() throws Exception {
     EnvironmentVariables envVars = new EnvironmentVariables()
-        .set("CONFIG_STRINGBEAN1", "true");
+        .set("CONFIG_STRINGBEAN1", "true")
+        .set("CONFIG_STRINGBEAN2", "true");
     envVars.execute(() -> {
       runner()
           .run(context -> {
             assertThatNoException()
                 .isThrownBy(() -> context.getBean("stringBean1"));
+            assertThatNoException()
+                .isThrownBy(() -> context.getBean("stringBean2"));
             var configProps = context.getBean(ConfigProps.class);
             assertThat(configProps.getStringBean1())
                 .isEqualTo("true");
@@ -92,13 +101,16 @@ class ConditionalOnPropertyTest {
   @Test
   void test_defined_env_screaming_case_usual_naming_for_props() throws Exception {
     EnvironmentVariables envVars = new EnvironmentVariables()
-        .set("CONFIG_STRING_BEAN1", "true");
+        .set("CONFIG_STRING_BEAN1", "true")
+        .set("CONFIG_STRING_BEAN2", "true");
     envVars.execute(() -> {
       runner()
           .run(context -> {
-            // it isn't handled the same way ConfigurationProperties are
+            // camelCase vars aren't handled the same way ConfigurationProperties are
             assertThatThrownBy(() -> context.getBean("stringBean1"))
                 .isInstanceOf(NoSuchBeanDefinitionException.class);
+            assertThatNoException()
+                .isThrownBy(() -> context.getBean("stringBean2"));
             var configProps = context.getBean(ConfigProps.class);
             assertThat(configProps.getStringBean1())
                 .isEqualTo("true");
@@ -107,9 +119,8 @@ class ConditionalOnPropertyTest {
   }
 
   private ApplicationContextRunner runner() {
-    var runner = new ApplicationContextRunner()
+    return new ApplicationContextRunner()
         .withUserConfiguration(Config.class);
-    return runner;
   }
 
 }
