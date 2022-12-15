@@ -23,9 +23,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.UrlResource;
 
-@SpringBootTest
+@SpringBootTest(classes = {})
 @Slf4j
-public class ResourceTest implements ResourceLoaderAware {
+class ResourceTest implements ResourceLoaderAware {
 
   @Autowired
   ApplicationContext context;

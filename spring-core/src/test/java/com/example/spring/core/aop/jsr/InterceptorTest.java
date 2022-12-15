@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @SpringBootTest
 @Slf4j
-public class InterceptorTest {
+class InterceptorTest {
 
   @Autowired
   SomeBean someBean;
@@ -29,17 +30,17 @@ public class InterceptorTest {
   @EnableAspectJAutoProxy
   static class Config {
 
-//    @Bean
-//    LogExecutionTimeInterceptor interceptor() {
-//      return new LogExecutionTimeInterceptor();
-//    }
+    @Bean
+    LogExecutionTimeInterceptor interceptor() {
+      return new LogExecutionTimeInterceptor();
+    }
 
     @Component
     static class SomeBean {
 
       @LogExecutionTime
       public void someFunc() throws InterruptedException {
-        Thread.sleep(1000l);
+        Thread.sleep(100l);
       }
     }
   }

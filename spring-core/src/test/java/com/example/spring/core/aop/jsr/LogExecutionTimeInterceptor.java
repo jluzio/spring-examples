@@ -1,8 +1,8 @@
 package com.example.spring.core.aop.jsr;
 
-import javax.interceptor.AroundInvoke;
-import javax.interceptor.Interceptor;
-import javax.interceptor.InvocationContext;
+import jakarta.interceptor.AroundInvoke;
+import jakarta.interceptor.Interceptor;
+import jakarta.interceptor.InvocationContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

@@ -13,7 +13,7 @@ class SpringCoreApplicationTest {
   private String appVersion;
 
   @Test
-  void test() {
+  void contextLoads() {
     log.info("appVersion: {}", appVersion);
   }
 
