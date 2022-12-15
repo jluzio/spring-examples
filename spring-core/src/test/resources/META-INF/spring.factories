@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.example.spring.core.config.auto_configuration.SampleAutoConfiguration

@@ -3,6 +3,8 @@ package com.example.spring.core.api.webflux;
 import com.example.spring.core.api.model.view.Detailed;
 import com.example.spring.core.api.model.view.Public;
 import com.example.spring.core.api.service.UserService;
+import com.example.types.User;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.json.Jackson2CodecSupport;
@@ -22,18 +24,17 @@ public class UserHandler {
     return ServerResponse.ok()
         .contentType(MediaType.APPLICATION_JSON)
         .hint(Jackson2CodecSupport.JSON_VIEW_HINT, Public.class)
-        .bodyValue(service.getUsers().collectList().block());
+        .body(service.getUsers(), User.class);
   }
 
   public Mono<ServerResponse> user(ServerRequest request) {
     String id = request.pathVariable("id");
     return service.findUser(id)
-        .map(user -> ServerResponse.ok()
+        .flatMap(user -> ServerResponse.ok()
             .contentType(MediaType.APPLICATION_JSON)
             .hint(Jackson2CodecSupport.JSON_VIEW_HINT, Detailed.class)
             .bodyValue(user))
-        .defaultIfEmpty(ServerResponse.notFound().build())
-        .block();
+        .switchIfEmpty(ServerResponse.notFound().build());
   }
 
 }

@@ -1,8 +1,8 @@
 package com.example.spring.core.validator.jsr380;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Data;
 

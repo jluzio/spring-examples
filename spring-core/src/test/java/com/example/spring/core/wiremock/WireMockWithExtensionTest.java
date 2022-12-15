@@ -2,9 +2,10 @@ package com.example.spring.core.wiremock;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import de.mkammerer.wiremock.WireMockExtension;
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
@@ -16,8 +17,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 class WireMockWithExtensionTest {
 
   @RegisterExtension
-  WireMockExtension wireMock = new WireMockExtension(8888);
-
+  static WireMockExtension wireMock = WireMockExtension.newInstance()
+      .options(wireMockConfig().port(8888))
+      .build();
   @Test
   void test() {
     int wiremockServerPort = wireMock.getOptions().portNumber();
@@ -26,8 +28,7 @@ class WireMockWithExtensionTest {
     wireMock.stubFor(get("/hello").willReturn(ok(message)));
 
     WebClient webClient = WebClient.builder()
-//        .baseUrl("http://localhost:%s/".formatted(wiremockServerPort))
-        .baseUrl(wireMock.getBaseUri().resolve("/").toString())
+        .baseUrl(wireMock.getRuntimeInfo().getHttpBaseUrl())
         .build();
 
     String response = webClient.get().uri("/hello")

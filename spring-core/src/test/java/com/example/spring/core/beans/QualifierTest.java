@@ -3,8 +3,8 @@ package com.example.spring.core.beans;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.spring.core.qualifier.FooQualifier;
+import jakarta.annotation.Resource;
 import java.util.List;
-import javax.annotation.Resource;
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;

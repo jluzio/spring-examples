@@ -2,7 +2,7 @@ package com.example.spring.core.beans;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 @SpringBootTest
 @Slf4j
-public class SingletonScenarioTest {
+class SingletonScenarioTest {
 
   @Resource
   ClientService clientService1;

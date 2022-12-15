@@ -2,8 +2,8 @@ package com.example.spring.core.validator.jsr380;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import javax.validation.ConstraintViolationException;
-import javax.validation.Valid;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
