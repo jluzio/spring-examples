@@ -7,6 +7,7 @@ import org.springframework.data.domain.Sort;
 
 @Data
 public class PageRequestData {
+
   private int page;
   private int size;
   private Sort sort;

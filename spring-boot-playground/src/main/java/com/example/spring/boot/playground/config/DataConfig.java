@@ -8,11 +8,11 @@ import org.springframework.data.repository.init.Jackson2RepositoryPopulatorFacto
 
 @Configuration
 public class DataConfig {
-  
+
   @Bean
   public Jackson2RepositoryPopulatorFactoryBean getDataPopulator() {
     Jackson2RepositoryPopulatorFactoryBean factoryBean = new Jackson2RepositoryPopulatorFactoryBean();
-    factoryBean.setResources(new Resource[] { new ClassPathResource("data.json") });
+    factoryBean.setResources(new Resource[]{new ClassPathResource("data.json")});
     return factoryBean;
   }
 

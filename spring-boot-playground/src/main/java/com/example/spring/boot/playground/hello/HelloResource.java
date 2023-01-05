@@ -8,16 +8,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloResource {
 
-	public record Greeting(String name) {}
-	
-	@GetMapping("/hello")
-	public String hello() {
-		return "Hello World!";
-	}
+  public record Greeting(String name) {
 
-	@PostMapping("/hello")
-	public String postHello(@RequestBody Greeting greeting) {
-		return "Hello %s!".formatted(greeting.name());
-	}
+  }
+
+  @GetMapping("/hello")
+  public String hello() {
+    return "Hello World!";
+  }
+
+  @PostMapping("/hello")
+  public String postHello(@RequestBody Greeting greeting) {
+    return "Hello %s!".formatted(greeting.name());
+  }
 
 }

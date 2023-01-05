@@ -1,12 +1,12 @@
 package com.example.spring.boot.playground.repository;
 
+import com.example.spring.boot.playground.user.User;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 import java.util.stream.Stream;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,14 +18,15 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.concurrent.ListenableFuture;
 
-import com.example.spring.boot.playground.user.User;
-
 @Repository
-public interface UserTestRepository extends CrudRepository<User, Integer>, PagingAndSortingRepository<User, Integer> {
+public interface UserTestRepository extends CrudRepository<User, Integer>,
+    PagingAndSortingRepository<User, Integer> {
 
   List<User> findByName(String name);
 
-  /** Using named query in User class **/
+  /**
+   * Using named query in User class
+   **/
   Optional<User> namedQueryFindByEmail(String email);
 
   Optional<User> findByNameIgnoreCaseAndEmailIgnoreCase(String name, String email);

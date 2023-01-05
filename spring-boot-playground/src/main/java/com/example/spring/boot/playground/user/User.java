@@ -1,21 +1,27 @@
 package com.example.spring.boot.playground.user;
 
-import javax.persistence.*;
-import javax.xml.bind.annotation.XmlRootElement;
-
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 
 @Data
 @XmlRootElement
 @Entity
 @NamedQueries({
-  @NamedQuery(name = "User.namedQueryFindByEmail", query = "select u from User u where u.email = ?1")
+    @NamedQuery(name = "User.namedQueryFindByEmail", query = "select u from User u where u.email = ?1")
 })
 public class User {
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
-	private String name;
+
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Integer id;
+  private String name;
   private String username;
   private String email;
   @Embedded
