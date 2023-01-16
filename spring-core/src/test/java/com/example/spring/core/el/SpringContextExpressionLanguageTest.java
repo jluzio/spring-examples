@@ -63,8 +63,7 @@ class SpringContextExpressionLanguageTest {
 
   @Test
   void test_bean_expression_resolver() {
-    BeanExpressionResolver expressionResolver = applicationContext.getBeanFactory()
-        .getBeanExpressionResolver();
+    BeanExpressionResolver expressionResolver = beanFactory.getBeanExpressionResolver();
     assertThat(expressionResolver).isNotNull();
 
     BeanExpressionContext expressionContext = new BeanExpressionContext(beanFactory, null);
