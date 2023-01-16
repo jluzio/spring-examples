@@ -47,6 +47,6 @@ class ValidatorTest {
     assertThat(invalidConstraintViolations).isNotEmpty();
     assertThat(invalidConstraintViolations)
         .map(ConstraintViolation::getMessage)
-        .contains("Must be able to vote!");
+        .contains("must be able to vote!");
   }
 }
