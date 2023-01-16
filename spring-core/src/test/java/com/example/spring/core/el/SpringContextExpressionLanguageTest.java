@@ -13,9 +13,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.expression.BeanExpressionContextAccessor;
 import org.springframework.context.expression.BeanFactoryResolver;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.common.TemplateParserContext;
 import org.springframework.expression.spel.SpelCompilerMode;
 import org.springframework.expression.spel.SpelParserConfiguration;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
@@ -40,7 +42,7 @@ class SpringContextExpressionLanguageTest {
   ConfigurableBeanFactory beanFactory;
 
   @Test
-  void test_default() {
+  void test_bean_reference() {
     ExpressionParser exprParser = getExpressionParser();
 
     StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
@@ -53,12 +55,24 @@ class SpringContextExpressionLanguageTest {
   }
 
   @Test
-  void test_embedded_value_resolver() {
-    EmbeddedValueResolver valueResolver = new EmbeddedValueResolver(beanFactory);
+  void test_bean_reference_bean_expression() {
+    ExpressionParser exprParser = getExpressionParser();
 
-    assertThat(valueResolver.resolveStringValue("#{foo}"))
+    StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
+    evaluationContext.setBeanResolver(new BeanFactoryResolver(beanFactory));
+    evaluationContext.addPropertyAccessor(new BeanExpressionContextAccessor());
+
+    BeanExpressionContext expressionContext = new BeanExpressionContext(beanFactory, null);
+
+    Expression expr1 = exprParser.parseExpression("foo");
+    assertThat(expr1.getValue(evaluationContext, expressionContext))
         .isInstanceOf(String.class)
         .isEqualTo("bar");
+
+    Expression expr2 = exprParser.parseExpression("#{foo.length}", new TemplateParserContext());
+    assertThat(expr2.getValue(evaluationContext, expressionContext))
+        .isInstanceOf(Integer.class)
+        .isEqualTo(3);
   }
 
   @Test
@@ -69,6 +83,15 @@ class SpringContextExpressionLanguageTest {
     BeanExpressionContext expressionContext = new BeanExpressionContext(beanFactory, null);
     Object evaluate = expressionResolver.evaluate("#{foo}", expressionContext);
     assertThat(evaluate)
+        .isInstanceOf(String.class)
+        .isEqualTo("bar");
+  }
+
+  @Test
+  void test_embedded_value_resolver() {
+    EmbeddedValueResolver valueResolver = new EmbeddedValueResolver(beanFactory);
+
+    assertThat(valueResolver.resolveStringValue("#{foo}"))
         .isInstanceOf(String.class)
         .isEqualTo("bar");
   }
