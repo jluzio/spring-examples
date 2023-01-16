@@ -48,8 +48,8 @@ class SpringContextExpressionLanguageTest {
     StandardEvaluationContext evaluationContext = new StandardEvaluationContext();
     evaluationContext.setBeanResolver(new BeanFactoryResolver(beanFactory));
 
-    Expression expr = exprParser.parseExpression("@foo");
-    assertThat(expr.getValue(evaluationContext, String.class))
+    Expression expr1 = exprParser.parseExpression("@foo");
+    assertThat(expr1.getValue(evaluationContext, String.class))
         .isInstanceOf(String.class)
         .isEqualTo("bar");
   }

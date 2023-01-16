@@ -48,10 +48,17 @@ class ExpressionLanguageTest {
         .isInstanceOf(String.class)
         .isEqualTo("bar");
 
-    Expression expr3 = exprParser.parseExpression("#{foo}", new TemplateParserContext());
+    var parserContext = new TemplateParserContext();
+    Expression expr3 = exprParser.parseExpression("#{foo}", parserContext);
     assertThat(expr3.getValue(evaluationContext, String.class))
         .isInstanceOf(String.class)
         .isEqualTo("bar");
+
+    Expression expr4 = exprParser.parseExpression("#{T(com.google.common.base.Strings).padStart(foo, 5, '.')}",
+        parserContext);
+    assertThat(expr4.getValue(evaluationContext, String.class))
+        .isInstanceOf(String.class)
+        .isEqualTo("..bar");
   }
 
   private ExpressionParser getExpressionParser() {
