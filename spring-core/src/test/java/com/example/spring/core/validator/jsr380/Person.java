@@ -13,7 +13,7 @@ public class Person {
   private String id;
   @NotEmpty
   private String name;
-  @Min(1)
+  @Min(value = 18, message = "{validation.constraints.MinCustom.message}")
   @Max(110)
   private Integer age;
 
