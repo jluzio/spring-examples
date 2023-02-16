@@ -11,7 +11,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.0.1</version>
+    <version>3.0.2</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
@@ -20,42 +20,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <maven.compiler.parameters>true</maven.compiler.parameters>
-    <lombok.version>1.18.24</lombok.version>
+    <lombok.version>1.18.26</lombok.version>
   </properties>
-
-  <profiles>
-    <profile>
-      <!-- TODO: replace temp profile when WireMock fixes compatibility with SpringBoot 3.x (see other comment) -->
-      <id>wiremock-temp-springboot3</id>
-      <activation>
-        <activeByDefault>true</activeByDefault>
-      </activation>
-      <repositories>
-        <repository>
-          <id>spring-milestones</id>
-          <name>Spring Milestones</name>
-          <url>https://repo.spring.io/milestone</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-        </repository>
-      </repositories>
-      <dependencies>
-        <dependency>
-          <groupId>com.github.tomakehurst</groupId>
-          <artifactId>wiremock-jre8-standalone</artifactId>
-          <version>2.35.0</version>
-          <scope>test</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.springframework.cloud</groupId>
-          <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
-          <version>4.0.0-M5</version>
-          <scope>test</scope>
-        </dependency>
-      </dependencies>
-    </profile>
-  </profiles>
 
   <dependencies>
     <dependency>
@@ -96,7 +62,7 @@
     <dependency>
       <groupId>com.github.ben-manes.caffeine</groupId>
       <artifactId>caffeine</artifactId>
-      <version>3.1.2</version>
+      <version>3.1.3</version>
     </dependency>
 
     <dependency>
@@ -110,7 +76,6 @@
       <artifactId>jakarta.interceptor-api</artifactId>
       <version>2.1.0</version>
     </dependency>
-
 
     <!-- 		<dependency> -->
     <!-- 			<groupId>javax.inject</groupId> -->
@@ -147,33 +112,37 @@
       <optional>true</optional>
     </dependency>
 
-    <!-- TODO: replace temp profile when WireMock fixes compatibility with SpringBoot 3.x (see other comment) -->
-<!--
+    <!--
+      # WARNING #
+      wiremock-jre8:2.35.0 is incompatible with SpringBoot 3.x.
+      Using wiremock-jre8-standalone as a workaround until issue is fixed.
+    -->
+    <!-- TODO: replace wiremock-jre8-standalone with wiremock-jre8 when WireMock fixes compatibility with SpringBoot 3.x -->
     <dependency>
       <groupId>com.github.tomakehurst</groupId>
-      <artifactId>wiremock-jre8</artifactId>
+<!--      <artifactId>wiremock-jre8</artifactId>-->
+      <artifactId>wiremock-jre8-standalone</artifactId>
       <version>2.35.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-contract-stub-runner</artifactId>
-      <version>3.1.5</version>
+      <version>4.0.1</version>
       <scope>test</scope>
     </dependency>
--->
     <!-- System Stubs: for testing with only lambda pattern -->
     <dependency>
       <groupId>uk.org.webcompere</groupId>
       <artifactId>system-stubs-core</artifactId>
-      <version>2.0.1</version>
+      <version>2.0.2</version>
       <scope>test</scope>
     </dependency>
     <!-- System Stubs: for JUnit 5 -->
     <dependency>
       <groupId>uk.org.webcompere</groupId>
       <artifactId>system-stubs-jupiter</artifactId>
-      <version>2.0.1</version>
+      <version>2.0.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -183,7 +152,7 @@
       <plugin>
         <groupId>org.jsonschema2pojo</groupId>
         <artifactId>jsonschema2pojo-maven-plugin</artifactId>
-        <version>1.1.2</version>
+        <version>1.1.3</version>
         <configuration>
           <sourceDirectory>${basedir}/src/main/resources/schema</sourceDirectory>
           <targetPackage>com.example.types</targetPackage>
@@ -209,7 +178,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.0.0-M5</version>
+        <version>3.0.0-M9</version>
         <configuration>
           <argLine>
             --add-opens java.base/java.lang=ALL-UNNAMED
