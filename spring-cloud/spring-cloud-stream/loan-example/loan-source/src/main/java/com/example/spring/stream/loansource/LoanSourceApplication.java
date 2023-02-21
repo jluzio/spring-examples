@@ -21,6 +21,8 @@ public class LoanSourceApplication {
       10L, 100L, 1000L,
       10000L, 100000L, 1000000L,
       10000000L, 100000000L, 100000000L);
+  private final Random random = new Random();
+  ;
 
   public static void main(String[] args) {
     SpringApplication.run(LoanSourceApplication.class, args);
@@ -30,11 +32,12 @@ public class LoanSourceApplication {
   @Bean
   public Supplier<Loan> supplyLoan() {
     return () -> {
-      Loan loan = new Loan(UUID.randomUUID().toString(),
-          names.get(new Random().nextInt(names.size())),
-          amounts.get(new Random().nextInt(amounts.size())));
-      log.info("{} {} for ${} for {}", loan.getStatus(), loan.getUuid(), loan.getAmount(),
-          loan.getName());
+      Loan loan = new Loan(
+          UUID.randomUUID().toString(),
+          names.get(random.nextInt(names.size())),
+          amounts.get(random.nextInt(amounts.size())));
+      log.info("{} {} for ${} for {}",
+          loan.getStatus(), loan.getUuid(), loan.getAmount(), loan.getName());
       return loan;
     };
   }

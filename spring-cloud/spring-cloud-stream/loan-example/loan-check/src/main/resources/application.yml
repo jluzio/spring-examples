@@ -1,1 +1,18 @@
 spring.profiles.active: @spring.profile.activated@
+
+spring:
+  cloud:
+    function:
+      definition: loanChecker
+    stream:
+    #  function:
+    #    definition: loanConsumer;approved;declined
+      poller:
+        # default is 1000 (1s)
+        fixedDelay: 5000
+      #        timeUnit: MILLISECONDS
+      #        initialDelay: 0
+      #        cron: ~
+      bindings:
+        loanChecker-in-0:
+          destination: loanPending

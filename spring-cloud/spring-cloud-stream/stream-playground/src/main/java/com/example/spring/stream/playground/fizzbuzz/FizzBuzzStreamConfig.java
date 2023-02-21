@@ -37,7 +37,7 @@ public class FizzBuzzStreamConfig {
 
   @Bean
   public Consumer<String> fizzBuzzConsumer(){
-    return (value) -> log.info("Consumer Received : " + value);
+    return value -> log.info("Consumer Received : " + value);
   }
 
   private String evaluateFizzBuzz(Integer value) {

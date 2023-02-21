@@ -1,6 +1,6 @@
 ## Environment
 
-These event driven applications are built on: [Spring Boot][boot], [Spring Cloud Stream][stream].
+These event driven applications are built on: [Spring Boot][boot], [Spring Cloud Stream][stream-docs] (data documentation [here][stream-docs-data]).
 
 This server-side runs on [Docker][docker] and includes: [Kafka][kafka], [Zookeeper][zookeeper], [RabbitMQ][rabbit], and [KafDrop][kafdrop] (image by by Obsidian Dynamics).
 
@@ -12,7 +12,8 @@ This server-side runs on [Docker][docker] and includes: [Kafka][kafka], [Zookeep
 - [Guide 01][guide-01] 
 - [Guide 02][guide-02] 
 
-[stream-docs]: https://docs.spring.io/spring-cloud-stream/docs/current/reference/htmlsingle
+[stream-docs]: https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/
+[stream-docs-data]: https://docs.spring.io/spring-cloud-stream/docs/current/reference/html/spring-cloud-stream.html#_programming_model
 [boot]: https://spring.io/projects/spring-boot
 [stream]: https://spring.io/projects/spring-cloud-stream
 [maven]: https://maven.apache.org
