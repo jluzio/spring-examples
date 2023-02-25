@@ -1,0 +1,24 @@
+todo-service:
+  todos:
+    - id: 1
+      name: Learn
+      description: Learn all the stuff!
+      completedAt: ~
+
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      registerHealthIndicator: true
+      slidingWindowSize: 50
+    slowApi:
+      registerHealthIndicator: true
+      slidingWindowSize: 50
+
+resilience4j.timelimiter:
+  configs:
+    default:
+      timeoutDuration: 2s
+      cancelRunningFuture: true
+    slowApi:
+      timeoutDuration: 5s
+      cancelRunningFuture: true
