@@ -1,6 +1,6 @@
 package com.example.spring.data.repository;
 
-import com.example.spring.data.model.Role;
+import com.example.spring.data.jpa.model.Role;
 import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

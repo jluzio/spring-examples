@@ -2,15 +2,15 @@ package com.example.spring.data.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.spring.data.config.DataPopulatorConfig;
-import com.example.spring.data.model.User;
+import com.example.spring.data.jpa.config.DataPopulatorConfig;
+import com.example.spring.data.jpa.model.Role;
+import com.example.spring.data.jpa.model.User;
 import com.google.common.collect.Lists;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Subquery;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
-import com.example.spring.data.model.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -26,8 +26,6 @@ class UserRepositoryTest {
 
   @Autowired
   UserRepository userRepository;
-  @Autowired
-  RoleRepository roleRepository;
 
   @Test
   void findAll() {

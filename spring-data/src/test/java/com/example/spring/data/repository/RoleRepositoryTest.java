@@ -4,8 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import com.example.spring.data.config.DataPopulatorConfig;
-import com.example.spring.data.model.Role;
+import com.example.spring.data.jpa.config.DataPopulatorConfig;
+import com.example.spring.data.jpa.model.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
