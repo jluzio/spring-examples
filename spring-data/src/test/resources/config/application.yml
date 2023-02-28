@@ -1,7 +1,7 @@
 logging:
   level:
     root: INFO
-    org.example.spring.data: DEBUG
+    com.example.spring.data: DEBUG
 
 # For data.sql (unsure if required or there is an alternative)
 #spring:

@@ -1,4 +1,4 @@
-package org.example.spring.data.config;
+package com.example.spring.data.config;
 
 import java.util.Arrays;
 import org.springframework.context.annotation.Bean;

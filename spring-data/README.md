@@ -15,7 +15,7 @@ Note that references to other entities is by using the object in the json/xml.
 Example:
 ~~~json
 {
-"_class": "org.example.spring.data.model.User",
+"_class": "model.com.example.spring.data.User",
 "id": 1,
 "name": "John Doe",
 "email": "john.doe@mail.org",

@@ -1,19 +1,15 @@
-package org.example.spring.data.repository;
+package com.example.spring.data.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
-import org.example.spring.data.config.DataPopulatorConfig;
-import org.example.spring.data.model.Role;
-import org.example.spring.data.model.User;
+import com.example.spring.data.config.DataPopulatorConfig;
+import com.example.spring.data.model.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
-import org.springframework.data.jpa.domain.Specification;
 
 @DataJpaTest
 @Import(DataPopulatorConfig.class)

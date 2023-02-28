@@ -1,15 +1,16 @@
-package org.example.spring.data.repository;
+package com.example.spring.data.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.spring.data.config.DataPopulatorConfig;
+import com.example.spring.data.model.User;
 import com.google.common.collect.Lists;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Subquery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Subquery;
 import lombok.extern.slf4j.Slf4j;
-import org.example.spring.data.config.DataPopulatorConfig;
-import org.example.spring.data.model.Role;
-import org.example.spring.data.model.User;
+import org.assertj.core.api.Assertions;
+import com.example.spring.data.model.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -51,7 +52,7 @@ class UserRepositoryTest {
 
   @Test
   void findByName() {
-    assertThat(userRepository.findByName("John Doe"))
+    Assertions.assertThat(userRepository.findByName("John Doe"))
         .isNotEmpty()
         .hasSize(1);
   }
