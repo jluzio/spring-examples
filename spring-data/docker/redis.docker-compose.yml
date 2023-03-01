@@ -1,0 +1,12 @@
+# https://hub.docker.com/_/redis
+
+services:
+
+  redis:
+    image: redis/redis-stack:latest
+    container_name: redis-stack
+    ports:
+      - 6379:6379
+      - 8001:8001
+    environment: {}
+
