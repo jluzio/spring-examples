@@ -4,7 +4,6 @@ import com.example.spring.core.api.model.view.Detailed;
 import com.example.spring.core.api.model.view.Public;
 import com.example.spring.core.api.service.UserService;
 import com.example.types.User;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.json.Jackson2CodecSupport;
