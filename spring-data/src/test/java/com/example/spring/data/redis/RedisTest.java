@@ -6,6 +6,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.Duration;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
+import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
-import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
@@ -57,7 +58,13 @@ class RedisTest {
       RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(
           redisContainer.getHost(),
           redisContainer.getMappedPort(6379));
-      return new JedisConnectionFactory(config);
+
+      var defaultTimeout = Duration.ofSeconds(5);
+      JedisClientConfiguration clientConfig = JedisClientConfiguration.builder()
+          .readTimeout(defaultTimeout)
+          .connectTimeout(defaultTimeout)
+          .build();
+      return new JedisConnectionFactory(config, clientConfig);
     }
 
     @Bean
