@@ -10,6 +10,7 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Subquery;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
@@ -43,7 +44,7 @@ class UserRepositoryTest {
     user.setName("custom");
     user.setEmail("custom@mail.org");
     user.setRole(new Role(1L));
-    user.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
+    user.setCreatedAt(OffsetDateTime.now(ZoneOffset.UTC));
     log.debug("{}", user);
 
     userRepository.save(user);
