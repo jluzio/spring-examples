@@ -9,6 +9,8 @@ import com.google.common.collect.Lists;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Subquery;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -41,11 +43,17 @@ class UserRepositoryTest {
     user.setName("custom");
     user.setEmail("custom@mail.org");
     user.setRole(new Role(1L));
+    user.setCreatedAt(LocalDateTime.now(ZoneOffset.UTC));
+    log.debug("{}", user);
 
     userRepository.save(user);
     assertThat(user.getId())
         .isNotNull()
         .isEqualTo(4L);
+
+    assertThat(userRepository.findById(4L))
+        .isPresent()
+        .hasValue(user);
   }
 
   @Test
