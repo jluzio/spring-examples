@@ -1,6 +1,6 @@
 [
 	{
-		"_class": "com.example.spring.boot.playground.user.User",
+		"_class": "com.example.spring.boot.playground.model.User",
 		"name": "John Doe",
 		"username": "jdoe",
 		"address": {
@@ -10,7 +10,7 @@
 		}
 	},
 	{
-		"_class": "com.example.spring.boot.playground.user.User",
+		"_class": "com.example.spring.boot.playground.model.User",
 		"name": "Jane Doe",
 		"username": "jndoe",
 		"address": {
@@ -20,7 +20,7 @@
 		}
 	},
 	{
-		"_class": "com.example.spring.boot.playground.user.User",
+		"_class": "com.example.spring.boot.playground.model.User",
 		"name": "Little D",
 		"username": "ldoe",
 		"address": {
@@ -30,7 +30,7 @@
 		}
 	},
 	{
-		"_class": "com.example.spring.boot.playground.todo.Todo",
+		"_class": "com.example.spring.boot.playground.model.Todo",
 		"title": "Learn stuff",
 		"completed": false,
 		"userId": 1

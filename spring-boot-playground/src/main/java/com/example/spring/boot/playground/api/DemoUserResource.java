@@ -1,5 +1,9 @@
-package com.example.spring.boot.playground.user;
+package com.example.spring.boot.playground.api;
 
+import com.example.spring.boot.playground.exception.NotFoundException;
+import com.example.spring.boot.playground.model.User;
+import com.example.spring.boot.playground.model.UserFilter;
+import com.example.spring.boot.playground.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -32,7 +36,7 @@ public class DemoUserResource {
   @GetMapping("{id}")
   public User getUser(@PathVariable("id") Integer id) {
     return userRepository.findById(id)
-        .orElseThrow(() -> new UserNotFoundException("id: %s".formatted(id)));
+        .orElseThrow(() -> new NotFoundException("id: %s".formatted(id)));
   }
 
   @PostMapping

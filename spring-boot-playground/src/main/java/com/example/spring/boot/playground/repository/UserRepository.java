@@ -1,5 +1,6 @@
-package com.example.spring.boot.playground.user;
+package com.example.spring.boot.playground.repository;
 
+import com.example.spring.boot.playground.model.User;
 import java.util.Optional;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;

@@ -1,5 +1,6 @@
-package com.example.spring.boot.playground.todo;
+package com.example.spring.boot.playground.repository;
 
+import com.example.spring.boot.playground.model.Todo;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.rest.core.annotation.RestResource;
 

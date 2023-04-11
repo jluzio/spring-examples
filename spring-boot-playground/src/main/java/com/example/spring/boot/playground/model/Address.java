@@ -1,4 +1,4 @@
-package com.example.spring.boot.playground.user;
+package com.example.spring.boot.playground.model;
 
 import jakarta.persistence.Embeddable;
 import lombok.Data;

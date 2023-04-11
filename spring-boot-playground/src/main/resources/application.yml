@@ -1,5 +1,6 @@
 logging:
   level:
+    com.example: DEBUG
     org.springframework: INFO
     org.springframework.web.filter.CommonsRequestLoggingFilter: DEBUG
 #    org.springframework.web.servlet.mvc.method.annotation: TRACE

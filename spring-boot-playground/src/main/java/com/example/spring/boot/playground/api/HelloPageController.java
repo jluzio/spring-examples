@@ -1,4 +1,4 @@
-package com.example.spring.boot.playground.hello;
+package com.example.spring.boot.playground.api;
 
 import java.util.Map;
 import org.springframework.stereotype.Controller;

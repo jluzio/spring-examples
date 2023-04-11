@@ -1,4 +1,4 @@
-package com.example.spring.boot.playground.query;
+package com.example.spring.boot.playground.model;
 
 import lombok.Data;
 import org.springframework.data.domain.PageRequest;

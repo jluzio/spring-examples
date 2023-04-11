@@ -1,4 +1,4 @@
-package com.example.spring.boot.playground.hello;
+package com.example.spring.boot.playground.api;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

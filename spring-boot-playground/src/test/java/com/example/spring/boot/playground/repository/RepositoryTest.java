@@ -1,6 +1,6 @@
 package com.example.spring.boot.playground.repository;
 
-import com.example.spring.boot.playground.user.User;
+import com.example.spring.boot.playground.model.User;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

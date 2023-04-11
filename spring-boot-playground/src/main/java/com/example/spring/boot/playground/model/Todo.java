@@ -1,6 +1,6 @@
-package com.example.spring.boot.playground.todo;
+package com.example.spring.boot.playground.model;
 
-import com.example.spring.boot.playground.user.User;
+import com.example.spring.boot.playground.model.User;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

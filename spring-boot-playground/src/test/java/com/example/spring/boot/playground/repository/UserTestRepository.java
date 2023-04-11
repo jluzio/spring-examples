@@ -1,6 +1,6 @@
 package com.example.spring.boot.playground.repository;
 
-import com.example.spring.boot.playground.user.User;
+import com.example.spring.boot.playground.model.User;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
