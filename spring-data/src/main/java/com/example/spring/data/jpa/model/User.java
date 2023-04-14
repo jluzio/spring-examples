@@ -1,12 +1,13 @@
 package com.example.spring.data.jpa.model;
 
+import com.example.spring.data.jpa.model.converter.UserStatusConverter;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import lombok.Data;
 
@@ -22,6 +23,8 @@ public class User {
   @ManyToOne(optional = false)
   @JoinColumn(name = "fk_role_id", referencedColumnName = "ID")
   private Role role;
+  @Convert(converter = UserStatusConverter.class)
+  private UserStatus status;
   private OffsetDateTime createdAt;
 
 }

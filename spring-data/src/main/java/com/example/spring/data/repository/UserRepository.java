@@ -1,7 +1,7 @@
 package com.example.spring.data.repository;
 
-import java.util.List;
 import com.example.spring.data.jpa.model.User;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

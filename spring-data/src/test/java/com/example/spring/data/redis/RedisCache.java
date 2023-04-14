@@ -5,10 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
 
-@Component
 @RequiredArgsConstructor
 public class RedisCache implements Cache {
   private final Jedis jedis;

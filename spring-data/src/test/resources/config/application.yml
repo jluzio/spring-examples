@@ -3,6 +3,8 @@ logging:
     root: INFO
     com.example.spring.data: DEBUG
 
+debug: true
+
 # For data.sql (unsure if required or there is an alternative)
 #spring:
 #  jpa:

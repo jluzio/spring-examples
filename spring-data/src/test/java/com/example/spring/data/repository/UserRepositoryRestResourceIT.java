@@ -6,28 +6,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.example.spring.data.jpa.config.DataPopulatorConfig;
-import com.example.spring.data.jpa.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
-import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
-@ConfigurationPropertiesScan(basePackageClasses = {
-    UserRepository.class, User.class, DataPopulatorConfig.class
-})
-@Import({JacksonAutoConfiguration.class})
 @AutoConfigureMockMvc
 @Slf4j
-class UserRepositoryRestResourceTest {
+class UserRepositoryRestResourceIT {
 
   @Autowired
   MockMvc mockMvc;
