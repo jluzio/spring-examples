@@ -1,7 +1,7 @@
 package com.example.liquibase.tools.service;
 
 import com.example.liquibase.tools.repository.DatabaseChangeLogRepository;
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

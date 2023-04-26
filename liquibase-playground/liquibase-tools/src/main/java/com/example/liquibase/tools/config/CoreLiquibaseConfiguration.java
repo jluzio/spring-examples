@@ -10,7 +10,6 @@ import liquibase.exception.LiquibaseException;
 import liquibase.integration.spring.SpringResourceAccessor;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.CompositeResourceAccessor;
-import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +44,7 @@ public class CoreLiquibaseConfiguration {
    */
   private ResourceAccessor resourceAccessor() {
     return new CompositeResourceAccessor(
-        new FileSystemResourceAccessor(),
+//        new liquibase.resource.FileSystemResourceAccessor(),
         new ClassLoaderResourceAccessor(),
         new SpringResourceAccessor(resourceLoader));
   }
