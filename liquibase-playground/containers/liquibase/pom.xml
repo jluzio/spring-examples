@@ -9,8 +9,7 @@
   <version>1.0.0</version>
 
   <properties>
-    <maven.compiler.source>11</maven.compiler.source>
-    <maven.compiler.target>11</maven.compiler.target>
+    <maven.compiler.release>11</maven.compiler.release>
     <dependencies.home>../../dependencies</dependencies.home>
     <dependencies.source>${dependencies.home}/target</dependencies.source>
   </properties>
@@ -20,42 +19,12 @@
       <id>mysql</id>
       <dependencies>
         <dependency>
-          <groupId>mysql</groupId>
-          <artifactId>mysql-connector-java</artifactId>
-          <version>8.0.30</version>
-          <!--      <version>5.1.49</version>-->
+          <groupId>com.mysql</groupId>
+          <artifactId>mysql-connector-j</artifactId>
+          <version>8.0.33</version>
           <scope>runtime</scope>
         </dependency>
       </dependencies>
-    </profile>
-    <profile>
-      <id>copy-dependencies-changelog</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-resources-plugin</artifactId>
-            <version>3.3.0</version>
-            <executions>
-              <execution>
-                <id>copy-resources-dependencies-changelog</id>
-                <phase>validate</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${basedir}/target/dependency</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>${dependencies.source}/dependency</directory>
-                      <filtering>false</filtering>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
     </profile>
   </profiles>
 
@@ -65,7 +34,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.5.0</version>
         <executions>
           <execution>
             <id>copy-dependencies</id>
@@ -82,7 +51,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.3.0</version>
+        <version>3.3.1</version>
         <executions>
           <execution>
             <id>copy-resources-changelog</id>
@@ -109,7 +78,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
-        <version>3.4.2</version>
+        <version>3.5.0</version>
         <executions>
           <execution>
             <id>assemble-zip</id>

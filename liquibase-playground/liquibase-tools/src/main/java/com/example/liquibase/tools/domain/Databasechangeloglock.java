@@ -1,4 +1,4 @@
-package com.example.liquibase.tools.entity;
+package com.example.liquibase.tools.domain;
 
 import java.io.Serializable;
 import java.util.Date;
