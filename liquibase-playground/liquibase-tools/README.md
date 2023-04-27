@@ -3,5 +3,7 @@
 > mvn spring-boot:run -Dspring-boot.run.profiles=run-task
 - Settings in <liquibase-tools>/config folder
 > mvn spring-boot:run -Dspring-boot.run.profiles=run-task,access-control
+- Settings in <liquibase-tools>/config folder and copy-generated-resources
+> mvn spring-boot:run -Pcopy-generated-resources -Dspring-boot.run.profiles=run-task,access-control
 - Settings in outside folder using profile
 > mvn spring-boot:run -Dspring-boot.run.profiles=run-task,access-control -Dspring-boot.run.jvmArguments="-Dspring.config.additional-location=.settings/config/"

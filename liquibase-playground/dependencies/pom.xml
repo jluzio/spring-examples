@@ -24,8 +24,11 @@
       <id>backbase-app</id>
       <properties>
         <backbase-bom.version>2022.01.22-LTS</backbase-bom.version>
-<!--        <identity-bom.version>1.9.5.5</identity-bom.version>-->
-<!--        <banking-services-bom.version>22.21.6.13</banking-services-bom.version>-->
+        <!--        <backbase-bom.version>2021.07</backbase-bom.version>-->
+        <!--        <backbase-bom.version>2021.08</backbase-bom.version>-->
+        <!--        <identity-bom.version>1.9.5.5</identity-bom.version>-->
+        <!--        <banking-services-bom.version>22.21.6.13</banking-services-bom.version>-->
+        <digital-sales-bom.version>2022.01.2-LTS</digital-sales-bom.version>
 
         <changelog.includes>db/**/*</changelog.includes>
         <application.yaml.includes>**/application*.y*ml</application.yaml.includes>
@@ -39,22 +42,13 @@
             <type>pom</type>
             <scope>import</scope>
           </dependency>
-          <!--
-                <dependency>
-                  <groupId>com.backbase.identity</groupId>
-                  <artifactId>identity-bom</artifactId>
-                  <version>${identity-bom.version}</version>
-                  <type>pom</type>
-                  <scope>import</scope>
-                </dependency>
-                <dependency>
-                  <groupId>com.backbase.dbs</groupId>
-                  <artifactId>banking-services-bom</artifactId>
-                  <version>${banking-services-bom.version}</version>
-                  <type>pom</type>
-                  <scope>import</scope>
-                </dependency>
-          -->
+          <dependency>
+            <groupId>com.backbase.flow</groupId>
+            <artifactId>digital-sales-bom</artifactId>
+            <version>${digital-sales-bom.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+          </dependency>
         </dependencies>
       </dependencyManagement>
     </profile>
@@ -124,6 +118,35 @@
       </dependencies>
     </profile>
     <profile>
+      <id>transaction-manager</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.backbase.dbs.transaction</groupId>
+          <artifactId>transaction-manager</artifactId>
+          <classifier>classes</classifier>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>token-converter</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.backbase.identity</groupId>
+          <artifactId>oidc-token-converter-service</artifactId>
+          <classifier>classes</classifier>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>flow</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.backbase.flow.platform.modules</groupId>
+          <artifactId>flow-liquibase-starter</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
       <id>backbase-identity</id>
       <properties>
         <changelog.includes>META-INF/*.xml,META-INF/liquibase/*.xml</changelog.includes>
@@ -157,7 +180,7 @@
               <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-<!--              <excludeTransitive>true</excludeTransitive>-->
+              <!--              <excludeTransitive>true</excludeTransitive>-->
               <overWriteReleases>false</overWriteReleases>
               <overWriteSnapshots>false</overWriteSnapshots>
               <overWriteIfNewer>true</overWriteIfNewer>
@@ -195,6 +218,7 @@
             </goals>
             <configuration>
               <excludeTransitive>false</excludeTransitive>
+              <excludeTypes>pom</excludeTypes>
               <includes>${changelog.includes},${application.yaml.includes}</includes>
               <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
             </configuration>
