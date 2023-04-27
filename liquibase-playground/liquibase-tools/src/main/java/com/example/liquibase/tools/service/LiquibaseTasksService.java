@@ -4,6 +4,7 @@ import static java.util.Optional.ofNullable;
 
 import com.example.liquibase.tools.config.LiquibaseTasksProperties;
 import com.example.liquibase.tools.model.Task;
+import com.example.liquibase.tools.model.Task.OutputMode;
 import com.example.liquibase.tools.util.LoggerOutputStream;
 import com.example.liquibase.tools.util.LoggerOutputStream.LogLevel;
 import java.io.PrintWriter;
@@ -37,10 +38,11 @@ public class LiquibaseTasksService {
         .blockLast();
   }
 
-  private void runTask(Task task, LiquibaseTasksProperties globalProperties) throws LiquibaseException {
+  private void runTask(Task task, LiquibaseTasksProperties globalProperties)
+      throws LiquibaseException {
     log.info("{} :: running", task);
 
-    try (PrintWriter outputWriter = new PrintWriter(new LoggerOutputStream(log, LogLevel.INFO))) {
+    try (PrintWriter outputWriter = outputWriter(task.getOutput())) {
       String changeLog = ofNullable(task.getChangeLog())
           .or(() -> ofNullable(globalProperties.getDefaultChangeLog()))
           .orElseThrow(NoSuchElementException::new);
@@ -82,13 +84,23 @@ public class LiquibaseTasksService {
                 task.getContexts(), task.getLabels(), outputWriter);
             break;
         }
-      } catch (LiquibaseException e) {
+      } catch (
+          LiquibaseException e) {
         log.error("{} :: error", task, e);
         throw e;
       }
     }
 
     log.info("{} :: complete", task);
+  }
+
+  @SuppressWarnings("java:S106")
+  private PrintWriter outputWriter(OutputMode outputMode) {
+    return switch (outputMode) {
+      case LOG -> new PrintWriter(new LoggerOutputStream(log, LogLevel.INFO));
+      case STDOUT -> new PrintWriter(System.out);
+      case STDERR -> new PrintWriter(System.err);
+    };
   }
 
 }

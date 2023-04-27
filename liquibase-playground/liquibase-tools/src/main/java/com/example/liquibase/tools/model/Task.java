@@ -16,12 +16,18 @@ public class Task {
   public enum Command {
     VALIDATE, STATUS, FORCE_RELEASE_LOCKS,
     CLEAR_CHECKSUM, CHANGE_LOG_SYNC, CHANGE_LOG_SYNC_SQL,
-    UPDATE, UPDATE_SQL, CLEAR_CHANGE_LOG}
+    UPDATE, UPDATE_SQL, CLEAR_CHANGE_LOG
+  }
+
+  public enum OutputMode {
+    LOG, STDOUT, STDERR
+  }
 
   private Command command;
   private String changeLog;
   private Contexts contexts;
   private LabelExpression labels;
+  private OutputMode output = OutputMode.LOG;
   private boolean verbose;
 
   public void setContexts(String... contexts) {

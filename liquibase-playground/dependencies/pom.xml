@@ -9,14 +9,11 @@
   <version>1.0.0</version>
 
   <properties>
-    <maven.compiler.release>11</maven.compiler.release>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
 
-    <changelog.groupId></changelog.groupId>
-    <changelog.artifactId></changelog.artifactId>
-    <changelog.version></changelog.version>
-    <changelog.type>jar</changelog.type>
-    <changelog.classifier></changelog.classifier>
-    <changelog.includes>**</changelog.includes>
+    <changelog.includes>db/**/*</changelog.includes>
+    <application.yaml.includes>**/application*.y*ml</application.yaml.includes>
   </properties>
 
   <profiles>
@@ -26,97 +23,123 @@
     <profile>
       <id>backbase-app</id>
       <properties>
-        <bb.version>2021.07</bb.version>
-        <!--    <bb.version>2021.07</bb.version>-->
-        <identity.version>1.8.0.1</identity.version>
-        <!--    <identity.version>1.7.0</identity.version>-->
-        <dbs.version>2.20.1.1</dbs.version>
-        <!--    <dbs.version>2.20.3</dbs.version>-->
-        <!--    <dbs.version>2.19.0</dbs.version>-->
+        <backbase-bom.version>2022.01.22-LTS</backbase-bom.version>
+<!--        <identity-bom.version>1.9.5.5</identity-bom.version>-->
+<!--        <banking-services-bom.version>22.21.6.13</banking-services-bom.version>-->
 
-        <changelog.version></changelog.version>
-        <changelog.type>jar</changelog.type>
-        <changelog.classifier>classes</changelog.classifier>
         <changelog.includes>db/**/*</changelog.includes>
+        <application.yaml.includes>**/application*.y*ml</application.yaml.includes>
       </properties>
       <dependencyManagement>
         <dependencies>
           <dependency>
             <groupId>com.backbase</groupId>
             <artifactId>backbase-bom</artifactId>
-            <version>${bb.version}</version>
+            <version>${backbase-bom.version}</version>
             <type>pom</type>
             <scope>import</scope>
           </dependency>
           <!--
                 <dependency>
-                  <groupId>com.backbase.dbs</groupId>
-                  <artifactId>banking-services-bom</artifactId>
-                  <version>${dbs.version}</version>
+                  <groupId>com.backbase.identity</groupId>
+                  <artifactId>identity-bom</artifactId>
+                  <version>${identity-bom.version}</version>
                   <type>pom</type>
                   <scope>import</scope>
                 </dependency>
                 <dependency>
-                  <groupId>com.backbase.identity</groupId>
-                  <artifactId>identity-bom</artifactId>
-                  <version>${identity.version}</version>
+                  <groupId>com.backbase.dbs</groupId>
+                  <artifactId>banking-services-bom</artifactId>
+                  <version>${banking-services-bom.version}</version>
                   <type>pom</type>
                   <scope>import</scope>
                 </dependency>
           -->
         </dependencies>
       </dependencyManagement>
+    </profile>
+    <profile>
+      <id>action-service</id>
       <dependencies>
         <dependency>
-          <groupId>${changelog.groupId}</groupId>
-          <artifactId>${changelog.artifactId}</artifactId>
-          <!--          <version>${changelog.version}</version>-->
-          <type>${changelog.type}</type>
-          <classifier>${changelog.classifier}</classifier>
+          <groupId>com.backbase.dbs.actions</groupId>
+          <artifactId>action-service</artifactId>
         </dependency>
       </dependencies>
     </profile>
     <profile>
-      <id>action-service</id>
-      <properties>
-        <changelog.groupId>com.backbase.dbs.actions</changelog.groupId>
-        <changelog.artifactId>action-service</changelog.artifactId>
-      </properties>
-    </profile>
-    <profile>
       <id>access-control</id>
-      <properties>
-        <changelog.groupId>com.backbase.dbs.accesscontrol</changelog.groupId>
-        <changelog.artifactId>access-control</changelog.artifactId>
-      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>com.backbase.dbs.accesscontrol</groupId>
+          <artifactId>access-control</artifactId>
+        </dependency>
+      </dependencies>
     </profile>
     <profile>
       <id>user-profile-manager</id>
-      <properties>
-        <changelog.groupId>com.backbase.dbs.user</changelog.groupId>
-        <changelog.artifactId>user-profile-manager</changelog.artifactId>
-      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>com.backbase.dbs.user</groupId>
+          <artifactId>user-profile-manager</artifactId>
+        </dependency>
+      </dependencies>
     </profile>
     <profile>
       <id>audit-service</id>
-      <properties>
-        <changelog.groupId>com.backbase.dbs.audit</changelog.groupId>
-        <changelog.artifactId>audit-service</changelog.artifactId>
-      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>com.backbase.dbs.audit</groupId>
+          <artifactId>audit-service</artifactId>
+        </dependency>
+      </dependencies>
     </profile>
     <profile>
       <id>notifications-service</id>
-      <properties>
-        <changelog.groupId>com.backbase.dbs.notifications</changelog.groupId>
-        <changelog.artifactId>notifications-service</changelog.artifactId>
-      </properties>
+      <dependencies>
+        <dependency>
+          <groupId>com.backbase.dbs.notifications</groupId>
+          <artifactId>notifications-service</artifactId>
+        </dependency>
+      </dependencies>
     </profile>
     <profile>
       <id>payment-order-service</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.backbase.dbs.paymentorder</groupId>
+          <artifactId>payment-order-service</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>arrangement-manager</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.backbase.products</groupId>
+          <artifactId>arrangement-manager</artifactId>
+          <type>jar</type>
+          <classifier>classes</classifier>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>backbase-identity</id>
       <properties>
-        <changelog.groupId>com.backbase.dbs.paymentorder</changelog.groupId>
-        <changelog.artifactId>payment-order-service</changelog.artifactId>
+        <changelog.includes>META-INF/*.xml,META-INF/liquibase/*.xml</changelog.includes>
       </properties>
+      <dependencies>
+        <dependency>
+          <groupId>com.backbase.identity</groupId>
+          <artifactId>backbase-identity</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>com.backbase.identity</groupId>
+          <artifactId>backbase-identity</artifactId>
+          <type>jar</type>
+          <classifier>classes</classifier>
+        </dependency>
+      </dependencies>
     </profile>
   </profiles>
 
@@ -128,45 +151,52 @@
         <version>3.5.0</version>
         <executions>
           <execution>
-            <id>unpack</id>
-            <phase>generate-resources</phase>
+            <id>copy-dependencies</id>
+            <phase>package</phase>
             <goals>
-              <goal>unpack</goal>
+              <goal>copy-dependencies</goal>
             </goals>
             <configuration>
-              <artifactItems>
-                <artifactItem>
-                  <groupId>${changelog.groupId}</groupId>
-                  <artifactId>${changelog.artifactId}</artifactId>
-                  <version>${changelog.version}</version>
-                  <type>${changelog.type}</type>
-                  <classifier>${changelog.classifier}</classifier>
-                  <includes>${changelog.includes}</includes>
-                </artifactItem>
-              </artifactItems>
-              <includes>**/*.sql,**/*.xml,**/*.y*ml</includes>
-              <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
+<!--              <excludeTransitive>true</excludeTransitive>-->
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
             </configuration>
           </execution>
           <execution>
-            <id>unpack-application-yaml</id>
-            <phase>generate-resources</phase>
+            <id>get-jdbc-drivers</id>
+            <phase>package</phase>
             <goals>
-              <goal>unpack</goal>
+              <goal>copy</goal>
             </goals>
             <configuration>
               <artifactItems>
                 <artifactItem>
-                  <groupId>${changelog.groupId}</groupId>
-                  <artifactId>${changelog.artifactId}</artifactId>
-                  <version>${changelog.version}</version>
-                  <type>${changelog.type}</type>
-                  <classifier>${changelog.classifier}</classifier>
-                  <includes>application*.y*ml</includes>
+                  <groupId>com.mysql</groupId>
+                  <artifactId>mysql-connector-j</artifactId>
+                  <version>8.0.33</version>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.oracle.ojdbc</groupId>
+                  <artifactId>ojdbc8</artifactId>
+                  <version>19.3.0.0</version>
                 </artifactItem>
               </artifactItems>
-              <includes>**/*</includes>
-              <outputDirectory>${project.build.directory}/application</outputDirectory>
+              <overWriteReleases>false</overWriteReleases>
+              <overWriteSnapshots>false</overWriteSnapshots>
+              <overWriteIfNewer>true</overWriteIfNewer>
+            </configuration>
+          </execution>
+          <execution>
+            <id>unpack-resources</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>unpack-dependencies</goal>
+            </goals>
+            <configuration>
+              <excludeTransitive>false</excludeTransitive>
+              <includes>${changelog.includes},${application.yaml.includes}</includes>
+              <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
             </configuration>
           </execution>
         </executions>
