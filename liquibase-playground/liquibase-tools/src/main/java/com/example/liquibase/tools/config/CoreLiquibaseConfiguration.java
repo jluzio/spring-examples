@@ -45,8 +45,10 @@ public class CoreLiquibaseConfiguration {
   private ResourceAccessor resourceAccessor() {
     return new CompositeResourceAccessor(
 //        new liquibase.resource.FileSystemResourceAccessor(),
+//        new SimpleResourceLoaderResourceAccessor(resourceLoader)
         new ClassLoaderResourceAccessor(),
-        new SpringResourceAccessor(resourceLoader));
+        new SpringResourceAccessor(resourceLoader)
+    );
   }
 
 }

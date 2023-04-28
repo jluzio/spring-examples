@@ -147,6 +147,16 @@
       </dependencies>
     </profile>
     <profile>
+      <id>contact-manager</id>
+      <dependencies>
+        <dependency>
+          <groupId>com.backbase.dbs.contact</groupId>
+          <artifactId>contact-manager</artifactId>
+          <classifier>classes</classifier>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
       <id>backbase-identity</id>
       <properties>
         <changelog.includes>META-INF/*.xml,META-INF/liquibase/*.xml</changelog.includes>
@@ -203,6 +213,11 @@
                   <groupId>com.oracle.ojdbc</groupId>
                   <artifactId>ojdbc8</artifactId>
                   <version>19.3.0.0</version>
+                </artifactItem>
+                <artifactItem>
+                  <groupId>com.h2database</groupId>
+                  <artifactId>h2</artifactId>
+                  <version>2.1.214</version>
                 </artifactItem>
               </artifactItems>
               <overWriteReleases>false</overWriteReleases>

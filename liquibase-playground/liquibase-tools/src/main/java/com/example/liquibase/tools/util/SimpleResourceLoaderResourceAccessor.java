@@ -1,32 +1,50 @@
 package com.example.liquibase.tools.util;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Set;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+import liquibase.resource.AbstractResourceAccessor;
+import liquibase.resource.Resource;
+import liquibase.resource.URIResource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
-public class SimpleResourceLoaderResourceAccessor /* extends AbstractResourceAccessor */ {
+@Slf4j
+//@RequiredArgsConstructor
+public class SimpleResourceLoaderResourceAccessor extends AbstractResourceAccessor {
 
   private final ResourceLoader resourceLoader;
 
-
-//  @Override
-  public Set<InputStream> getResourcesAsStream(String path) throws IOException {
-    return Set.of(resourceLoader.getResource(path).getInputStream());
+  public SimpleResourceLoaderResourceAccessor(ResourceLoader resourceLoader) {
+    super();
+    this.resourceLoader = resourceLoader;
+    log.debug("SimpleResourceLoaderResourceAccessor<>");
   }
 
-//  @Override
-  public Set<String> list(String relativeTo, String path, boolean includeFiles,
-      boolean includeDirectories, boolean recursive) throws IOException {
-    return Set.of(resourceLoader.getResource(path).getFile().getAbsolutePath());
+  @Override
+  public List<Resource> search(String path, boolean recursive) throws IOException {
+    log.debug("SimpleResourceLoaderResourceAccessor::search :: {} | {}", path, recursive);
+    return getAll(path);
   }
 
-//  @Override
-  public ClassLoader toClassLoader() {
-    return this.getClass().getClassLoader();
+  @Override
+  public List<Resource> getAll(String path) throws IOException {
+    log.debug("SimpleResourceLoaderResourceAccessor::getAll :: {}", path);
+    Resource resource = new URIResource(
+        path, resourceLoader.getResource(path).getURI());
+    return List.of(resource);
   }
+
+  @Override
+  public List<String> describeLocations() {
+    log.debug("SimpleResourceLoaderResourceAccessor::describeLocations");
+    return List.of("classpath:");
+  }
+
+  @Override
+  public void close() throws Exception {
+    // empty
+  }
+
 }
