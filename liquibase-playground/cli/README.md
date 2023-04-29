@@ -12,3 +12,8 @@ url=jdbc:h2:tcp://localhost:9090/mem:dev
 username=sa
 password=letmein
 ~~~
+
+## execute-sql
+~~~bash
+liquibase execute-sql (--sql | --sql-file)
+~~~

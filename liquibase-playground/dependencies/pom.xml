@@ -31,7 +31,7 @@
         <digital-sales-bom.version>2022.01.2-LTS</digital-sales-bom.version>
 
         <changelog.includes>db/**/*</changelog.includes>
-        <application.yaml.includes>**/application*.y*ml</application.yaml.includes>
+        <application.includes>**/application*.y*ml,**/application*.properties</application.includes>
       </properties>
       <dependencyManagement>
         <dependencies>
@@ -234,7 +234,7 @@
             <configuration>
               <excludeTransitive>false</excludeTransitive>
               <excludeTypes>pom</excludeTypes>
-              <includes>${changelog.includes},${application.yaml.includes}</includes>
+              <includes>${changelog.includes},${application.includes}</includes>
               <outputDirectory>${project.build.directory}/generated-resources</outputDirectory>
             </configuration>
           </execution>
