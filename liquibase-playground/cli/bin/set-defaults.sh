@@ -7,10 +7,21 @@ print_usage() {
   printf " %-10s : %s\n" "-o PARAM" "LIQUIBASE_OUTPUT_FILE"
 }
 
-if [ "$1" == "" ]
-then
-  print_usage
-fi
+optionsCount=0
+useExportOption() {
+  echo "export $1=\"${2}\""
+  export $1="${2}"
+  incOptionsCount
+}
+incOptionsCount() {
+  let optionsCount="optionsCount + 1"
+}
+verifyOptions() {
+  if [ $optionsCount == 0 ]
+  then
+    print_usage
+  fi
+}
 
 unset LIQUIBASE_DEFAULTS_FILE
 unset LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME
@@ -19,9 +30,11 @@ unset LIQUIBASE_OUTPUT_FILE
 OPTIND=1
 while getopts 'f:s:o:' flag; do
   case "${flag}" in
-    f) export LIQUIBASE_DEFAULTS_FILE="${OPTARG}" ;;
-    s) export LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME="${OPTARG}" ;;
-    o) export LIQUIBASE_OUTPUT_FILE="${OPTARG}" ;;
-    *) print_usage ;;
+    f) useExportOption LIQUIBASE_DEFAULTS_FILE ${OPTARG} ;;
+    s) useExportOption LIQUIBASE_COMMAND_DEFAULT_SCHEMA_NAME ${OPTARG} ;;
+    o) useExportOption LIQUIBASE_OUTPUT_FILE ${OPTARG} ;;
+    *) incOptionsCount; print_usage ;;
   esac
 done
+
+verifyOptions
