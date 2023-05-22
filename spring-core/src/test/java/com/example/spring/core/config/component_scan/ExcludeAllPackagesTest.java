@@ -12,28 +12,27 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 
 @SpringBootTest(properties = {"debug=true"})
-class ExcludeSubPackagesTest {
+class ExcludeAllPackagesTest {
 
   @Configuration
   @ComponentScan(
       basePackages = "com.example.spring.core.config.component_scan",
       excludeFilters = @Filter(
           type = FilterType.ASPECTJ,
-          pattern = "com.example.spring.core.config.component_scan.**.*"
+          pattern = "com.example.spring.core.config.component_scan..*"
       )
   )
   static class Config {
 
   }
 
-  @Autowired
+  @Autowired(required = false)
   @DataBean
   List<Object> dataBeans;
 
   @Test
   void test() {
-    // inner class with @Configuration is not excluded
     assertThat(dataBeans)
-        .containsExactlyInAnyOrder("configDefault-dataBean", "configC-innerConfig-dataBean");
+        .isNull();
   }
 }

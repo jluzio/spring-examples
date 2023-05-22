@@ -11,28 +11,34 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 
-@SpringBootTest
-class ExcludePackagesTest {
+@SpringBootTest(properties = {"debug=true"})
+class ExcludePackageListTest {
 
   @Configuration
   @ComponentScan(
       basePackages = "com.example.spring.core.config.component_scan",
-      excludeFilters = @Filter(
-          type = FilterType.ASPECTJ,
-          pattern = "com.example.spring.core.config.component_scan..*"
-      )
+      excludeFilters = {
+          @Filter(
+              type = FilterType.ASPECTJ,
+              pattern = "com.example.spring.core.config.component_scan.config_b.*"
+          ),
+          @Filter(
+              type = FilterType.ASPECTJ,
+              pattern = "com.example.spring.core.config.component_scan.config_c.*"
+          )
+      }
   )
   static class Config {
 
   }
 
-  @Autowired(required = false)
+  @Autowired
   @DataBean
   List<Object> dataBeans;
 
   @Test
   void test() {
     assertThat(dataBeans)
-        .isNull();
+        .containsExactlyInAnyOrder("configDefault-dataBean", "configA-dataBean");
   }
 }

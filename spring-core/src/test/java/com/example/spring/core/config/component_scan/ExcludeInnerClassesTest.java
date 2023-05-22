@@ -11,15 +11,16 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 
-@SpringBootTest
-class ExcludeSinglePackageTest {
+@SpringBootTest(properties = {"debug=true"})
+class ExcludeInnerClassesTest {
 
   @Configuration
   @ComponentScan(
       basePackages = "com.example.spring.core.config.component_scan",
       excludeFilters = @Filter(
           type = FilterType.ASPECTJ,
-          pattern = "com.example.spring.core.config.component_scan.config_a.*"
+          pattern = "com.example.spring.core..*.ConfigCImportInnerConfig"
+//          pattern = ".*ConfigCHolder.*"
       )
   )
   static class Config {
@@ -32,7 +33,13 @@ class ExcludeSinglePackageTest {
 
   @Test
   void test() {
+    // inner class with @Configuration is not excluded
     assertThat(dataBeans)
-        .containsExactlyInAnyOrder("configDefault-dataBean", "configB-dataBean");
+        .containsExactlyInAnyOrder(
+            "configDefault-dataBean",
+            "configA-dataBean",
+            "configB-dataBean",
+            "configC-innerConfig-dataBean"
+        );
   }
 }
