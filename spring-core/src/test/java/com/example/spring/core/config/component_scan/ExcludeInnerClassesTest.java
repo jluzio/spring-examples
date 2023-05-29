@@ -11,10 +11,11 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 
-@SpringBootTest(properties = {"debug=true"})
+@SpringBootTest(
+    classes = ExcludeInnerClassesTest.Config.class,
+    properties = {"debug=true"})
 class ExcludeInnerClassesTest {
 
-  @Configuration
   @ComponentScan(
       basePackages = "com.example.spring.core.config.component_scan",
       excludeFilters = @Filter(

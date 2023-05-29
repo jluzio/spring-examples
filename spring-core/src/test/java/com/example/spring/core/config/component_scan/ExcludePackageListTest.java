@@ -8,24 +8,35 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 
-@SpringBootTest(properties = {"debug=true"})
+@SpringBootTest(
+    classes = ExcludePackageListTest.Config.class,
+    properties = {"debug=true"})
 class ExcludePackageListTest {
 
-  @Configuration
   @ComponentScan(
       basePackages = "com.example.spring.core.config.component_scan",
       excludeFilters = {
+          // filter classes in root of package
           @Filter(
               type = FilterType.ASPECTJ,
               pattern = "com.example.spring.core.config.component_scan.config_b.*"
           ),
+          // filter classes inside package
           @Filter(
               type = FilterType.ASPECTJ,
-              pattern = "com.example.spring.core.config.component_scan.config_c.*"
+              pattern = "com.example.spring.core.config.component_scan.config_c..*"
           )
+          // alternative using REGEX
+//          @Filter(
+//              type = FilterType.REGEX,
+//              pattern = ".*config_b.*"
+//          ),
+//          @Filter(
+//              type = FilterType.REGEX,
+//              pattern = ".*config_c.*"
+//          )
       }
   )
   static class Config {
