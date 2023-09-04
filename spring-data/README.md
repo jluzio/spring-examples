@@ -1,3 +1,9 @@
+# References
+- https://spring.io/projects/spring-data
+  - https://spring.io/projects/spring-data-jpa
+  - https://spring.io/projects/spring-data-rest
+  - https://spring.io/projects/spring-data-redis
+- http://querydsl.com
 
 # Data Populators
 ## SQL
@@ -22,3 +28,4 @@ Example:
 "role": { "id": 1 }
 }
 ~~~
+
