@@ -1,8 +1,8 @@
 package com.example.spring.core.lifecycle;
 
 import com.example.spring.core.lifecycle.LifecycleTest.Config.LifecycleBean;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.DisposableBean;
@@ -80,7 +80,7 @@ class LifecycleTest {
   }
 
   @Test
-  public void test() {
+  void test() {
     log.info("bean1: {}", lifecycleBean);
   }
 

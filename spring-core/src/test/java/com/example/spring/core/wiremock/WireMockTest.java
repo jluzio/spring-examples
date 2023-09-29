@@ -5,34 +5,38 @@ import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.maciejwalkowiak.wiremock.spring.ConfigureWireMock;
+import com.maciejwalkowiak.wiremock.spring.EnableWireMock;
+import com.maciejwalkowiak.wiremock.spring.InjectWireMock;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
-import org.springframework.core.env.Environment;
 import org.springframework.web.reactive.function.client.WebClient;
 
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@AutoConfigureWireMock(port = 0)
+@SpringBootTest(webEnvironment = WebEnvironment.NONE)
+@EnableWireMock({
+    @ConfigureWireMock(name = "default", stubLocation = ".")
+})
 @Slf4j
 class WireMockTest {
 
-  @Autowired
-  Environment environment;
+  @InjectWireMock("default")
+  WireMockServer wiremock;
 
   @Test
   void test() {
     // See Also: wiremock-playground project
 
-    String wiremockServerPort = environment.getProperty("wiremock.server.port");
+    WireMock.configureFor(wiremock.port());
 
     String message = "World!";
     stubFor(get("/hello").willReturn(ok(message)));
 
     WebClient webClient = WebClient.builder()
-        .baseUrl("http://localhost:%s/".formatted(wiremockServerPort))
+        .baseUrl(wiremock.baseUrl())
         .build();
 
     String response = webClient.get().uri("/hello")
