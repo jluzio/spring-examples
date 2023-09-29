@@ -44,6 +44,7 @@ class OptimisticLockingTest {
       return repository.findById(id).orElseThrow();
     }
 
+    // NOTE: recover parameter can define the function in this class to recover
     @Retryable(maxAttempts = 3, backoff = @Backoff(multiplier = 3, random = true))
     public void update(Long id, int value) {
       repository.updateValue(id, value);
