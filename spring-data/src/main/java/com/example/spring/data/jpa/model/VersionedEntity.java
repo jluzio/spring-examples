@@ -9,13 +9,13 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Employee {
+public class VersionedEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String name;
-  private String email;
+  private int value;
   @Version
   private int version;
 
