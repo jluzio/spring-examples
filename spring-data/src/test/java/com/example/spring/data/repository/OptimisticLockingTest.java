@@ -61,9 +61,8 @@ class OptimisticLockingTest {
       repository.updateValue(id, value);
     }
 
-    // NOTE: recover parameter can define the function in this class to recover
     @Retryable(maxAttempts = 3, backoff = @Backoff(multiplier = 3, random = true))
-    public void updateEntity(VersionedEntity entity, VersionedEntity initialEntity) {
+    public void updateEntityFirstReadVersion(VersionedEntity entity, VersionedEntity initialEntity) {
       VersionedEntity currentEntity = repository.findById(entity.getId()).orElseThrow();
       if (entity.getVersion() == currentEntity.getVersion()) {
         log.debug("Updating entity :: no version conflict");
@@ -139,7 +138,7 @@ class OptimisticLockingTest {
                   assertThat(updatedEntity).isEqualTo(initialEntity);
 
                   updatedEntity.setValue(value);
-                  service.updateEntity(updatedEntity, initialEntity);
+                  service.updateEntityFirstReadVersion(updatedEntity, initialEntity);
                 })
         )
         .log()
