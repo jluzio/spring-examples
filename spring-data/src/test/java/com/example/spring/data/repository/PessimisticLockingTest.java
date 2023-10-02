@@ -53,10 +53,10 @@ class PessimisticLockingTest {
   VersionedEntityService service;
 
   @Test
-  void testOptimisticLocking_simple() {
+  void test_locking_simple() {
     var entityId = service.create();
 
-    Flux.range(1, 3)
+    Flux.range(1, 10)
         .log()
         .flatMap(v ->
             Mono.just(v)
