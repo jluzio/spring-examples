@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface VersionedEntityRepository extends JpaRepository<VersionedEntity, Long>,
-    JpaSpecificationExecutor<VersionedEntity> {
+    JpaSpecificationExecutor<VersionedEntity>, CustomVersionedEntityRepository {
 
   default VersionedEntity updateValue(Long id, int value) {
     var entity = findById(id).orElseThrow();
