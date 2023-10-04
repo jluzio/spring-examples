@@ -11,6 +11,7 @@ import com.github.fge.jsonpatch.JsonPatch;
 import com.github.fge.jsonpatch.JsonPatchException;
 import com.github.fge.jsonpatch.diff.JsonDiff;
 import java.io.IOException;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -58,21 +59,39 @@ class OptimisticLockingTest {
     // NOTE: recover parameter can define the function in this class to recover
     @Retryable(maxAttempts = 3, backoff = @Backoff(multiplier = 3, random = true))
     public void updateValue(Long id, int value) {
-      repository.updateValue(id, value);
+      log.debug("updateEntity[{}]", value);
+      var entity = repository.findById(id).orElseThrow();
+      log.debug("updateEntity[{}] :: read entity", value);
+      updateEntityData(entity, value);
+      log.debug("updateEntity[{}] :: saving", value);
+      repository.save(entity);
+      log.debug("updateEntity[{}] :: saved :: {}", value, entity);
     }
 
     @Retryable(maxAttempts = 3, backoff = @Backoff(multiplier = 3, random = true))
-    public void updateEntityFirstReadVersion(VersionedEntity entity, VersionedEntity initialEntity) {
-      VersionedEntity currentEntity = repository.findById(entity.getId()).orElseThrow();
+    public void updateEntityPatchingUsingVersionCheck(VersionedEntity entity,
+        VersionedEntity initialEntity) {
+      var runId = "(t=%s)(v=%s)".formatted(Thread.currentThread().getName(), entity.getValue());
+      log.debug("updateEntity[{}] :: {}", runId, entity);
+      var currentEntity = repository.findById(entity.getId()).orElseThrow();
+      log.debug("updateEntity[{}]  :: read current entity :: {}", runId, currentEntity);
       if (entity.getVersion() == currentEntity.getVersion()) {
-        log.debug("Updating entity :: no version conflict");
+        log.debug("Updating entity[{}]  :: no version conflict before saving", runId);
         repository.save(entity);
       } else {
         JsonPatch jsonPatch = getJsonDiff(initialEntity, entity);
-        log.debug("Updating entity :: with version conflict :: patch={}", jsonPatch);
+        log.debug("Updating entity[{}]  :: with version conflict :: patch={}", runId, jsonPatch);
         VersionedEntity patchedEntity = applyJsonPatch(currentEntity, jsonPatch);
         repository.save(patchedEntity);
       }
+    }
+
+    public void updateEntityData(VersionedEntity entity, int value) {
+      entity.setValue(value);
+      Optional.of(value)
+          .filter(v -> v % 2 == 1)
+          .map("name-%s"::formatted)
+          .ifPresent(entity::setName);
     }
 
     private <T> JsonPatch getJsonDiff(T source, T target) {
@@ -105,16 +124,16 @@ class OptimisticLockingTest {
     var entityId = service.create();
 
     Flux.range(1, 10)
-        .log()
+//        .log()
         .flatMap(v ->
-            Mono.just(v)
-                .log()
-                .subscribeOn(Schedulers.boundedElastic())
-                .doOnNext(value -> {
-                  service.updateValue(entityId, value);
-                })
+                Mono.just(v)
+//                .log()
+                    .subscribeOn(Schedulers.boundedElastic())
+                    .doOnNext(value -> {
+                      service.updateValue(entityId, value);
+                    })
         )
-        .log()
+//        .log()
         .collectList()
         .block();
 
@@ -127,21 +146,21 @@ class OptimisticLockingTest {
     var entityId = service.create();
 
     Flux.range(1, 10)
-        .log()
+//        .log()
         .flatMap(v ->
-            Mono.just(v)
-                .log()
-                .subscribeOn(Schedulers.boundedElastic())
-                .doOnNext(value -> {
-                  VersionedEntity initialEntity = service.get(entityId);
-                  VersionedEntity updatedEntity = clone(initialEntity);
-                  assertThat(updatedEntity).isEqualTo(initialEntity);
+                Mono.just(v)
+//                .log()
+                    .subscribeOn(Schedulers.boundedElastic())
+                    .doOnNext(value -> {
+                      VersionedEntity initialEntity = service.get(entityId);
+                      VersionedEntity updatedEntity = clone(initialEntity);
+                      assertThat(updatedEntity).isEqualTo(initialEntity);
 
-                  updatedEntity.setValue(value);
-                  service.updateEntityFirstReadVersion(updatedEntity, initialEntity);
-                })
+                      service.updateEntityData(updatedEntity, value);
+                      service.updateEntityPatchingUsingVersionCheck(updatedEntity, initialEntity);
+                    })
         )
-        .log()
+//        .log()
         .collectList()
         .block();
 

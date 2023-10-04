@@ -2,6 +2,8 @@ package com.example.spring.data.repository;
 
 import com.example.spring.data.jpa.model.VersionedEntity;
 import com.example.spring.data.repository.PessimisticLockingTest.VersionedEntityService;
+import jakarta.persistence.LockModeType;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -41,10 +43,22 @@ class PessimisticLockingTest {
       return repository.findById(id).orElseThrow();
     }
 
-    public void updateEntity(Long id, int value) {
-      VersionedEntity entity = repository.getAndLock(id);
-      entity.setValue(value);
+    public void updateEntityLockOnRead(Long id, int value) {
+      log.debug("updateEntity[{}]", value);
+      var entity = repository.getWithLock(id, LockModeType.PESSIMISTIC_WRITE);
+      log.debug("updateEntity[{}] :: obtained lock", value);
+      updateEntityData(entity, value);
+      log.debug("updateEntity[{}] :: saving", value);
       repository.save(entity);
+      log.debug("updateEntity[{}] :: saved :: {}", value, entity);
+    }
+
+    private void updateEntityData(VersionedEntity entity, int value) {
+      entity.setValue(value);
+      Optional.of(value)
+          .filter(v -> v % 2 == 1)
+          .map("name-%s"::formatted)
+          .ifPresent(entity::setName);
     }
 
   }
@@ -53,20 +67,20 @@ class PessimisticLockingTest {
   VersionedEntityService service;
 
   @Test
-  void test_locking_simple() {
+  void test_locking_on_read() {
     var entityId = service.create();
 
     Flux.range(1, 10)
-        .log()
+//        .log()
         .flatMap(v ->
             Mono.just(v)
-                .log()
+//                .log()
                 .subscribeOn(Schedulers.boundedElastic())
                 .doOnNext(value -> {
-                  service.updateEntity(entityId, value);
+                  service.updateEntityLockOnRead(entityId, value);
                 })
         )
-        .log()
+//        .log()
         .collectList()
         .block();
 
