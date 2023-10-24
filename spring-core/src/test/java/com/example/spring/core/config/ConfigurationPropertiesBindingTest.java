@@ -18,7 +18,10 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.converter.Converter;
 
 @SpringBootTest(
-    properties = "configuration-properties-binding-test.rectangle2D=1,2,3,4"
+    properties = {
+        "configuration-properties-binding-test.rectangle2DVal1=1,2,3,4",
+        "configuration-properties-binding-test.rectangle2DVal2=",
+    }
 )
 class ConfigurationPropertiesBindingTest {
 
@@ -36,7 +39,9 @@ class ConfigurationPropertiesBindingTest {
   @Builder
   public static class ConfigProperties {
 
-    private Rectangle2D rectangle2D;
+    private Rectangle2D rectangle2DVal1;
+    private Rectangle2D rectangle2DVal2;
+    private Rectangle2D rectangle2DVal3;
 
   }
 
@@ -45,6 +50,9 @@ class ConfigurationPropertiesBindingTest {
 
     @Override
     public Rectangle2D convert(String source) {
+      if (source.isBlank()) {
+        return null;
+      }
       // Parse the string and create a Rectangle2D object
       String[] parts = source.split(",");
       if (parts.length == 4) {
@@ -65,9 +73,8 @@ class ConfigurationPropertiesBindingTest {
   @Test
   void test() {
     assertThat(properties)
-        .hasNoNullFieldsOrProperties()
         .isEqualTo(ConfigProperties.builder()
-            .rectangle2D(new Rectangle2D.Double(1, 2, 3, 4))
+            .rectangle2DVal1(new Rectangle2D.Double(1, 2, 3, 4))
             .build());
   }
 
