@@ -6,3 +6,7 @@
 - Thymeleaf layouts
   - https://www.thymeleaf.org/doc/articles/layouts.html
   - https://ultraq.github.io/thymeleaf-layout-dialect/
+- Webjars
+  - https://www.webjars.org/
+- Bootstrap
+  - https://getbootstrap.com/docs/
