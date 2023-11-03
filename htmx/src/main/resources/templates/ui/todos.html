@@ -13,7 +13,7 @@
         th:hx-get="@{${'/ui/todos/' + todo.id}}"
         hx-trigger="click"
         hx-target="#todo-div"
-        hx-swap="outerHTML "
+        hx-swap="outerHTML"
         >
       <th scope="row" th:text="${todo.id}">
         id
