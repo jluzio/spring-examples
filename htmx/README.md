@@ -3,6 +3,8 @@
   - https://htmx.org/
   - https://github.com/wiverson/htmx-demo
   - https://github.com/wimdeblauwe/htmx-spring-boot
+- Hyperscript
+  - https://hyperscript.org/
 - Thymeleaf layouts
   - https://www.thymeleaf.org/doc/articles/layouts.html
   - https://ultraq.github.io/thymeleaf-layout-dialect/

@@ -54,11 +54,11 @@
       <div id="collapseTodo" class="accordion-collapse collapse" data-bs-parent="#homeData">
         <div class="accordion-body">
           <div>
-            <button type="button" class="btn"
+            <button type="button" class="btn btn-primary"
                     th:hx-get="@{/ui/todos}"
                     hx-trigger="click"
                     hx-target="#todos-div"
-                    hx-swap="innerHTML swap:0.5s"
+                    hx-swap="outerHTML swap:0.5s"
             >
               Load!
             </button>

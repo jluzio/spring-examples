@@ -1,10 +1,9 @@
-<div xmlns:th="http://www.thymeleaf.org" class="card row offset-md-3 col-md-6">
+<div id="todo-div" xmlns:th="http://www.thymeleaf.org" class="card row offset-md-3 col-md-6">
   <div class="card-body">
     <h5 class="card-title" th:text="${todo.name}">name</h5>
     <p class="card-text" th:text="${todo.description}">description</p>
     <button type="button" class="btn btn-primary"
-            hx-target="#todo-div"
-            hx-swap="delete"
+            _="on click hide #todo-div"
     >
       Close
     </button>
