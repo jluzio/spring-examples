@@ -12,3 +12,8 @@
   - https://www.webjars.org/
 - Bootstrap
   - https://getbootstrap.com/docs/
+- mustache
+  - https://mustache.github.io/
+  - https://github.com/spullara/mustache.java
+- j2html
+  - https://j2html.com/examples.html
