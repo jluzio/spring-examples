@@ -55,12 +55,20 @@
         <div class="accordion-body">
           <div>
             <button type="button" class="btn btn-primary"
-                    th:hx-get="@{/ui/todos}"
+                    th:hx-get="@{/components/thymeleaf/todos}"
                     hx-trigger="click"
                     hx-target="#todos-div"
                     hx-swap="outerHTML swap:0.5s"
             >
-              Load!
+              Load (Thymeleaf)!
+            </button>
+            <button type="button" class="btn btn-primary"
+                    th:hx-get="@{/components/mustache/todos}"
+                    hx-trigger="click"
+                    hx-target="#todos-div"
+                    hx-swap="outerHTML swap:0.5s"
+            >
+              Load (Mustache)!
             </button>
           </div>
           <div id="todos-div">

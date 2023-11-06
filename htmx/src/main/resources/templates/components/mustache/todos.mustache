@@ -1,4 +1,4 @@
-<div id="todos-div" xmlns:th="http://www.thymeleaf.org">
+<div id="todos-div">
   <table class="table table-striped table-sm">
     <thead>
     <tr>
@@ -9,24 +9,25 @@
     </tr>
     </thead>
     <tbody>
-    <tr th:each="todo, iterStat : *{todos}"
-        th:hx-get="@{${'/ui/todos/' + todo.id}}"
+    {{#todos}}
+    <tr hx-get="/components/mustache/todos/{{id}}"
         hx-trigger="click"
         hx-target="#todo-div"
         hx-swap="outerHTML"
-        >
-      <th scope="row" th:text="${todo.id}">
-        id
+    >
+      <th scope="row">
+        {{id}}
       </th>
-      <td th:text="${todo.name}">
-        name
+      <td>
+        {{name}}
       </td>
-      <td th:text="${todo.description}">
-        description
+      <td>
+        {{description}}
       </td>
       <td class="col">
       </td>
     </tr>
+    {{/todos}}
     </tbody>
   </table>
   <div id="todo-div"></div>

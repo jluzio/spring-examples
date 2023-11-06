@@ -1,4 +1,4 @@
-package com.example.spring.htmx.api.ui
+package com.example.spring.htmx.api.components
 
 import com.example.spring.htmx.service.TodoService
 import org.springframework.beans.factory.annotation.Autowired
@@ -6,23 +6,25 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.ModelMap
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller
-class TodoController {
+@RequestMapping("/components/mustache")
+class MustacheTodoController {
 
   @Autowired
   lateinit var todoService: TodoService
 
-  @GetMapping("/ui/todos")
+  @GetMapping("/todos")
   fun todos(model: ModelMap): String {
     model["todos"] = todoService.todos
-    return "ui/todos"
+    return "components/mustache/todos"
   }
 
-  @GetMapping("/ui/todos/{id}")
+  @GetMapping("/todos/{id}")
   fun todo(@PathVariable id: String, model: ModelMap): String {
     model["todo"] = todoService.todos.find { it.id == id }
-    return "ui/todo"
+    return "components/mustache/todo"
   }
 
 }
