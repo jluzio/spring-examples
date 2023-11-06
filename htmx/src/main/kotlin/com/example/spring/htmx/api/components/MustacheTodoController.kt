@@ -8,23 +8,25 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
 
+private const val COMPONENTS = "components/mustache"
+
 @Controller
-@RequestMapping("/components/mustache")
+@RequestMapping("/components/mustache/todos")
 class MustacheTodoController {
 
   @Autowired
   lateinit var todoService: TodoService
 
-  @GetMapping("/todos")
+  @GetMapping("")
   fun todos(model: ModelMap): String {
     model["todos"] = todoService.todos
-    return "components/mustache/todos"
+    return "$COMPONENTS/todos"
   }
 
-  @GetMapping("/todos/{id}")
+  @GetMapping("{id}")
   fun todo(@PathVariable id: String, model: ModelMap): String {
     model["todo"] = todoService.todos.find { it.id == id }
-    return "components/mustache/todo"
+    return "$COMPONENTS/todo"
   }
 
 }
