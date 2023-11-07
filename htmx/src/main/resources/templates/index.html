@@ -53,26 +53,7 @@
       </h2>
       <div id="collapseTodo" class="accordion-collapse collapse" data-bs-parent="#homeData">
         <div class="accordion-body">
-          <div>
-            <button type="button" class="btn btn-primary"
-                    th:hx-get="@{/components/thymeleaf/todos}"
-                    hx-trigger="click"
-                    hx-target="#todos-div"
-                    hx-swap="outerHTML swap:0.5s"
-            >
-              Load (Thymeleaf)!
-            </button>
-            <button type="button" class="btn btn-primary"
-                    th:hx-get="@{/components/mustache/todos}"
-                    hx-trigger="click"
-                    hx-target="#todos-div"
-                    hx-swap="outerHTML swap:0.5s"
-            >
-              Load (Mustache)!
-            </button>
-          </div>
-          <div id="todos-div">
-          </div>
+          <div th:replace="components/thymeleaf/todos-container.html"></div>
         </div>
       </div>
     </div>

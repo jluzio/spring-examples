@@ -1,0 +1,28 @@
+<div id="todos-container" xmlns:th="http://www.thymeleaf.org">
+  <button type="button" class="btn btn-primary"
+          th:hx-get="@{/components/thymeleaf/todos}"
+          hx-trigger="click"
+          hx-target="#todos-div"
+          hx-swap="outerHTML swap:0.5s"
+  >
+    Load (Thymeleaf)!
+  </button>
+  <button type="button" class="btn btn-primary"
+          th:hx-get="@{/components/mustache/todos}"
+          hx-trigger="click"
+          hx-target="#todos-div"
+          hx-swap="outerHTML swap:0.5s"
+  >
+    Load (Mustache)!
+  </button>
+  <button type="button" class="btn btn-primary"
+          th:hx-get="@{/components/j2html/todos}"
+          hx-trigger="click"
+          hx-target="#todos-div"
+          hx-swap="outerHTML swap:0.5s"
+  >
+    Load (j2html)!
+  </button>
+  <div id="todos-div">
+  </div>
+</div>
