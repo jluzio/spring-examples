@@ -36,10 +36,47 @@ class SpringContextExpressionLanguageTest {
     }
   }
 
+  enum UserRole {
+    USER,
+    ADMIN;
+  }
+
+  record UserData(String username, Object role) {
+
+  }
+
+
   @Autowired
   ConfigurableApplicationContext applicationContext;
   @Autowired
   ConfigurableBeanFactory beanFactory;
+
+  @Test
+  void test_simple_getValue_string() {
+    ExpressionParser exprParser = getExpressionParser();
+    Expression expression = exprParser.parseExpression("role == 'ADMIN'");
+
+    var context = new StandardEvaluationContext(new UserData("u1", "ADMIN"));
+    assertThat(expression.getValue(context))
+        .isInstanceOf(Boolean.class)
+        .isEqualTo(true);
+  }
+
+  @Test
+  void test_simple_getValue_enum() {
+    ExpressionParser exprParser = getExpressionParser();
+
+    var userData = new UserData("u1", UserRole.ADMIN);
+    var context = new StandardEvaluationContext(userData);
+
+    Expression expression1 = exprParser.parseExpression("role == 'ADMIN'");
+    assertThat(expression1.getValue(context))
+        .isEqualTo(false);
+
+    Expression expression2 = exprParser.parseExpression("role.name == 'ADMIN'");
+    assertThat(expression2.getValue(context))
+        .isEqualTo(true);
+  }
 
   @Test
   void test_bean_reference() {
