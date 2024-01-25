@@ -47,7 +47,7 @@ public interface UserTestRepository extends CrudRepository<User, Integer>,
   List<User> customFindByNameSpEL(String name);
 
   @Query(value = "SELECT * FROM USER WHERE EMAIL like %?1%", countName = "SELECT count(*) FROM USER WHERE EMAIL like %?1%", nativeQuery = true)
-  Page<User> findByEmailAddressContaningNative(String emailAddress, Pageable pageable);
+  Page<User> findByEmailAddressContainingNative(String emailAddress, Pageable pageable);
 
   @Modifying
   @Query("update User u set u.name = ?1 where u.username in ?2")
@@ -62,6 +62,6 @@ public interface UserTestRepository extends CrudRepository<User, Integer>,
   CompletableFuture<User> findOneByUsername(String username);
 
   @Async
-  ListenableFuture<User> findOneByEmail(String email);
+  CompletableFuture<User> findOneByEmail(String email);
 
 }

@@ -60,7 +60,7 @@ public class RepositoryTest {
     var customSpel = repository.customFindByNameSpEL("name-1");
     log.info("customSpel: {}", customSpel);
 
-    var nativeResult = repository.findByEmailAddressContaningNative("mail.org",
+    var nativeResult = repository.findByEmailAddressContainingNative("mail.org",
         PageRequest.of(1, 2, Direction.DESC, "id"));
     log.info("nativeResult: {} | {} | {}",
         nativeResult,
