@@ -4,23 +4,52 @@
   <button type="button" class="btn btn-primary"
           th:hx-get="@{/todos}"
           hx-trigger="click"
-          hx-target="#todos-clientside-div"
-          hx-swap="outerHTML swap:0.5s"
-          mustache-array-template="todo-template"
+          hx-target="#todos-cs-div"
+          hx-swap="innerHTML swap:0.5s"
+          mustache-array-template="todos-template"
   >
-    Load (mustache-array)!
+    Load list (mustache)!
+  </button>
+  <button type="button" class="btn btn-primary"
+          th:hx-get="@{/todos/1}"
+          hx-trigger="click"
+          hx-target="#todos-cs-div"
+          hx-swap="innerHTML swap:0.5s"
+          mustache-template="todo-template"
+  >
+    Load first (mustache)!
   </button>
 
-  <template id="todo-template">
-    {{#data}}
-    <div class="row">
-      <div class="col-md">{{id}}</div>
-      <div class="col-md">{{name}}</div>
-      <div class="col-md">{{description}}</div>
+  <template id="todos-template">
+    <div class="container">
+      <div class="table">
+        <div class="row">
+            <div class="col">id</div>
+            <div class="col">name</div>
+            <div class="col">description</div>
+            <div class="col">actions</div>
+        </div>
+        {{#data}}
+        <div class="row">
+            <div class="col">{{id}}</div>
+            <div class="col">{{name}}</div>
+            <div class="col">{{description}}</div>
+            <div class="col"></div>
+          </div>
+        {{/data}}
+      </div>
+      <div id="todo-cs-div"></div>
     </div>
-    {{/data}}
+  </template>
+  <template id="todo-template">
+    <div class="row">
+      <div class="col">{{id}}</div>
+      <div class="col">{{name}}</div>
+      <div class="col">{{description}}</div>
+    </div>
   </template>
 
-  <div id="todos-clientside-div">
+
+  <div id="todos-cs-div">
   </div>
 </div>
