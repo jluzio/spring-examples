@@ -11,7 +11,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>3.1.4</version>
+    <version>3.2.2</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
 
@@ -25,7 +25,7 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
-      <!--			<artifactId>spring-boot-starter-web</artifactId>-->
+<!--      			<artifactId>spring-boot-starter-web</artifactId>-->
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -78,7 +78,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>32.1.2-jre</version>
+      <version>33.0.0-jre</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
@@ -108,30 +108,41 @@
       <optional>true</optional>
     </dependency>
 
+    <!-- WARNING:
+      WireMock 3.3.1 has a dependency mismatch with Spring Boot 3.2.2.
+      Current workaround is to use wiremock-standalone and exclude wiremock in wiremock-spring-boot.
+    -->
     <dependency>
       <groupId>org.wiremock</groupId>
-      <artifactId>wiremock</artifactId>
-      <version>3.2.0</version>
+<!--      <artifactId>wiremock</artifactId>-->
+      <artifactId>wiremock-standalone</artifactId>
+      <version>3.3.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.maciejwalkowiak.spring</groupId>
       <artifactId>wiremock-spring-boot</artifactId>
-      <version>1.0.1</version>
+      <version>2.1.1</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.wiremock</groupId>
+          <artifactId>wiremock</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!-- System Stubs: for testing with only lambda pattern -->
     <dependency>
       <groupId>uk.org.webcompere</groupId>
       <artifactId>system-stubs-core</artifactId>
-      <version>2.1.2</version>
+      <version>2.1.6</version>
       <scope>test</scope>
     </dependency>
     <!-- System Stubs: for JUnit 5 -->
     <dependency>
       <groupId>uk.org.webcompere</groupId>
       <artifactId>system-stubs-jupiter</artifactId>
-      <version>2.1.2</version>
+      <version>2.1.6</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

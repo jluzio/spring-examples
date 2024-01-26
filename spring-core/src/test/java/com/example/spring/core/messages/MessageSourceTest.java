@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.context.support.ResourceBundleMessageSource;
 
 @SpringBootTest
 @Slf4j
@@ -29,7 +30,7 @@ class MessageSourceTest {
     @Bean
     MessageSource validationMessageSource() {
       var messageSource = new ReloadableResourceBundleMessageSource();
-      messageSource.setBasename("validation");
+      messageSource.setBasename("classpath:validation");
       return messageSource;
     }
   }
@@ -37,7 +38,7 @@ class MessageSourceTest {
   @Test
   void test() {
     log.info("hello default: {}", messageSource.getMessage("hello.world", null, Locale.ENGLISH));
-    log.info("hello pt: {}", messageSource.getMessage("hello.world", null, new Locale("pt")));
+    log.info("hello pt: {}", messageSource.getMessage("hello.world", null, Locale.of("pt")));
     log.info("validation: {}",
         validationMessageSource.getMessage("validation.success", null, Locale.ENGLISH));
   }
