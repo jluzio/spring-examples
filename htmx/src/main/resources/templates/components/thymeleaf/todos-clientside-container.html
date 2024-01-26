@@ -1,0 +1,26 @@
+<div id="todos-container" xmlns:th="http://www.thymeleaf.org"
+     hx-ext="client-side-templates">
+
+  <button type="button" class="btn btn-primary"
+          th:hx-get="@{/todos}"
+          hx-trigger="click"
+          hx-target="#todos-clientside-div"
+          hx-swap="outerHTML swap:0.5s"
+          mustache-array-template="todo-template"
+  >
+    Load (mustache-array)!
+  </button>
+
+  <template id="todo-template">
+    {{#data}}
+    <div class="row">
+      <div class="col-md">{{id}}</div>
+      <div class="col-md">{{name}}</div>
+      <div class="col-md">{{description}}</div>
+    </div>
+    {{/data}}
+  </template>
+
+  <div id="todos-clientside-div">
+  </div>
+</div>
