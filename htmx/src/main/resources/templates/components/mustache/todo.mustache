@@ -1,10 +1,10 @@
 {{#todo}}
-<div id="todo-div" class="card row offset-md-3 col-md-6">
+<div id="todos-item-inner" class="card row offset-md-3 col-md-6">
   <div class="card-body">
     <h5 class="card-title">{{name}}</h5>
     <p class="card-text">{{description}}</p>
     <button type="button" class="btn btn-primary"
-            _="on click hide #todo-div"
+            _="on click remove #todos-item-inner"
     >
       Close
     </button>

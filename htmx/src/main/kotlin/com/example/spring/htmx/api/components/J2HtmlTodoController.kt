@@ -21,7 +21,7 @@ class J2HtmlTodoController {
   fun todos(model: ModelMap): String {
     val todos = todoService.todos
     // @formatter:off
-    return div(attrs("#todos-div"),
+    return div(
       table(
         attrs(".table.table-striped.table-sm"),
         thead(
@@ -43,8 +43,8 @@ class J2HtmlTodoController {
             )
               .attr("hx-get", "/components/j2html/todos/${it.id}")
               .attr("hx-trigger", "click")
-              .attr("hx-target", "#todo-div")
-              .attr("hx-swap", "outerHTML")
+              .attr("hx-target", "#todos-item")
+              .attr("hx-swap", "innerHTML")
           }.toTypedArray()
         )
       ),
@@ -59,7 +59,7 @@ class J2HtmlTodoController {
     val todo = todoService.todos.find { it.id == id }!!
     // @formatter:off
     return div(
-      attrs("#todo-div.card.row.offset-md-3.col-md-6"),
+      attrs("#todos-item-inner.card.row.offset-md-3.col-md-6"),
       div(
         attrs(".card-body"),
         h5(todo.name).withClass("card-title"),
@@ -67,7 +67,7 @@ class J2HtmlTodoController {
         button("Close")
           .withType("button")
           .withClass("btn btn-primary")
-          .attr("_", "on click hide #todo-div")
+          .attr("_", "on click remove #todos-item-inner")
       )
     )
       .render()

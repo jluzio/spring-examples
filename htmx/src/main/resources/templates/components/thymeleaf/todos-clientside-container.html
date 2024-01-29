@@ -1,55 +1,115 @@
-<div id="todos-container" xmlns:th="http://www.thymeleaf.org"
+<div id="todos-cs-examples" xmlns:th="http://www.thymeleaf.org"
      hx-ext="client-side-templates">
 
   <button type="button" class="btn btn-primary"
           th:hx-get="@{/todos}"
           hx-trigger="click"
-          hx-target="#todos-cs-div"
+          hx-target="#todos-cs-list"
           hx-swap="innerHTML swap:0.5s"
-          mustache-array-template="todos-template"
+          mustache-array-template="todos-div-template"
   >
-    Load list (mustache)!
+    Load list (mustache :: div)!
+  </button>
+  <button type="button" class="btn btn-primary"
+          th:hx-get="@{/todos}"
+          hx-trigger="click"
+          hx-target="#todos-cs-list"
+          hx-swap="innerHTML swap:0.5s"
+          mustache-array-template="todos-table-template"
+  >
+    Load list (mustache :: table)!
   </button>
   <button type="button" class="btn btn-primary"
           th:hx-get="@{/todos/1}"
           hx-trigger="click"
-          hx-target="#todos-cs-div"
+          hx-target="#todos-cs-item"
           hx-swap="innerHTML swap:0.5s"
           mustache-template="todo-template"
   >
     Load first (mustache)!
   </button>
 
-  <template id="todos-template">
+  <template id="todos-div-template">
     <div class="container">
       <div class="table">
         <div class="row">
-            <div class="col">id</div>
-            <div class="col">name</div>
-            <div class="col">description</div>
-            <div class="col">actions</div>
+          <div class="col">id</div>
+          <div class="col">name</div>
+          <div class="col">description</div>
+          <div class="col">actions</div>
         </div>
         {{#data}}
         <div class="row">
-            <div class="col">{{id}}</div>
-            <div class="col">{{name}}</div>
-            <div class="col">{{description}}</div>
-            <div class="col"></div>
-          </div>
+          <div class="col">{{id}}</div>
+          <div class="col">{{name}}</div>
+          <div class="col">{{description}}</div>
+          <div class="col"></div>
+        </div>
         {{/data}}
       </div>
       <div id="todo-cs-div"></div>
     </div>
   </template>
+
+  <template id="todos-table-template">
+    <div>
+      <table class="table table-striped table-sm">
+        <thead>
+        <tr>
+          <th scope="col">id</th>
+          <th scope="col">name</th>
+          <th scope="col">description</th>
+          <th scope="col">actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!--
+          Workaround for browser changing the template due to table element rules.
+          see: https://github.com/ampproject/amphtml/issues/11205
+        -->
+        <!-- {{#data}} -->
+        <tr hx-get="/todos/{{id}}"
+            hx-trigger="click"
+            hx-target="#todos-cs-item"
+            hx-swap="innerHTML"
+            mustache-template="todo-template"
+        >
+          <th scope="row">
+            {{id}}
+          </th>
+          <td>
+            {{name}}
+          </td>
+          <td>
+            {{description}}
+          </td>
+          <td>
+          </td>
+        </tr>
+        <!-- {{/data}} -->
+        </tbody>
+      </table>
+    </div>
+  </template>
   <template id="todo-template">
-    <div class="row">
-      <div class="col">{{id}}</div>
-      <div class="col">{{name}}</div>
-      <div class="col">{{description}}</div>
+    <div id="todos-cs-item-inner" class="card row offset-md-3 col-md-6">
+      <div class="card-body">
+        <h5 class="card-title">{{name}}</h5>
+        <p class="card-text">{{description}}</p>
+        <button type="button" class="btn btn-primary"
+                _="on click remove #todos-cs-item-inner"
+        >
+          Close
+        </button>
+      </div>
     </div>
   </template>
 
-
-  <div id="todos-cs-div">
+  <div id="todos-cs-container">
+    <div id="todos-cs-list">
+    </div>
+    <div id="todos-cs-item">
+    </div>
   </div>
+
 </div>

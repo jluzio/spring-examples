@@ -1,4 +1,4 @@
-<div id="todos-div" xmlns:th="http://www.thymeleaf.org">
+<div xmlns:th="http://www.thymeleaf.org">
   <table class="table table-striped table-sm">
     <thead>
     <tr>
@@ -12,8 +12,8 @@
     <tr th:each="todo, iterStat : *{todos}"
         th:hx-get="@{${'/components/thymeleaf/todos/' + todo.id}}"
         hx-trigger="click"
-        hx-target="#todo-div"
-        hx-swap="outerHTML"
+        hx-target="#todos-item"
+        hx-swap="innerHTML"
         >
       <th scope="row" th:text="${todo.id}">
         id
@@ -29,5 +29,4 @@
     </tr>
     </tbody>
   </table>
-  <div id="todo-div"></div>
 </div>
