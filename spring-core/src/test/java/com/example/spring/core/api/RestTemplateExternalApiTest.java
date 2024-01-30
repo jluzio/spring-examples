@@ -17,7 +17,9 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
 @Slf4j
-class RestTemplateTest {
+class RestTemplateExternalApiTest {
+
+  public static final String ROOT_URI = "https://jsonplaceholder.typicode.com";
 
   @Configuration
   static class Config {
@@ -37,9 +39,9 @@ class RestTemplateTest {
   RestTemplate restTemplate;
 
   @Test
-  void test_ok() throws Exception {
+  void test_ok() {
     var responseEntity = restTemplate.getForEntity(
-        "https://jsonplaceholder.typicode.com/todos/1",
+        ROOT_URI + "/todos/1",
         String.class
     );
     log.debug("responseEntity: {}", responseEntity);
@@ -48,9 +50,9 @@ class RestTemplateTest {
   }
 
   @Test
-  void test_not_found() throws Exception {
+  void test_not_found() {
     assertThatThrownBy(() -> restTemplate.getForEntity(
-        "https://jsonplaceholder.typicode.com/todos/999999",
+        ROOT_URI + "/todos/999999",
         String.class
     ))
         .isInstanceOf(RestClientException.class)

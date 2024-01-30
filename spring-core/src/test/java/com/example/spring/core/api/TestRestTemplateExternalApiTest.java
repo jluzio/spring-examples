@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 
 @SpringBootTest
 @Slf4j
-class TestRestTemplateTest {
+class TestRestTemplateExternalApiTest {
+
+  public static final String ROOT_URI = "https://jsonplaceholder.typicode.com";
 
   @Configuration
   static class Config {
@@ -23,7 +25,7 @@ class TestRestTemplateTest {
   @Test
   void test_ok() throws Exception {
     var responseEntity = testRestTemplate.getForEntity(
-        "https://jsonplaceholder.typicode.com/todos/1",
+        ROOT_URI + "/todos/1",
         String.class
     );
     log.debug("responseEntity: {}", responseEntity);
@@ -34,7 +36,7 @@ class TestRestTemplateTest {
   @Test
   void test_not_found() throws Exception {
     var responseEntity = testRestTemplate.getForEntity(
-        "https://jsonplaceholder.typicode.com/todos/999999",
+        ROOT_URI + "/todos/999999",
         String.class
     );
     log.debug("responseEntity: {}", responseEntity);
