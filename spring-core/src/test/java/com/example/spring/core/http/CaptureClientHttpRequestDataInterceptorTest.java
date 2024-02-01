@@ -44,9 +44,12 @@ import org.springframework.web.client.RestTemplate;
 @Slf4j
 class CaptureClientHttpRequestDataInterceptorTest {
 
+  public static final String ROOT_URI = "https://jsonplaceholder.typicode.com";
+
   @Configuration
   @Import({CaptureClientHttpRequestDataInterceptor.class, LoggingEventListener.class})
   static class Config {
+
 
     @Bean
     RestTemplate restTemplate(Collection<ClientHttpRequestInterceptor> interceptors) {
@@ -66,12 +69,11 @@ class CaptureClientHttpRequestDataInterceptorTest {
 
     RestTemplateBuilder baseRestTemplateBuilder() {
       return new RestTemplateBuilder()
+          .rootUri(ROOT_URI)
           .requestFactory(
               () -> new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
     }
   }
-
-  public static final String ROOT_URI = "https://jsonplaceholder.typicode.com";
 
   @Autowired
   @Qualifier("restTemplate")
@@ -87,10 +89,7 @@ class CaptureClientHttpRequestDataInterceptorTest {
 
   @Test
   void test_ok() {
-    var responseEntity = restTemplate.getForEntity(
-        ROOT_URI + "/todos/1",
-        String.class
-    );
+    var responseEntity = restTemplate.getForEntity("/todos/1", String.class);
     log.debug("responseEntity: {}", responseEntity);
     assertThat(responseEntity.getStatusCode())
         .isEqualTo(HttpStatus.OK);
@@ -114,9 +113,8 @@ class CaptureClientHttpRequestDataInterceptorTest {
   @Test
   void test_not_found() {
     assertThatThrownBy(() -> restTemplate.getForEntity(
-        ROOT_URI + "/todos/999999",
-        String.class
-    ))
+        "/todos/999999", String.class)
+    )
         .isInstanceOf(RestClientException.class)
         .isInstanceOf(RestClientResponseException.class)
         .isInstanceOf(NotFound.class)
@@ -138,9 +136,7 @@ class CaptureClientHttpRequestDataInterceptorTest {
   @Test
   void test_not_found_with_exception_interceptor() {
     assertThatThrownBy(() -> restTemplateWithExceptionHandlingInterceptor.getForEntity(
-        ROOT_URI + "/todos/999999",
-        String.class
-    ))
+        "/todos/999999", String.class))
         .isInstanceOf(RestClientException.class)
         .isInstanceOf(RestClientResponseException.class)
         .isInstanceOf(NotFound.class)

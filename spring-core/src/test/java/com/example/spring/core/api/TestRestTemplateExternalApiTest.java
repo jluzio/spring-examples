@@ -24,10 +24,7 @@ class TestRestTemplateExternalApiTest {
 
   @Test
   void test_ok() throws Exception {
-    var responseEntity = testRestTemplate.getForEntity(
-        ROOT_URI + "/todos/1",
-        String.class
-    );
+    var responseEntity = testRestTemplate.getForEntity(ROOT_URI + "/todos/1", String.class);
     log.debug("responseEntity: {}", responseEntity);
     assertThat(responseEntity.getStatusCode())
         .isEqualTo(HttpStatus.OK);
@@ -35,10 +32,7 @@ class TestRestTemplateExternalApiTest {
 
   @Test
   void test_not_found() throws Exception {
-    var responseEntity = testRestTemplate.getForEntity(
-        ROOT_URI + "/todos/999999",
-        String.class
-    );
+    var responseEntity = testRestTemplate.getForEntity(ROOT_URI + "/todos/999999", String.class);
     log.debug("responseEntity: {}", responseEntity);
     assertThat(responseEntity.getStatusCode())
         .isEqualTo(HttpStatus.NOT_FOUND);

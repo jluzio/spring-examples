@@ -26,7 +26,8 @@ class RestTemplateExternalApiTest {
 
     @Bean
     public RestTemplateBuilder restTemplateBuilder() {
-      return new RestTemplateBuilder();
+      return new RestTemplateBuilder()
+          .rootUri(ROOT_URI);
     }
 
     @Bean
@@ -40,10 +41,7 @@ class RestTemplateExternalApiTest {
 
   @Test
   void test_ok() {
-    var responseEntity = restTemplate.getForEntity(
-        ROOT_URI + "/todos/1",
-        String.class
-    );
+    var responseEntity = restTemplate.getForEntity("/todos/1", String.class);
     log.debug("responseEntity: {}", responseEntity);
     assertThat(responseEntity.getStatusCode())
         .isEqualTo(HttpStatus.OK);
@@ -51,10 +49,7 @@ class RestTemplateExternalApiTest {
 
   @Test
   void test_not_found() {
-    assertThatThrownBy(() -> restTemplate.getForEntity(
-        ROOT_URI + "/todos/999999",
-        String.class
-    ))
+    assertThatThrownBy(() -> restTemplate.getForEntity("/todos/999999", String.class))
         .isInstanceOf(RestClientException.class)
         .isInstanceOf(RestClientResponseException.class)
         .satisfies(throwable -> {
