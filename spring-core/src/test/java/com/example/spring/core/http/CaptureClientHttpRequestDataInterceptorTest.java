@@ -4,12 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 
-import com.example.types.Todo;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -25,15 +21,11 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpClientErrorException.NotFound;
 import org.springframework.web.client.RestClientException;
@@ -154,26 +146,6 @@ class CaptureClientHttpRequestDataInterceptorTest {
               .isNotNull()
               .isInstanceOf(NotFound.class);
         });
-  }
-
-  @RestController
-  static class TodoController {
-
-    List<Todo> todos = IntStream.rangeClosed(1, 10)
-        .mapToObj(id -> new Todo()
-            .withId(id)
-            .withName("Todo-%s".formatted(id)))
-        .toList();
-
-    @GetMapping("/todos/{id}")
-    public ResponseEntity<Todo> todo(@PathVariable Integer id) {
-      log.debug("/todos/{}", id);
-      return todos.stream()
-          .filter(it -> Objects.equals(it.getId(), id))
-          .findFirst()
-          .map(ResponseEntity::ok)
-          .orElse(ResponseEntity.notFound().build());
-    }
   }
 
   static class LoggingEventListener {
