@@ -5,169 +5,221 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.nio.charset.StandardCharsets;
 import lombok.extern.slf4j.Slf4j;
+import org.assertj.core.api.AbstractStringAssert;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.boot.web.client.RestTemplateBuilder;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.event.EventListener;
-import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestExecution;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.mock.http.client.MockClientHttpRequest;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpClientErrorException.NotFound;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
-import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
 @Slf4j
 class CaptureClientHttpRequestDataInterceptorTest {
 
-  public static final String ROOT_URI = "https://jsonplaceholder.typicode.com";
-
   @Configuration
-  @Import({CaptureClientHttpRequestDataInterceptor.class, LoggingEventListener.class})
+  @Import({CaptureClientHttpRequestDataInterceptor.class, NopEventListener.class})
   static class Config {
 
-
-    @Bean
-    RestTemplate restTemplate(Collection<ClientHttpRequestInterceptor> interceptors) {
-      return baseRestTemplateBuilder()
-          .additionalInterceptors(interceptors)
-          .build();
-    }
-
-    @Bean
-    RestTemplate restTemplateWithExceptionHandlingInterceptor(
-        Collection<ClientHttpRequestInterceptor> interceptors) {
-      return baseRestTemplateBuilder()
-          .additionalInterceptors(interceptors)
-          .additionalInterceptors(new NotFoundInterceptor())
-          .build();
-    }
-
-    RestTemplateBuilder baseRestTemplateBuilder() {
-      return new RestTemplateBuilder()
-          .rootUri(ROOT_URI)
-          .requestFactory(
-              () -> new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
-    }
   }
 
   @Autowired
-  @Qualifier("restTemplate")
-  RestTemplate restTemplate;
-  @Autowired
-  @Qualifier("restTemplateWithExceptionHandlingInterceptor")
-  RestTemplate restTemplateWithExceptionHandlingInterceptor;
-  @SpyBean
-  LoggingEventListener eventListener;
+  CaptureClientHttpRequestDataInterceptor interceptor;
   @Captor
   ArgumentCaptor<ClientHttpRequestDataEvent> eventArgCaptor;
+  @SpyBean
+  NopEventListener eventListener;
 
 
   @Test
-  void test_ok() {
-    var responseEntity = restTemplate.getForEntity("/todos/1", String.class);
-    log.debug("responseEntity: {}", responseEntity);
-    assertThat(responseEntity.getStatusCode())
-        .isEqualTo(HttpStatus.OK);
-    log.debug("responseEntity.body: {}", responseEntity.getBody());
-    assertThat(responseEntity.getBody())
-        .isNotEmpty();
+  void test_status_ok() throws IOException {
+    var request = new MockClientHttpRequest(HttpMethod.GET, "/data");
+    var requestBody = "dummy";
+    var execution = mockClientHttpRequestExecution(
+        HttpStatus.OK.getReasonPhrase().getBytes(), HttpStatus.OK);
+    var responseBody = HttpStatus.OK.getReasonPhrase();
 
-    verify(eventListener).receiveEvent(eventArgCaptor.capture());
+    var response = interceptor.intercept(request, requestBody.getBytes(), execution);
+
+    assertThat(response.getStatusCode())
+        .isEqualTo(HttpStatus.OK);
+    assertResponseStringData(response)
+        .isEqualTo(responseBody);
+
+    verify(eventListener).listen(eventArgCaptor.capture());
     assertThat(eventArgCaptor.getValue())
         .isNotNull()
         .satisfies(it -> log.debug("event: {}", it));
 
     var requestData = eventArgCaptor.getValue().getRequestData();
-    var responsePayload = requestData.getResponseBody();
-    var responsePayloadString = new String(responsePayload);
-    log.debug("responsePayloadString: {}", responsePayloadString);
-    assertThat(responsePayloadString)
-        .isNotEmpty();
+    assertThat(requestData)
+        .satisfies(it -> assertThat(it.getResponseException()).isNull())
+        .usingRecursiveComparison()
+        .ignoringExpectedNullFields()
+        .isEqualTo(ClientHttpRequestData.builder()
+            .request(request)
+            .response(response)
+            .responseStatus(response.getStatusCode())
+            .build());
+    assertThat(requestData.getRequestBody())
+        .asString()
+        .satisfies(it -> log.debug("requestBody: {}", it))
+        .isEqualTo(requestBody);
+    assertThat(requestData.getResponseBody())
+        .asString()
+        .satisfies(it -> log.debug("responseBody: {}", it))
+        .isEqualTo(responseBody);
   }
 
   @Test
-  void test_not_found() {
-    assertThatThrownBy(() -> restTemplate.getForEntity(
-        "/todos/999999", String.class)
-    )
+  void test_status_error() throws IOException {
+    var request = new MockClientHttpRequest(HttpMethod.GET, "/data");
+    var requestBody = "dummy";
+    var responseBody = HttpStatus.I_AM_A_TEAPOT.getReasonPhrase();
+    var execution = mockClientHttpRequestExecution(
+        responseBody.getBytes(), HttpStatus.I_AM_A_TEAPOT);
+
+    var response = interceptor.intercept(request, requestBody.getBytes(), execution);
+
+    assertThat(response.getStatusCode())
+        .isEqualTo(HttpStatus.I_AM_A_TEAPOT);
+    assertResponseStringData(response)
+        .isEqualTo(responseBody);
+
+    verify(eventListener).listen(eventArgCaptor.capture());
+    assertThat(eventArgCaptor.getValue())
+        .isNotNull()
+        .satisfies(it -> log.debug("event: {}", it));
+
+    var requestData = eventArgCaptor.getValue().getRequestData();
+    assertThat(requestData)
+        .satisfies(it -> assertThat(it.getResponseException()).isNull())
+        .usingRecursiveComparison()
+        .ignoringExpectedNullFields()
+        .isEqualTo(ClientHttpRequestData.builder()
+            .request(request)
+            .response(response)
+            .responseStatus(response.getStatusCode())
+            .build());
+    assertThat(requestData.getRequestBody())
+        .asString()
+        .satisfies(it -> log.debug("requestBody: {}", it))
+        .isEqualTo(requestBody);
+    assertThat(requestData.getResponseBody())
+        .asString()
+        .satisfies(it -> log.debug("responseBody: {}", it))
+        .isEqualTo(responseBody);
+  }
+
+  @Test
+  void test_status_error_RestClientException() throws IOException {
+    var request = new MockClientHttpRequest(HttpMethod.GET, "/data");
+    var requestBody = "dummy";
+    var requestBodyBytes = requestBody.getBytes();
+    var execution = exceptionClientHttpRequestExecution(
+        HttpClientErrorException.create(
+            HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase(), null, null, null));
+
+    assertThatThrownBy(() -> interceptor.intercept(request, requestBodyBytes, execution))
         .isInstanceOf(RestClientException.class)
         .isInstanceOf(RestClientResponseException.class)
         .isInstanceOf(NotFound.class)
         .satisfies(throwable -> {
-          RestClientResponseException restClientResponseException = (RestClientResponseException) throwable;
-          log.debug("responseBody: {}", restClientResponseException.getResponseBodyAsString());
-
-          verify(eventListener).receiveEvent(eventArgCaptor.capture());
+          verify(eventListener).listen(eventArgCaptor.capture());
           assertThat(eventArgCaptor.getValue())
               .isNotNull()
               .satisfies(it -> log.debug("event: {}", it));
 
           var requestData = eventArgCaptor.getValue().getRequestData();
+          assertThat(requestData.getRequest())
+              .isEqualTo(request);
+          assertThat(requestData.getRequestBody())
+              .asString()
+              .satisfies(it -> log.debug("requestBody: {}", it))
+              .isEqualTo(requestBody);
+          assertThat(requestData)
+              .extracting(ClientHttpRequestData::getResponse,
+                  ClientHttpRequestData::getResponseBody)
+              .allSatisfy(it -> assertThat(it).isNull());
           assertThat(requestData.getResponseException())
-              .isNull();
-        });
-  }
-
-  @Test
-  void test_not_found_with_exception_interceptor() {
-    assertThatThrownBy(() -> restTemplateWithExceptionHandlingInterceptor.getForEntity(
-        "/todos/999999", String.class))
-        .isInstanceOf(RestClientException.class)
-        .isInstanceOf(RestClientResponseException.class)
-        .isInstanceOf(NotFound.class)
-        .satisfies(throwable -> {
-          RestClientResponseException restClientResponseException = (RestClientResponseException) throwable;
-          log.debug("responseBody: {}", restClientResponseException.getResponseBodyAsString());
-
-          verify(eventListener).receiveEvent(eventArgCaptor.capture());
-          assertThat(eventArgCaptor.getValue())
-              .isNotNull()
-              .satisfies(it -> log.debug("event: {}", it));
-
-          var requestData = eventArgCaptor.getValue().getRequestData();
-          assertThat(requestData.getResponseException())
-              .isNotNull()
               .isInstanceOf(NotFound.class);
         });
   }
 
-  static class LoggingEventListener {
+  @Test
+  void test_status_error_IOException() throws IOException {
+    var request = new MockClientHttpRequest(HttpMethod.GET, "/data");
+    var requestBody = "dummy";
+    var requestBodyBytes = requestBody.getBytes();
+    var execution = exceptionClientHttpRequestExecution(
+        new IOException(HttpStatus.NOT_FOUND.getReasonPhrase()));
+
+    assertThatThrownBy(() -> interceptor.intercept(request, requestBodyBytes, execution))
+        .isInstanceOf(IOException.class)
+        .satisfies(throwable -> {
+          verify(eventListener).listen(eventArgCaptor.capture());
+          assertThat(eventArgCaptor.getValue())
+              .isNotNull()
+              .satisfies(it -> log.debug("event: {}", it));
+
+          var requestData = eventArgCaptor.getValue().getRequestData();
+          assertThat(requestData.getRequest())
+              .isEqualTo(request);
+          assertThat(requestData.getRequestBody())
+              .asString()
+              .satisfies(it -> log.debug("requestBody: {}", it))
+              .isEqualTo(requestBody);
+          assertThat(requestData)
+              .extracting(ClientHttpRequestData::getResponse,
+                  ClientHttpRequestData::getResponseBody)
+              .allSatisfy(it -> assertThat(it).isNull());
+          assertThat(requestData.getResponseException())
+              .isInstanceOf(IOException.class);
+        });
+  }
+
+  AbstractStringAssert<?> assertResponseStringData(ClientHttpResponse response) throws IOException {
+    return assertThat(response.getBody())
+        .isNotNull()
+        .asString(StandardCharsets.UTF_8);
+  }
+
+  ClientHttpRequestExecution mockClientHttpRequestExecution(byte[] data, HttpStatus httpStatus) {
+    return (request, body) -> new BufferingClientHttpResponseWrapper(data, httpStatus);
+  }
+
+  ClientHttpRequestExecution exceptionClientHttpRequestExecution(IOException throwable) {
+    return (request, body) -> {
+      throw throwable;
+    };
+  }
+
+  ClientHttpRequestExecution exceptionClientHttpRequestExecution(RuntimeException throwable) {
+    return (request, body) -> {
+      throw throwable;
+    };
+  }
+
+  static class NopEventListener {
 
     @EventListener
-    public void receiveEvent(ClientHttpRequestDataEvent event) {
-      log.debug("{}", event);
+    public void listen(ClientHttpRequestDataEvent event) {
+      // nop
     }
   }
 
-  static class NotFoundInterceptor implements ClientHttpRequestInterceptor {
-
-    @Override
-    public ClientHttpResponse intercept(HttpRequest request, byte[] body,
-        ClientHttpRequestExecution execution) throws IOException {
-      var response = execution.execute(request, body);
-      if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
-        throw HttpClientErrorException.create(response.getStatusCode(), "Not Found", null, null,
-            null);
-      } else {
-        return response;
-      }
-    }
-  }
 }

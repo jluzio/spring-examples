@@ -37,7 +37,7 @@ public class CaptureClientHttpRequestDataInterceptor implements ClientHttpReques
 
       return response;
     } catch (IOException | RuntimeException e) {
-      var responseStatus = getHttpStatusCode(e);
+      var responseStatus = getHttpStatus(e);
 
       requestDataBuilder
           .responseException(e)
@@ -53,8 +53,12 @@ public class CaptureClientHttpRequestDataInterceptor implements ClientHttpReques
   private byte[] getResponseBody(ClientHttpResponse response) throws IOException {
     byte[] body = null;
     if (isResponseBuffered(response)) {
-      InputStream bodyInput = response.getBody();
-      body = bodyInput.readAllBytes();
+      try {
+        InputStream bodyInput = response.getBody();
+        body = bodyInput.readAllBytes();
+      } catch (IOException e) {
+        // Ignoring the exception. Response is buffered, so body must have no content.
+      }
     }
     return body;
   }
@@ -63,16 +67,16 @@ public class CaptureClientHttpRequestDataInterceptor implements ClientHttpReques
     return response.getClass().toString().endsWith("BufferingClientHttpResponseWrapper");
   }
 
-  private HttpStatusCode getHttpStatusCode(Throwable e) {
-    HttpStatusCode httpStatusCode = null;
+  private HttpStatusCode getHttpStatus(Throwable e) {
+    HttpStatusCode httpStatus = null;
     if (e instanceof HttpStatusCodeException hsce) {
-      httpStatusCode = hsce.getStatusCode();
+      httpStatus = hsce.getStatusCode();
     } else {
       var responseStatus = e.getClass().getAnnotation(ResponseStatus.class);
       if (responseStatus != null) {
-        httpStatusCode = responseStatus.code();
+        httpStatus = responseStatus.code();
       }
     }
-    return httpStatusCode;
+    return httpStatus;
   }
 }
