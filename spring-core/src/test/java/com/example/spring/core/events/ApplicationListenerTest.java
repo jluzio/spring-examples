@@ -7,14 +7,20 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
 import org.springframework.test.context.event.BeforeTestExecutionEvent;
 import org.springframework.test.context.event.BeforeTestMethodEvent;
 
 @SpringBootTest
 @Slf4j
-public class ApplicationListenerTest {
+class ApplicationListenerTest {
+
+  @Configuration
+  @Import({AppEventListener.class, EventListenerBean.class})
+  static class Config {
+
+  }
 
   @Test
   void test() {
@@ -24,26 +30,19 @@ public class ApplicationListenerTest {
         .forEach(log::info);
   }
 
-  @Configuration
-  static class Config {
+  static class AppEventListener implements ApplicationListener {
 
-    @Component
-    class AppEventListener implements ApplicationListener {
-
-      @Override
-      public void onApplicationEvent(ApplicationEvent event) {
-        log.info("event: {}", event);
-      }
+    @Override
+    public void onApplicationEvent(ApplicationEvent event) {
+      log.info("event: {}", event);
     }
+  }
 
-    @Component
-    class EventListenerBean {
+  static class EventListenerBean {
 
-      @EventListener({BeforeTestMethodEvent.class, BeforeTestExecutionEvent.class})
-      void listenSomeEvent(ApplicationEvent event) {
-        log.info("some-event: {}", event);
-      }
-
+    @EventListener({BeforeTestMethodEvent.class, BeforeTestExecutionEvent.class})
+    void listenSomeEvent(ApplicationEvent event) {
+      log.info("some-event: {}", event);
     }
   }
 }
