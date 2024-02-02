@@ -63,8 +63,11 @@ public class CaptureClientHttpRequestDataInterceptor implements ClientHttpReques
     return body;
   }
 
+  /**
+   * @see org.springframework.http.client.BufferingClientHttpResponseWrapper
+   */
   private boolean isResponseBuffered(ClientHttpResponse response) {
-    return response.getClass().toString().endsWith("BufferingClientHttpResponseWrapper");
+    return response.getClass().getName().contains("Buffer");
   }
 
   private HttpStatusCode getHttpStatus(Throwable e) {
