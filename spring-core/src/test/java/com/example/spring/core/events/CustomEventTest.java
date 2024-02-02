@@ -2,18 +2,14 @@ package com.example.spring.core.events;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.clearInvocations;
-import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import java.time.Duration;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
@@ -24,7 +20,6 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Mono;
 
 @SpringBootTest
 @Slf4j
@@ -70,26 +65,6 @@ class CustomEventTest {
     clearInvocations(eventListener);
   }
 
-  /**
-   * From docs: By default, event listeners receive events synchronously.
-   */
-  @Test
-  void sync_test() {
-    var eventCaptor = ArgumentCaptor.forClass(DelayedProcessingEvent.class);
-    doCallRealMethod()
-        .when(eventListener).listenDelayedProcessingEvent(eventCaptor.capture());
-
-    eventPublisher.publishEvent(new DelayedProcessingEvent("-data1-"));
-    verify(eventListener).listenDelayedProcessingEvent(any());
-    log.debug("events: {}", eventCaptor.getAllValues());
-
-    eventPublisher.publishEvent(new DelayedProcessingEvent("-data2-"));
-    verify(eventListener, times(2)).listenDelayedProcessingEvent(any());
-    log.debug("events: {}", eventCaptor.getAllValues());
-
-    clearInvocations(eventListener);
-  }
-
   @Component
   static class EventListenerBean {
 
@@ -125,22 +100,13 @@ class CustomEventTest {
     void listenNonApplicationEvent(NonApplicationEvent event) {
       log.info("NonApplicationEvent: {}", event);
     }
-
-    @EventListener
-    void listenDelayedProcessingEvent(DelayedProcessingEvent event) {
-      log.info("DelayedProcessingEvent (start): {}", event);
-      Mono.delay(Duration.ofMillis(50))
-          .block();
-      log.info("DelayedProcessingEvent (end): {}", event);
-    }
   }
 
   @ToString
   @Getter
-  @Setter
   static class CustomEvent extends ApplicationEvent {
 
-    private String data;
+    private final String data;
 
     public CustomEvent(Object source, String data) {
       super(source);
@@ -155,7 +121,6 @@ class CustomEventTest {
     }
   }
 
-
   static class IntegerEntityCreatedEvent extends EntityCreatedEvent<Integer> {
 
     public IntegerEntityCreatedEvent(Object source) {
@@ -165,7 +130,6 @@ class CustomEventTest {
 
   @ToString
   @Getter
-  @Setter
   static class EntityCreatedEvent<T> extends ApplicationEvent {
 
     public EntityCreatedEvent(Object source) {
@@ -174,10 +138,6 @@ class CustomEventTest {
   }
 
   record NonApplicationEvent(String data) {
-
-  }
-
-  record DelayedProcessingEvent(String data) {
 
   }
 }

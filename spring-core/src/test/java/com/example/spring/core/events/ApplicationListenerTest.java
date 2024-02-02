@@ -30,7 +30,7 @@ class ApplicationListenerTest {
         .forEach(log::info);
   }
 
-  static class AppEventListener implements ApplicationListener {
+  static class AppEventListener implements ApplicationListener<ApplicationEvent> {
 
     @Override
     public void onApplicationEvent(ApplicationEvent event) {
