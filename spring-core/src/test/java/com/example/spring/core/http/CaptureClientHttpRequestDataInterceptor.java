@@ -9,9 +9,11 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.client.HttpStatusCodeException;
 
+@Component
 @RequiredArgsConstructor
 public class CaptureClientHttpRequestDataInterceptor implements ClientHttpRequestInterceptor {
 
