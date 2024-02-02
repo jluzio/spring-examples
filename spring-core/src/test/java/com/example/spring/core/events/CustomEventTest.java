@@ -1,68 +1,154 @@
 package com.example.spring.core.events;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.clearInvocations;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+import java.time.Duration;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Mono;
 
 @SpringBootTest
 @Slf4j
 class CustomEventTest {
 
-  @Autowired
-  ApplicationEventPublisher eventPublisher;
-
-  @Test
-  void test() {
-    eventPublisher.publishEvent(new CustomEvent("-source-", "-data-"));
-    eventPublisher.publishEvent(new CustomEvent("-source-", "foo"));
-
-    eventPublisher.publishEvent(new StringEntityCreatedEvent("-source string-"));
-    eventPublisher.publishEvent(new IntegerEntityCreatedEvent("-source integer-"));
-  }
-
   @Configuration
+  @Import(EventListenerBean.class)
   static class Config {
 
-    @Component
-    class EventListenerBean {
+  }
 
-      @EventListener
-        // defaults to @Order(0)
-      void listenCustomEvent(CustomEvent event) {
-        log.info("event: {}", event);
-      }
+  @Autowired
+  ApplicationEventPublisher eventPublisher;
+  @SpyBean
+  EventListenerBean eventListener;
 
-      @Order(-1)
-      @EventListener(condition = "#event.data == 'foo'")
-      void listenCustomEventDataFoo(CustomEvent event) {
-        log.info("event-data-foo: {}", event);
-      }
+  @Test
+  void basic() {
+    eventPublisher.publishEvent(new CustomEvent(this, "-data-"));
+    verify(eventListener).listenCustomEvent(any());
+    verify(eventListener, never()).listenCustomEventDataFoo(any());
+    verify(eventListener, never()).listenCustomEventRootDataFoo(any());
+    clearInvocations(eventListener);
 
-      @Order(2)
-      @EventListener(condition = "#root.event.data == 'foo'")
-      void listenCustomEventRootDataFoo(CustomEvent someEvent) {
-        log.info("event-root-data-foo: {}", someEvent);
-      }
+    eventPublisher.publishEvent(new CustomEvent(this, "foo"));
+    verify(eventListener).listenCustomEvent(any());
+    verify(eventListener).listenCustomEventDataFoo(any());
+    verify(eventListener).listenCustomEventRootDataFoo(any());
+    clearInvocations(eventListener);
 
-      @EventListener
-      void listenEntityCreatedString(EntityCreatedEvent<String> event) {
-        log.info("EntityCreatedEvent<String>: {}", event.getSource());
-      }
+    eventPublisher.publishEvent(new StringEntityCreatedEvent(this));
+    verify(eventListener).listenEntityCreatedString(any());
+    verify(eventListener, never()).listenEntityCreatedInteger(any());
+    clearInvocations(eventListener);
 
-      @EventListener
-      void listenEntityCreatedInteger(EntityCreatedEvent<Integer> event) {
-        log.info("EntityCreatedEvent<Integer>: {}", event.getSource());
-      }
+    eventPublisher.publishEvent(new IntegerEntityCreatedEvent(this));
+    verify(eventListener, never()).listenEntityCreatedString(any());
+    verify(eventListener).listenEntityCreatedInteger(any());
+    clearInvocations(eventListener);
+
+    eventPublisher.publishEvent(new NonApplicationEvent("-data-"));
+    verify(eventListener).listenNonApplicationEvent(any());
+    clearInvocations(eventListener);
+  }
+
+  /**
+   * From docs: By default, event listeners receive events synchronously.
+   */
+  @Test
+  void sync_test() {
+    var eventCaptor = ArgumentCaptor.forClass(DelayedProcessingEvent.class);
+    doCallRealMethod()
+        .when(eventListener).listenDelayedProcessingEvent(eventCaptor.capture());
+
+    eventPublisher.publishEvent(new DelayedProcessingEvent("-data1-"));
+    verify(eventListener).listenDelayedProcessingEvent(any());
+    log.debug("events: {}", eventCaptor.getAllValues());
+
+    eventPublisher.publishEvent(new DelayedProcessingEvent("-data2-"));
+    verify(eventListener, times(2)).listenDelayedProcessingEvent(any());
+    log.debug("events: {}", eventCaptor.getAllValues());
+
+    clearInvocations(eventListener);
+  }
+
+  @Component
+  static class EventListenerBean {
+
+    @EventListener
+      // defaults to @Order(0)
+    void listenCustomEvent(CustomEvent event) {
+      log.info("event: {}", event);
+    }
+
+    @Order(-1)
+    @EventListener(condition = "#event.data == 'foo'")
+    void listenCustomEventDataFoo(CustomEvent event) {
+      log.info("event-data-foo: {}", event);
+    }
+
+    @Order(2)
+    @EventListener(condition = "#root.event.data == 'foo'")
+    void listenCustomEventRootDataFoo(CustomEvent someEvent) {
+      log.info("event-root-data-foo: {}", someEvent);
+    }
+
+    @EventListener
+    void listenEntityCreatedString(EntityCreatedEvent<String> event) {
+      log.info("EntityCreatedEvent<String>: {}", event);
+    }
+
+    @EventListener
+    void listenEntityCreatedInteger(EntityCreatedEvent<Integer> event) {
+      log.info("EntityCreatedEvent<Integer>: {}", event);
+    }
+
+    @EventListener
+    void listenNonApplicationEvent(NonApplicationEvent event) {
+      log.info("NonApplicationEvent: {}", event);
+    }
+
+    @EventListener
+    void listenDelayedProcessingEvent(DelayedProcessingEvent event) {
+      log.info("DelayedProcessingEvent (start): {}", event);
+      Mono.delay(Duration.ofMillis(50))
+          .block();
+      log.info("DelayedProcessingEvent (end): {}", event);
     }
   }
 
-  class StringEntityCreatedEvent extends EntityCreatedEvent<String> {
+  @ToString
+  @Getter
+  @Setter
+  static class CustomEvent extends ApplicationEvent {
+
+    private String data;
+
+    public CustomEvent(Object source, String data) {
+      super(source);
+      this.data = data;
+    }
+  }
+
+  static class StringEntityCreatedEvent extends EntityCreatedEvent<String> {
 
     public StringEntityCreatedEvent(Object source) {
       super(source);
@@ -70,10 +156,28 @@ class CustomEventTest {
   }
 
 
-  class IntegerEntityCreatedEvent extends EntityCreatedEvent<Integer> {
+  static class IntegerEntityCreatedEvent extends EntityCreatedEvent<Integer> {
 
     public IntegerEntityCreatedEvent(Object source) {
       super(source);
     }
+  }
+
+  @ToString
+  @Getter
+  @Setter
+  static class EntityCreatedEvent<T> extends ApplicationEvent {
+
+    public EntityCreatedEvent(Object source) {
+      super(source);
+    }
+  }
+
+  record NonApplicationEvent(String data) {
+
+  }
+
+  record DelayedProcessingEvent(String data) {
+
   }
 }
