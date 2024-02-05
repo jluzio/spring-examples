@@ -1,5 +1,6 @@
 package com.example.spring.core.http;
 
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Value;
@@ -14,10 +15,12 @@ public class ClientHttpRequestData {
 
   HttpRequest request;
   byte[] requestBody;
+  Instant requestTimestamp;
 
   ClientHttpResponse response;
   HttpStatusCode responseStatus;
   Throwable responseException;
   byte[] responseBody;
+  Instant responseTimestamp;
 
 }

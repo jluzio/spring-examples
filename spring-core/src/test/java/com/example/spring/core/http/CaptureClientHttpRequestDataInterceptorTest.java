@@ -3,16 +3,21 @@ package com.example.spring.core.http;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.Clock;
+import java.time.Instant;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.AbstractStringAssert;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -43,7 +48,16 @@ class CaptureClientHttpRequestDataInterceptorTest {
   ArgumentCaptor<ClientHttpRequestDataEvent> eventArgCaptor;
   @SpyBean
   NopEventListener eventListener;
+  @MockBean
+  Clock clock;
+  Instant instant1 = Instant.parse("2020-01-02T03:04:05Z");
+  Instant instant2 = Instant.parse("2020-01-02T03:04:06Z");
 
+  @BeforeEach
+  void setup() {
+    when(clock.instant())
+        .thenReturn(instant1, instant2);
+  }
 
   @Test
   void test_status_ok() throws IOException {
@@ -72,8 +86,10 @@ class CaptureClientHttpRequestDataInterceptorTest {
         .ignoringExpectedNullFields()
         .isEqualTo(ClientHttpRequestData.builder()
             .request(request)
+            .requestTimestamp(instant1)
             .response(response)
             .responseStatus(response.getStatusCode())
+            .responseTimestamp(instant2)
             .build());
     assertThat(requestData.getRequestBody())
         .asString()
@@ -112,8 +128,10 @@ class CaptureClientHttpRequestDataInterceptorTest {
         .ignoringExpectedNullFields()
         .isEqualTo(ClientHttpRequestData.builder()
             .request(request)
+            .requestTimestamp(instant1)
             .response(response)
             .responseStatus(response.getStatusCode())
+            .responseTimestamp(instant2)
             .build());
     assertThat(requestData.getRequestBody())
         .asString()
@@ -145,8 +163,14 @@ class CaptureClientHttpRequestDataInterceptorTest {
               .satisfies(it -> log.debug("event: {}", it));
 
           var requestData = eventArgCaptor.getValue().getRequestData();
-          assertThat(requestData.getRequest())
-              .isEqualTo(request);
+          assertThat(requestData)
+              .usingRecursiveComparison()
+              .ignoringExpectedNullFields()
+              .isEqualTo(ClientHttpRequestData.builder()
+                  .request(request)
+                  .requestTimestamp(instant1)
+                  .responseTimestamp(instant2)
+                  .build());
           assertThat(requestData.getRequestBody())
               .asString()
               .satisfies(it -> log.debug("requestBody: {}", it))
@@ -177,8 +201,14 @@ class CaptureClientHttpRequestDataInterceptorTest {
               .satisfies(it -> log.debug("event: {}", it));
 
           var requestData = eventArgCaptor.getValue().getRequestData();
-          assertThat(requestData.getRequest())
-              .isEqualTo(request);
+          assertThat(requestData)
+              .usingRecursiveComparison()
+              .ignoringExpectedNullFields()
+              .isEqualTo(ClientHttpRequestData.builder()
+                  .request(request)
+                  .requestTimestamp(instant1)
+                  .responseTimestamp(instant2)
+                  .build());
           assertThat(requestData.getRequestBody())
               .asString()
               .satisfies(it -> log.debug("requestBody: {}", it))
@@ -221,5 +251,4 @@ class CaptureClientHttpRequestDataInterceptorTest {
       // nop
     }
   }
-
 }

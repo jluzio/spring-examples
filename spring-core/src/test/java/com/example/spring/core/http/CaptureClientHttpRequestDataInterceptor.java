@@ -2,6 +2,8 @@ package com.example.spring.core.http;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Clock;
+import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpRequest;
@@ -18,6 +20,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 public class CaptureClientHttpRequestDataInterceptor implements ClientHttpRequestInterceptor {
 
   private final ApplicationEventPublisher eventPublisher;
+  private final Clock clock;
 
   @Override
   public ClientHttpResponse intercept(
@@ -27,7 +30,8 @@ public class CaptureClientHttpRequestDataInterceptor implements ClientHttpReques
   ) throws IOException {
     var requestDataBuilder = ClientHttpRequestData.builder()
         .request(request)
-        .requestBody(body);
+        .requestBody(body)
+        .requestTimestamp(Instant.now(clock));
     try {
       var response = execution.execute(request, body);
       var responseBody = getResponseBody(response);
@@ -35,7 +39,8 @@ public class CaptureClientHttpRequestDataInterceptor implements ClientHttpReques
       requestDataBuilder
           .response(response)
           .responseStatus(response.getStatusCode())
-          .responseBody(responseBody);
+          .responseBody(responseBody)
+          .responseTimestamp(Instant.now(clock));
 
       return response;
     } catch (IOException | RuntimeException e) {
@@ -43,7 +48,8 @@ public class CaptureClientHttpRequestDataInterceptor implements ClientHttpReques
 
       requestDataBuilder
           .responseException(e)
-          .responseStatus(responseStatus);
+          .responseStatus(responseStatus)
+          .responseTimestamp(Instant.now(clock));
 
       throw e;
     } finally {

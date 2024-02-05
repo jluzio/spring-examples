@@ -3,16 +3,21 @@ package com.example.spring.core.http;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.Collection;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -76,6 +81,16 @@ class CaptureClientHttpRequestDataInterceptorExternalApiTest {
   LoggingEventListener eventListener;
   @Captor
   ArgumentCaptor<ClientHttpRequestDataEvent> eventArgCaptor;
+  @MockBean
+  Clock clock;
+  Instant instant1 = Instant.parse("2020-01-02T03:04:05Z");
+  Instant instant2 = Instant.parse("2020-01-02T03:04:06Z");
+
+  @BeforeEach
+  void setup() {
+    when(clock.instant())
+        .thenReturn(instant1, instant2);
+  }
 
 
   @Test
