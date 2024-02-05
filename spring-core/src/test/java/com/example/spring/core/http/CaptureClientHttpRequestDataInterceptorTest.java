@@ -61,7 +61,7 @@ class CaptureClientHttpRequestDataInterceptorTest {
 
   @Test
   void test_status_ok() throws IOException {
-    var request = new MockClientHttpRequest(HttpMethod.GET, "/data");
+    var request = mockClientHttpRequest("/data");
     var requestBody = "dummy";
     var execution = mockClientHttpRequestExecution(
         HttpStatus.OK.getReasonPhrase().getBytes(), HttpStatus.OK);
@@ -103,7 +103,7 @@ class CaptureClientHttpRequestDataInterceptorTest {
 
   @Test
   void test_status_error() throws IOException {
-    var request = new MockClientHttpRequest(HttpMethod.GET, "/data");
+    var request = mockClientHttpRequest("/data");
     var requestBody = "dummy";
     var responseBody = HttpStatus.I_AM_A_TEAPOT.getReasonPhrase();
     var execution = mockClientHttpRequestExecution(
@@ -145,7 +145,7 @@ class CaptureClientHttpRequestDataInterceptorTest {
 
   @Test
   void test_status_error_RestClientException() throws IOException {
-    var request = new MockClientHttpRequest(HttpMethod.GET, "/data");
+    var request = mockClientHttpRequest("/data");
     var requestBody = "dummy";
     var requestBodyBytes = requestBody.getBytes();
     var execution = exceptionClientHttpRequestExecution(
@@ -186,7 +186,7 @@ class CaptureClientHttpRequestDataInterceptorTest {
 
   @Test
   void test_status_error_IOException() throws IOException {
-    var request = new MockClientHttpRequest(HttpMethod.GET, "/data");
+    var request = mockClientHttpRequest("/data");
     var requestBody = "dummy";
     var requestBodyBytes = requestBody.getBytes();
     var execution = exceptionClientHttpRequestExecution(
@@ -220,6 +220,10 @@ class CaptureClientHttpRequestDataInterceptorTest {
           assertThat(requestData.getResponseException())
               .isInstanceOf(IOException.class);
         });
+  }
+
+  MockClientHttpRequest mockClientHttpRequest(String uri) {
+    return new MockClientHttpRequest(HttpMethod.GET, uri);
   }
 
   AbstractStringAssert<?> assertResponseStringData(ClientHttpResponse response) throws IOException {
