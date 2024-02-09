@@ -3,8 +3,6 @@ package com.example.spring.core.beans;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
-import lombok.Builder;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,36 +17,40 @@ class OptionalTest {
 
   @Configuration
   static class Config {
+
     @Bean
     String testString() {
       return "testString";
     }
+
+    @Bean
+    Integer beanCreatedWithOptionals(
+        Optional<NonExisting> optionalItem,
+        Optional<String> optionalString) {
+      return 42;
+    }
   }
-
-  @Data
-  @Builder
-  static class OptionalItem {
-
-    private String id;
-  }
-
 
   @Autowired
-  Optional<OptionalItem> optionalItem1;
+  Optional<NonExisting> optionalEmpty1;
   @Autowired(required = false)
-  OptionalItem optionalItem2;
+  NonExisting optionalEmpty2;
   @Autowired
   @Nullable
-  OptionalItem optionalItem3;
+  NonExisting optionalEmpty3;
   @Autowired
-  Optional<String> optionalString;
+  Optional<String> optionalPresentString;
 
   @Test
   void test() {
-    assertThat(optionalItem1).isEmpty();
-    assertThat(optionalItem2).isNull();
-    assertThat(optionalItem3).isNull();
-    assertThat(optionalString).isPresent();
+    assertThat(optionalEmpty1).isEmpty();
+    assertThat(optionalEmpty2).isNull();
+    assertThat(optionalEmpty3).isNull();
+    assertThat(optionalPresentString).isPresent();
+  }
+
+  record NonExisting(String id) {
+
   }
 
 }
