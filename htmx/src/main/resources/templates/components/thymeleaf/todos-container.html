@@ -16,6 +16,14 @@
     Load (Mustache)!
   </button>
   <button type="button" class="btn btn-primary"
+          th:hx-get="@{/components/kotlinx-html/todos}"
+          hx-trigger="click"
+          hx-target="#todos-list"
+          hx-swap="innerHTML swap:0.5s"
+  >
+    Load (kotlinx html)!
+  </button>
+  <button type="button" class="btn btn-primary"
           th:hx-get="@{/components/j2html/todos}"
           hx-trigger="click"
           hx-target="#todos-list"
