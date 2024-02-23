@@ -12,7 +12,7 @@ import org.testcontainers.containers.MySQLContainer;
 public class LocalDevApplication {
 
   @TestConfiguration(proxyBeanMethods = false)
-  class LocalDevTestcontainersConfig {
+  static class LocalDevTestcontainersConfig {
 
     @Bean
     @ServiceConnection
