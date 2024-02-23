@@ -10,6 +10,9 @@ public record Book(String id, String name, int pageCount, String authorId) {
       new Book("book-3", "Down Under", 436, "author-3")
   );
 
+  public static List<Book> findAll() {
+    return books;
+  }
   public static Book getById(String id) {
     return books.stream()
         .filter(book -> book.id().equals(id))
