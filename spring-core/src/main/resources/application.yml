@@ -13,6 +13,12 @@ logging:
 #  pattern:
 #    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %mask(%m){}%n"
 
+management:
+  endpoints.web.exposure.include: "*"
+  endpoint.health.probes:
+    enabled: true
+    show-details: always
+
 app:
   log:
     mask-converter:
