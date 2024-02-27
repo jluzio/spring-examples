@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
     }
 )
 @EnableConfigurationProperties
-class ConfigurationPropertiesAndQualifierTest {
+class BeanMethodsAndQualifierTest {
 
   @Data
   static class CfgProps {
