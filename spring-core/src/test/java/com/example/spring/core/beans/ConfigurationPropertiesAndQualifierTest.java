@@ -3,6 +3,7 @@ package com.example.spring.core.beans;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import lombok.Data;
+import lombok.Value;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -26,7 +27,12 @@ class ConfigurationPropertiesAndQualifierTest {
   static class CfgProps {
 
     private String id;
+  }
 
+  @Value
+  static class HolderCfgProps {
+
+    CfgProps cfgProps;
   }
 
   @Configuration
@@ -56,6 +62,10 @@ class ConfigurationPropertiesAndQualifierTest {
       return new CfgProps();
     }
 
+    @Bean
+    HolderCfgProps holderCfgProps(CfgProps cfgProps2) {
+      return new HolderCfgProps(cfgProps2);
+    }
   }
 
   @Autowired
@@ -64,6 +74,8 @@ class ConfigurationPropertiesAndQualifierTest {
   CfgProps cfgProps2;
   @Autowired
   CfgProps cfgProps3;
+  @Autowired
+  HolderCfgProps holderCfgProps;
 
   @Test
   void verify_props() {
@@ -79,6 +91,11 @@ class ConfigurationPropertiesAndQualifierTest {
     assertThat(cfgProps3)
         .extracting(CfgProps::getId)
         .isEqualTo("id3");
+
+    assertThat(holderCfgProps)
+        .extracting(HolderCfgProps::getCfgProps)
+        .extracting(CfgProps::getId)
+        .isEqualTo("id2");
   }
 
 }
