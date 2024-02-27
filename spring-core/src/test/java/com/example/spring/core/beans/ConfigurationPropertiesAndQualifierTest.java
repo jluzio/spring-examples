@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 
 @SpringBootTest(
     properties = {
+        "app.cfg-props.main.id=idMain",
         "app.cfg-props.1.id=id1",
         "app.cfg-props.2.id=id2",
         "app.cfg-props.3.id=id3",
@@ -30,6 +31,12 @@ class ConfigurationPropertiesAndQualifierTest {
 
   @Configuration
   static class Config {
+
+    @Bean
+    @ConfigurationProperties("app.cfg-props.main")
+    CfgProps cfgPropsMain() {
+      return new CfgProps();
+    }
 
     @Bean
     @ConfigurationProperties("app.cfg-props.1")
