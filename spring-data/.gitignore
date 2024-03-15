@@ -1,5 +1,15 @@
+# Gradle
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Old Maven config
 /target/
 !.mvn/wrapper/maven-wrapper.jar
+!maven_bkp/.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
 .apt_generated
