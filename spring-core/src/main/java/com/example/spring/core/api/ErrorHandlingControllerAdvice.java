@@ -1,5 +1,6 @@
 package com.example.spring.core.api;
 
+import java.util.Map;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -10,8 +11,13 @@ public class ErrorHandlingControllerAdvice {
 
   @ExceptionHandler
   ProblemDetail handle(IllegalStateException e) {
+    // RFC 7807
     var pd = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
     pd.setDetail(e.getLocalizedMessage());
+    // extension values
+    pd.setProperties(Map.of(
+        "some-key", "some-value"
+    ));
     return pd;
   }
 
