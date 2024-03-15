@@ -29,7 +29,7 @@ class EnvironmentTest {
   void test() {
     assertThat(env).isNotNull();
 
-    log.info("environment info :: profiles={}", env.getActiveProfiles());
+    log.info("environment info :: profiles={}", (Object) env.getActiveProfiles());
 
     Map<String, Function<String, Object>> mappings = ImmutableMap.of(
         "logging.level.com.example.spring", env::getProperty,
