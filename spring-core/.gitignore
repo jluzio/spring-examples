@@ -8,6 +8,7 @@ build/
 
 # Old Maven config
 /target/
+!.mvn/wrapper/maven-wrapper.jar
 !maven_bkp/.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
