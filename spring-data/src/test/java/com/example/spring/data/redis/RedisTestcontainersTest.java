@@ -32,7 +32,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @SpringBootTest
 @Testcontainers
-class RedisTest {
+class RedisTestcontainersTest {
 
   public record SampleDataRecord(String id, String value) {
 

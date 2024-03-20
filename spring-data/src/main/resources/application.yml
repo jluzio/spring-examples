@@ -3,6 +3,10 @@
 #    rest:
 #      base-path: /api
 
+# NOTE: Docker Composed Support enforces a required docker-compose file, so disabling this to be optional
+# 2024/03/20 :: TODO: remove if not using docker compose support or if it doesn't enforce a required docker-compose file
+spring.docker.compose.enabled: false
+
 logging:
   level:
     root: INFO

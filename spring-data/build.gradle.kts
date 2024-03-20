@@ -43,7 +43,6 @@ dependencies {
 
   developmentOnly("org.springframework.boot:spring-boot-devtools")
   testCompileOnly("org.springframework.boot:spring-boot-devtools")
-  developmentOnly("org.springframework.boot:spring-boot-docker-compose")
   annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
   compileOnly("org.projectlombok:lombok")
   testCompileOnly("org.projectlombok:lombok")
@@ -52,6 +51,8 @@ dependencies {
   annotationProcessor("com.querydsl:querydsl-apt:$querydsl_version:jakarta") {
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
   }
+  // NOTE: Docker Composed Support enforces a required docker-compose file if spring.docker.compose.enabled is true (which is by default)
+  developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 
   implementation("org.hsqldb:hsqldb")
   implementation("redis.clients:jedis")
