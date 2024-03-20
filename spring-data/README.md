@@ -3,6 +3,7 @@
   - https://spring.io/projects/spring-data-jpa
   - https://spring.io/projects/spring-data-rest
   - https://spring.io/projects/spring-data-redis
+- https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html
 - http://querydsl.com
 
 # Data Populators

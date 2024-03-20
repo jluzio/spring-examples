@@ -1,3 +1,7 @@
+# References
+- https://docs.spring.io/spring-boot/docs/current/reference/html/
+- https://docs.spring.io/spring-boot/docs/current/reference/html/application-properties.html
+
 # Changes in Spring Boot 3.0.0
 
 ## Switch to Jakarta EE
