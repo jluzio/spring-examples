@@ -11,10 +11,21 @@ java {
   sourceCompatibility = JavaVersion.VERSION_21
 }
 
-configurations {
-  compileOnly {
-    extendsFrom(configurations.annotationProcessor.get())
-  }
+// enable Java preview features
+val compileJvmArgs = listOf("--enable-preview")
+val runtimeJvmArgs = listOf(
+  "--enable-preview",
+  "--add-opens", "java.base/java.lang=ALL-UNNAMED",
+  "--add-opens", "java.base/java.util=ALL-UNNAMED"
+)
+tasks.withType<JavaCompile>().configureEach {
+  options.compilerArgs.addAll(compileJvmArgs)
+}
+tasks.withType<Test>().configureEach {
+  jvmArgs(runtimeJvmArgs)
+}
+tasks.withType<JavaExec>().configureEach {
+  jvmArgs(runtimeJvmArgs)
 }
 
 repositories {
