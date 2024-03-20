@@ -7,7 +7,7 @@
 - http://querydsl.com
 
 # Data Populators
-## SQL
+## SQL  
 File data.sql is automatically used if present. 
 Might require some configuration such as:
 ~~~yaml
