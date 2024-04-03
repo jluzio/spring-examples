@@ -26,7 +26,6 @@ class WebTestClientHeadersControllerTest {
           .bindToController(new HeadersController())
           .build();
     }
-
   }
 
   // Spring Boot will create a `WebTestClient` for you,

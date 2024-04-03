@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
 @SpringBootTest
-class WebTestClientControllerTest {
+class WebTestClientSimpleControllerTest {
 
   @Configuration
   static class Config {
