@@ -53,6 +53,7 @@ class RestTemplateInterceptorExternalApiTest {
         Collection<ClientHttpRequestInterceptor> interceptors
     ) {
       return builder
+          // the order in the list is is the order of application, otherwise the bean class should have an @Order or similar
           .additionalInterceptors(interceptors)
           .build();
     }
@@ -64,6 +65,7 @@ class RestTemplateInterceptorExternalApiTest {
     ) {
       var reversedInterceptors = List.copyOf(interceptors).reversed();
       return builder
+          // since the bean instances don't have an annotation for order, they won't be reordered by RestTemplate
           .additionalInterceptors(reversedInterceptors)
           .build();
     }
