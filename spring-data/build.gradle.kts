@@ -48,6 +48,7 @@ dependencies {
   testCompileOnly("org.projectlombok:lombok")
   annotationProcessor("org.projectlombok:lombok")
   testAnnotationProcessor("org.projectlombok:lombok")
+  annotationProcessor("org.hibernate.orm:hibernate-jpamodelgen")
   annotationProcessor("com.querydsl:querydsl-apt:$querydsl_version:jakarta") {
     annotationProcessor("jakarta.persistence:jakarta.persistence-api")
   }
