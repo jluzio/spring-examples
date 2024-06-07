@@ -9,6 +9,7 @@ import redis.clients.jedis.Jedis;
 
 @RequiredArgsConstructor
 public class RedisCache implements Cache {
+
   private final Jedis jedis;
   private final String cacheName;
   private final ObjectMapper objectMapper;

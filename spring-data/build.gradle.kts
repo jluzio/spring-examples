@@ -1,7 +1,7 @@
 plugins {
   java
-  id("org.springframework.boot") version "3.2.2"
-  id("io.spring.dependency-management") version "1.1.4"
+  id("org.springframework.boot") version "3.3.0"
+  id("io.spring.dependency-management") version "1.1.5"
 }
 
 group = "com.example.spring"
@@ -12,9 +12,10 @@ java {
 }
 
 // enable Java preview features
-val compileJvmArgs = listOf("--enable-preview")
+val compileJvmArgs = emptyList<String>()
+//val compileJvmArgs = listOf("--enable-preview")
 val runtimeJvmArgs = listOf(
-  "--enable-preview",
+//  "--enable-preview",
   "--add-opens", "java.base/java.lang=ALL-UNNAMED",
   "--add-opens", "java.base/java.util=ALL-UNNAMED"
 )
@@ -39,6 +40,7 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-data-rest")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
   implementation("org.springframework.boot:spring-boot-starter-data-redis")
+  implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
   implementation("org.springframework.retry:spring-retry")
 
   developmentOnly("org.springframework.boot:spring-boot-devtools")
@@ -66,6 +68,7 @@ dependencies {
   testImplementation("org.springframework.boot:spring-boot-testcontainers")
   testImplementation("org.testcontainers:junit-jupiter")
   testImplementation("org.testcontainers:mysql")
+  testImplementation("org.testcontainers:mongodb")
   testImplementation("com.mysql:mysql-connector-j:8.3.0")
 }
 
