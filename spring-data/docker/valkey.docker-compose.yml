@@ -4,9 +4,10 @@ services:
 
   redis:
     image: valkey/valkey:7.2.5-alpine
-    container_name: valkey
+    container_name: springdata-redis
     ports:
       - 6379:6379
       - 8001:8001
     environment: {}
-
+    labels:
+      org.springframework.boot.service-connection: redis

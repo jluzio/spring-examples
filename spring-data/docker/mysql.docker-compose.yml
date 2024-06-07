@@ -1,0 +1,10 @@
+# https://hub.docker.com/_/redis
+
+services:
+
+  mysql:
+    image: mysql:latest
+    container_name: springdata-mysql
+    ports:
+      - 3306:3306
+    environment: {}
