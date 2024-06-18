@@ -48,6 +48,7 @@ dependencies {
   testAnnotationProcessor("org.projectlombok:lombok")
   // NOTE: Docker Composed Support enforces a required docker-compose file if spring.docker.compose.enabled is true (which is by default)
   developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+  // testCompileOnly("org.springframework.boot:spring-boot-docker-compose")
 
   implementation("org.hsqldb:hsqldb")
   implementation("redis.clients:jedis")

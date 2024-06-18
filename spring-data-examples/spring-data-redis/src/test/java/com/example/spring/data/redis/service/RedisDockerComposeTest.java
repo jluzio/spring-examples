@@ -1,23 +1,20 @@
-package com.example.spring.data.redis;
+package com.example.spring.data.redis.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.example.spring.data.redis.model.SampleDataPojo;
-import com.example.spring.data.redis.model.SampleDataRecord;
+import com.example.spring.data.redis.service.model.SampleDataPojo;
+import com.example.spring.data.redis.service.model.SampleDataRecord;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.redis.testcontainers.RedisContainer;
 import java.time.Duration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.autoconfigure.data.redis.RedisConnectionDetails;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
@@ -27,23 +24,31 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
+import org.springframework.test.context.junit.jupiter.DisabledIf;
 
-@SpringBootTest
-@Testcontainers
-class RedisTestcontainersTest {
+@SpringBootTest(
+    properties = {
+        "spring.docker.compose.skip.in-tests=false",
+        "spring.docker.compose.enabled=true",
+        "spring.docker.compose.file=file:docker/redis.docker-compose.yml",
+        "DEBUG=false"
+    }
+)
+// TODO: find a way to start the container
+@DisabledIf(value = "true", reason = "Docker Compose is not starting container")
+class RedisDockerComposeTest {
 
-  @Configuration
-  @Import({JacksonAutoConfiguration.class})
+  @TestConfiguration
+//  @Import({JacksonAutoConfiguration.class})
   static class Config {
 
     @Bean
-    JedisConnectionFactory redisConnectionFactory() {
+    JedisConnectionFactory redisConnectionFactory(RedisConnectionDetails redisConnectionDetails) {
       // defaults to localhost:6379
+      var redisConfig = redisConnectionDetails.getStandalone();
       RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(
-          redisContainer.getHost(),
-          redisContainer.getMappedPort(6379));
+          redisConfig.getHost(),
+          redisConfig.getPort());
 
       var defaultTimeout = Duration.ofSeconds(5);
       JedisClientConfiguration clientConfig = JedisClientConfiguration.builder()
@@ -102,10 +107,6 @@ class RedisTestcontainersTest {
       return redisTemplate;
     }
   }
-
-  @Container
-  @ServiceConnection
-  private static final RedisContainer redisContainer = new RedisContainer("redis:7-alpine");
 
   @Autowired
   private ObjectMapper objectMapper;

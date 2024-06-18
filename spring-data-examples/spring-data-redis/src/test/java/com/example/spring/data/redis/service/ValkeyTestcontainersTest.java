@@ -1,10 +1,10 @@
-package com.example.spring.data.redis;
+package com.example.spring.data.redis.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.example.spring.data.redis.model.SampleDataPojo;
-import com.example.spring.data.redis.model.SampleDataRecord;
+import com.example.spring.data.redis.service.model.SampleDataPojo;
+import com.example.spring.data.redis.service.model.SampleDataRecord;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;

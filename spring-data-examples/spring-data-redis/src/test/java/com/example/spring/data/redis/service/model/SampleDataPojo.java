@@ -1,4 +1,4 @@
-package com.example.spring.data.redis.model;
+package com.example.spring.data.redis.service.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

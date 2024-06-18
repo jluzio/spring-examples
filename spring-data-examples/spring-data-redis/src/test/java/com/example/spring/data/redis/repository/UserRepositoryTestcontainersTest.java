@@ -1,51 +1,36 @@
-package com.example.spring.data.redis;
+package com.example.spring.data.redis.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.spring.data.redis.model.User;
-import com.example.spring.data.redis.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redis.testcontainers.RedisContainer;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.data.redis.RedisConnectionDetails;
-import org.springframework.boot.autoconfigure.data.redis.RedisConnectionDetails.Cluster;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-@SpringBootTest
+@SpringBootTest(
+    properties = {
+        "spring.data.redis.port=12345",
+        "spring.redis.port=12345"
+    }
+)
 @Testcontainers
 @Log4j2
 class UserRepositoryTestcontainersTest {
 
   @Container
   @ServiceConnection(name = "redis")
-  static final RedisContainer redisContainer = new RedisContainer("redis:7-alpine")
-      .withExposedPorts(6379);
-
-//  @DynamicPropertySource
-//  static void redisProperties(DynamicPropertyRegistry registry) {
-//    registry.add("spring.data.redis.host", redisContainer::getHost);
-//    registry.add("spring.data.redis.port", () -> redisContainer.getMappedPort(6379));
-//  }
-
-//  @Configuration
-//  @Import({JacksonAutoConfiguration.class})
-//  static class Config {
-//
-//  }
+  static final RedisContainer redisContainer = new RedisContainer("redis:7-alpine");
 
   @Autowired
   private ObjectMapper objectMapper;
-  //  @Autowired
+  @Autowired
   private UserRepository userRepository;
   @Autowired
   private RedisConnectionDetails redisConnectionDetails;
@@ -60,10 +45,12 @@ class UserRepositoryTestcontainersTest {
         .satisfies(it -> assertThat(it.getPort()).isNotZero());
   }
 
-  //  @Test
+  @Test
   void basic() {
     var users = userRepository.findAll();
     log.info("users: {}", users);
+    assertThat(users)
+        .hasSize(3);
 
     var newUser = new User();
     newUser.setName("New Doe");
@@ -72,6 +59,8 @@ class UserRepositoryTestcontainersTest {
 
     var updatedUsers = userRepository.findAll();
     log.info("updatedUsers: {}", updatedUsers);
+    assertThat(updatedUsers)
+        .hasSize(4);
   }
 
 }
