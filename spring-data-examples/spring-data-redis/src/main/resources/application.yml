@@ -1,0 +1,27 @@
+#spring:
+#  data:
+#    rest:
+#      base-path: /api
+
+# NOTE: Docker Composed Support enforces a required docker-compose file, so disabling this to be optional
+# 2024/03/20 :: TODO: remove if not using docker compose support or if it doesn't enforce a required docker-compose file
+#spring.docker.compose.enabled: false
+
+logging:
+  level:
+    root: INFO
+    com.example.spring.data: DEBUG
+#    org.hibernate: ERROR
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+spring.jpa:
+  show-sql: false # currently ignored
+  properties:
+    hibernate.show_sql: false
+#    hibernate.format_sql: true
+
+# For data.sql (unsure if required or there is an alternative)
+#spring:
+#  jpa:
+#    defer-datasource-initialization: true
