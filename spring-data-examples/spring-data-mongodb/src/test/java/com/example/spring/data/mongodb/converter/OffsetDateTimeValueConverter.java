@@ -7,6 +7,15 @@ import org.bson.BsonDateTime;
 import org.springframework.data.convert.PropertyValueConverter;
 import org.springframework.data.convert.ValueConversionContext;
 
+/**
+ * Example for a PropertyValueConverter, used at the field level.
+ * <pre>
+ * {@code
+ *   @ValueConverter(OffsetDateTimeValueConverter.class)
+ *   private Instant createdAt;
+ * }
+ * </pre>
+ */
 public class OffsetDateTimeValueConverter implements
     PropertyValueConverter<OffsetDateTime, BsonDateTime, ValueConversionContext<?>> {
 

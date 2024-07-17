@@ -1,14 +1,14 @@
 package com.example.spring.data.mongodb.model;
 
-import com.example.spring.data.mongodb.converter.OffsetDateTimeValueConverter;
-import java.time.OffsetDateTime;
+import java.time.Instant;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.convert.ValueConverter;
+import org.springframework.data.mongodb.core.mapping.Document;
 
+@Document("users")
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
@@ -20,7 +20,6 @@ public class User {
   private String name;
   private String username;
   private UserStatus status;
-  @ValueConverter(OffsetDateTimeValueConverter.class)
-  private OffsetDateTime createdAt;
+  private Instant createdAt;
 
 }
