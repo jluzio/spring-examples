@@ -48,6 +48,7 @@ dependencies {
   testAnnotationProcessor("org.projectlombok:lombok")
   // NOTE: Docker Composed Support enforces a required docker-compose file if spring.docker.compose.enabled is true (which is by default)
   developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+  testRuntimeOnly("org.springframework.boot:spring-boot-docker-compose")
 
   implementation("com.google.guava:guava:33.0.0-jre")
 

@@ -1,0 +1,9 @@
+spring:
+  data:
+    mongodb:
+      database: ${DATABASE_NAME:test}
+      uri: ${DATABASE_URI:mongodb://root:secret@localhost:27017/?authSource=admin}
+  docker:
+    compose:
+      skip:
+        in-tests: false
