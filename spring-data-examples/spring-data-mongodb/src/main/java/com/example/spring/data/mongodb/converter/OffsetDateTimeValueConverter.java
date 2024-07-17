@@ -1,19 +1,22 @@
 package com.example.spring.data.mongodb.converter;
 
+import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import org.bson.BsonDateTime;
 import org.springframework.data.convert.PropertyValueConverter;
 import org.springframework.data.convert.ValueConversionContext;
 
 public class OffsetDateTimeValueConverter implements
-    PropertyValueConverter<OffsetDateTime, String, ValueConversionContext<?>> {
+    PropertyValueConverter<OffsetDateTime, BsonDateTime, ValueConversionContext<?>> {
 
   @Override
-  public OffsetDateTime read(String value, ValueConversionContext<?> context) {
-    return OffsetDateTime.parse(value);
+  public OffsetDateTime read(BsonDateTime value, ValueConversionContext<?> context) {
+    return Instant.ofEpochMilli(value.getValue()).atOffset(ZoneOffset.UTC);
   }
 
   @Override
-  public String write(OffsetDateTime value, ValueConversionContext<?> context) {
-    return value.toString();
+  public BsonDateTime write(OffsetDateTime value, ValueConversionContext<?> context) {
+    return new BsonDateTime(value.toInstant().toEpochMilli());
   }
 }
