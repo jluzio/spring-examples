@@ -15,6 +15,8 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
+spring.docker.compose.file: docker/redis.docker-compose.yml
+
 spring.jpa:
   show-sql: false # currently ignored
   properties:

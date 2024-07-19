@@ -2,6 +2,7 @@ package com.example.spring.data.mongodb.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.spring.data.mongodb.DockerImages;
 import com.example.spring.data.mongodb.model.User;
 import com.example.spring.data.mongodb.model.projection.UserReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,11 +23,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest
 @Testcontainers
 @Log4j2
-class TestcontainersTest {
+class UserRespositoryTestcontainersTest {
 
   @Container
   @ServiceConnection
-  private static final MongoDBContainer container = new MongoDBContainer("mongo:latest");
+  private static final MongoDBContainer container = new MongoDBContainer(DockerImages.MONGO_DB);
   @Autowired
   private ObjectMapper objectMapper;
   @Autowired

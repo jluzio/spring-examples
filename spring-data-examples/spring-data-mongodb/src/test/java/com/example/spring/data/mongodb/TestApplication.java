@@ -16,7 +16,7 @@ public class TestApplication {
     @ServiceConnection
     @RestartScope
     public MongoDBContainer mongodbContainer() {
-      return new MongoDBContainer("mongo:latest");
+      return new MongoDBContainer(DockerImages.MONGO_DB);
     }
   }
 

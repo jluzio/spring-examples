@@ -1,0 +1,13 @@
+# https://hub.docker.com/_/redis
+
+name: springdata-redis-stack
+
+services:
+
+  redis:
+    image: redis/redis-stack:7.2.0-v11
+    container_name: springdata-redis-stack
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    environment: {}

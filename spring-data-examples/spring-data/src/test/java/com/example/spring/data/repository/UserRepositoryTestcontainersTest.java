@@ -2,6 +2,7 @@ package com.example.spring.data.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.spring.data.DockerImages;
 import com.example.spring.data.jpa.config.DataPopulatorConfig;
 import com.example.spring.data.jpa.model.Role;
 import com.example.spring.data.jpa.model.User;
@@ -29,11 +30,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 //@SpringBootTest
 @DataJpaTest(properties = {
-    "spring.jpa.properties.javax.persistence.schema-generation.scripts.action=drop-and-create",
-    "spring.jpa.properties.javax.persistence.schema-generation.scripts.create-target=target/test-classes/gen/create.sql",
-    "spring.jpa.properties.javax.persistence.schema-generation.scripts.drop-target=target/test-classes/gen/drop.sql",
-    "spring.jpa.properties.javax.persistence.schema-generation.scripts.create-source=metadata",
-    "spring.jpa.properties.javax.persistence.schema-generation.scripts.drop-source=metadata",
+    "spring.jpa.properties.jakarta.persistence.schema-generation.scripts.action=drop-and-create",
+    "spring.jpa.properties.jakarta.persistence.schema-generation.scripts.create-target=build/classes/java/test/gen/create.sql",
+    "spring.jpa.properties.jakarta.persistence.schema-generation.scripts.drop-target=build/classes/java/test/gen/drop.sql",
+    "spring.jpa.properties.jakarta.persistence.schema-generation.scripts.create-source=metadata",
+    "spring.jpa.properties.jakarta.persistence.schema-generation.scripts.drop-source=metadata"
 })
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Testcontainers
@@ -44,24 +45,13 @@ class UserRepositoryTestcontainersTest {
   @Container
   @ServiceConnection
   static final MySQLContainer<?> MYSQL_CONTAINER =
-      new MySQLContainer<>("mysql:latest")
+      new MySQLContainer<>(DockerImages.MYSQL)
           .withDatabaseName("testdb")
           .withUsername("root")
           .withPassword("testpass")
           .withInitScript("schemas/mysql/drop.sql")
           .withInitScript("schemas/mysql/create.sql")
       ;
-
-  // Pre Spring Boot 3.1
-/*
-  @DynamicPropertySource
-  static void configureProperties(DynamicPropertyRegistry registry) {
-    var container = MYSQL_CONTAINER;
-    registry.add("spring.datasource.url", container::getJdbcUrl);
-    registry.add("spring.datasource.username", container::getUsername);
-    registry.add("spring.datasource.password", container::getPassword);
-  }
-*/
 
   @Autowired
   UserRepository userRepository;

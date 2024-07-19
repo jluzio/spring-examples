@@ -1,17 +1,15 @@
-package com.example.spring.data.mongodb.repository;
+package com.example.spring.data.mongodb;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
 import com.example.spring.data.mongodb.model.Product;
+import com.example.spring.data.mongodb.repository.UserRepository;
 import com.mongodb.client.MongoClient;
-import java.util.UUID;
-import java.util.function.Supplier;
 import lombok.extern.log4j.Log4j2;
 import org.bson.BsonDocument;
 import org.bson.Document;
 import org.bson.conversions.Bson;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,18 +19,12 @@ import org.springframework.test.context.ActiveProfiles;
 @SpringBootTest
 @ActiveProfiles("docker-compose-test")
 @Log4j2
-class DockerComposeSupportTest {
+class DockerComposeTest {
 
   @Autowired
   private UserRepository repository;
   @Autowired
   MongoClient mongoClient;
-
-  Supplier<String> id = () -> UUID.randomUUID().toString();
-
-  @BeforeEach
-  void setup() {
-  }
 
   @Test
   void repository_check_populated() {

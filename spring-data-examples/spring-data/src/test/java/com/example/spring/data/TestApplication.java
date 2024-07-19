@@ -16,7 +16,7 @@ public class TestApplication {
     @ServiceConnection
     @RestartScope
     public MySQLContainer<?> mySQLContainer() {
-      return new MySQLContainer<>("mysql:latest")
+      return new MySQLContainer<>(DockerImages.MYSQL)
           .withInitScript("schemas/mysql/drop.sql")
           .withInitScript("schemas/mysql/create.sql");
     }

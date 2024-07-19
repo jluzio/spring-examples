@@ -1,13 +1,14 @@
 # https://hub.docker.com/_/redis
 
+name: springdata-valkey
+
 services:
 
   redis:
-    image: valkey/valkey:7.2.5-alpine
+    image: valkey/valkey:7-alpine
     container_name: springdata-redis
-    ports:
-      - 6379:6379
-      - 8001:8001
-    environment: {}
     labels:
       org.springframework.boot.service-connection: redis
+    ports:
+      - "6379:6379"
+    environment: {}

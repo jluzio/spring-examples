@@ -1,10 +1,23 @@
 # https://hub.docker.com/_/redis
 
+name: springdata-mysql
+
 services:
 
   mysql:
-    image: mysql:latest
+    image: mysql:8
     container_name: springdata-mysql
     ports:
-      - 3306:3306
-    environment: {}
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+    volumes:
+      - type: volume
+        source: mysql-data
+        target: /var/lib/mysql
+
+volumes:
+  mysql-data:

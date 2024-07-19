@@ -1,0 +1,24 @@
+# https://hub.docker.com/_/redis
+
+name: springdata-postgres
+
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: springdata-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: secret
+      # default: postgres
+#      POSTGRES_USER: test
+      # default: <POSTGRES_USER>
+#      POSTGRES_DB: test
+    volumes:
+      - type: volume
+        source: postgres-data
+        target: /var/lib/mysql
+
+volumes:
+  postgres-data:

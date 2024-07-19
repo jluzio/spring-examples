@@ -38,7 +38,7 @@ class ResourceTest implements ResourceLoaderAware {
     var resource = new UrlResource("https://www.wikipedia.org/");
     displayResource(resource, DisplayResourceParams.defaults());
 
-    var someProjectFile = new File(System.getProperty("user.dir"), "pom.xml");
+    var someProjectFile = new File(System.getProperty("user.dir"), "README.md");
     var resourceFile = new UrlResource(someProjectFile.toURI());
     displayResource(resourceFile, DisplayResourceParams.builder()
         .resourceId("file")
@@ -47,7 +47,7 @@ class ResourceTest implements ResourceLoaderAware {
 
   @Test
   void test_file() throws IOException {
-    var someProjectFile = new File(System.getProperty("user.dir"), "pom.xml");
+    var someProjectFile = new File(System.getProperty("user.dir"), "README.md");
     var resourceFile = new FileSystemResource(someProjectFile);
     displayResource(resourceFile, DisplayResourceParams.defaults());
   }

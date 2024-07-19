@@ -2,6 +2,7 @@ package com.example.spring.data.redis.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.spring.data.redis.DockerImages;
 import com.example.spring.data.redis.model.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redis.testcontainers.RedisContainer;
@@ -26,7 +27,7 @@ class UserRepositoryTestcontainersTest {
 
   @Container
   @ServiceConnection(name = "redis")
-  static final RedisContainer redisContainer = new RedisContainer("redis:7-alpine");
+  static final RedisContainer redisContainer = new RedisContainer(DockerImages.REDIS);
 
   @Autowired
   private ObjectMapper objectMapper;

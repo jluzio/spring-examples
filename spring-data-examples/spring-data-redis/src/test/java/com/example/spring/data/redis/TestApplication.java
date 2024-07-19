@@ -16,7 +16,7 @@ public class TestApplication {
     @ServiceConnection
     @RestartScope
     public RedisContainer redisContainer() {
-      return new RedisContainer("redis:latest");
+      return new RedisContainer(DockerImages.REDIS);
     }
   }
 

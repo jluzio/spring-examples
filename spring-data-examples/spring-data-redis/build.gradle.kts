@@ -1,7 +1,7 @@
 plugins {
   java
-  id("org.springframework.boot") version "3.3.0"
-  id("io.spring.dependency-management") version "1.1.5"
+  id("org.springframework.boot") version "3.3.2"
+  id("io.spring.dependency-management") version "1.1.6"
 }
 
 group = "com.example.spring"
@@ -48,7 +48,7 @@ dependencies {
   testAnnotationProcessor("org.projectlombok:lombok")
   // NOTE: Docker Composed Support enforces a required docker-compose file if spring.docker.compose.enabled is true (which is by default)
   developmentOnly("org.springframework.boot:spring-boot-docker-compose")
-  // testCompileOnly("org.springframework.boot:spring-boot-docker-compose")
+  testImplementation("org.springframework.boot:spring-boot-docker-compose")
 
   implementation("org.hsqldb:hsqldb")
   implementation("redis.clients:jedis")

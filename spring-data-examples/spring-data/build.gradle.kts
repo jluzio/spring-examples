@@ -1,7 +1,7 @@
 plugins {
   java
-  id("org.springframework.boot") version "3.3.0"
-  id("io.spring.dependency-management") version "1.1.5"
+  id("org.springframework.boot") version "3.3.2"
+  id("io.spring.dependency-management") version "1.1.6"
 }
 
 group = "com.example.spring"
@@ -55,8 +55,11 @@ dependencies {
   implementation("io.projectreactor:reactor-core")
   // NOTE: Docker Composed Support enforces a required docker-compose file if spring.docker.compose.enabled is true (which is by default)
   developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+  testImplementation("org.springframework.boot:spring-boot-docker-compose")
 
   implementation("org.hsqldb:hsqldb")
+  implementation("com.mysql:mysql-connector-j:8.4.0")
+  implementation("org.postgresql:postgresql:42.7.3")
   implementation("com.querydsl:querydsl-jpa:$querydsl_version:jakarta")
   implementation("com.google.guava:guava:33.0.0-jre")
   implementation("com.github.java-json-tools:json-patch:1.13")
@@ -65,7 +68,6 @@ dependencies {
   testImplementation("org.springframework.boot:spring-boot-testcontainers")
   testImplementation("org.testcontainers:junit-jupiter")
   testImplementation("org.testcontainers:mysql")
-  testImplementation("com.mysql:mysql-connector-j:8.3.0")
 }
 
 tasks.withType<Test> {
