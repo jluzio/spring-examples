@@ -24,18 +24,10 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.SerializationException;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.test.context.junit.jupiter.DisabledIf;
+import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest(
-    properties = {
-        "spring.docker.compose.skip.in-tests=false",
-        "spring.docker.compose.enabled=true",
-        "spring.docker.compose.file=file:docker/redis.docker-compose.yml",
-        "DEBUG=false"
-    }
-)
-// TODO: find a way to start the container
-@DisabledIf(value = "true", reason = "Docker Compose is not starting container")
+@SpringBootTest
+@ActiveProfiles("redis-test")
 class RedisDockerComposeTest {
 
   @TestConfiguration
