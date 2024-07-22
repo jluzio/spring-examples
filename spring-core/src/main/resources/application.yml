@@ -19,6 +19,8 @@ management:
     enabled: true
     show-details: always
 
+spring.docker.compose.enabled: false
+
 app:
   log:
     mask-converter:
