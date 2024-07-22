@@ -1,4 +1,4 @@
-version: "3.5"
+version: "3.9"
 
 services:
   kafdrop:
@@ -11,7 +11,7 @@ services:
     expose:
       - 9000
     ports:
-      - 9000:9000
+      - "9000:9000"
     environment:
       ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_BROKERCONNECT: kafka:29092
@@ -24,15 +24,15 @@ services:
       - 5672
       - 15672
     ports:
-      - 5672:5672
-      - 15672:15672
+      - "5672:5672"
+      - "15672:15672"
 
   zookeeper:
     image: zookeeper:latest
 #    image: confluentinc/cp-zookeeper:latest
     container_name: zookeeper
     ports:
-      - 2181:2181
+      - "2181:2181"
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
@@ -60,8 +60,8 @@ services:
     depends_on:
       - zookeeper
     ports:
-      - 9092:9092
-      - 29092:29092
+      - "9092:9092"
+      - "29092:29092"
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
