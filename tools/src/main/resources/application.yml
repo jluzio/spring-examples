@@ -1,0 +1,16 @@
+logging:
+  level:
+    com.example.spring: DEBUG
+    #    org.springframework: DEBUG
+    org.springframework: INFO
+    org.springframework.boot.autoconfigure: DEBUG
+    org.springframework.context.annotation: DEBUG
+#    org.springframework.core.io.support: DEBUG
+#    org.springframework.web: TRACE
+#    org.springframework.web.servlet.mvc.method.annotation: TRACE
+#  pattern:
+#    console: "%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %mask(%m){}%n"
+
+spring.application.name: tools
+
+spring.docker.compose.enabled: false
