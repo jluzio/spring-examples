@@ -5,15 +5,17 @@ services:
   # https://hub.docker.com/r/bitnami/kafka
   kafka:
     container_name: kafka
-    image: 'bitnami/kafka:latest'
-    pull_policy: always
+    image: bitnami/kafka:latest
+#    pull_policy: always
     ports:
-      - '9092:9092'
+      - "9092:9092"
+      - "9094:9094"
     environment:
       KAFKA_CFG_NODE_ID: 0
       KAFKA_CFG_PROCESS_ROLES: controller,broker
-      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093
-      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CFG_LISTENERS: PLAINTEXT://:9092,CONTROLLER://:9093,EXTERNAL://:9094
+      KAFKA_CFG_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,EXTERNAL://localhost:9094
+      KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,EXTERNAL:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_CFG_CONTROLLER_QUORUM_VOTERS: 0@kafka:9093
       KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
 
@@ -22,7 +24,7 @@ services:
   kafka-ui:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
-    pull_policy: always
+#    pull_policy: always
     depends_on:
       - kafka
     ports:
@@ -30,20 +32,20 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-#      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka0:29092
-#      KAFKA_CLUSTERS_0_METRICS_PORT: 9997
-#      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schemaregistry0:8085
-#      KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: first
-#      KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://kafka-connect0:8083
+      #      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka0:29092
+      #      KAFKA_CLUSTERS_0_METRICS_PORT: 9997
+      #      KAFKA_CLUSTERS_0_SCHEMAREGISTRY: http://schemaregistry0:8085
+      #      KAFKA_CLUSTERS_0_KAFKACONNECT_0_NAME: first
+      #      KAFKA_CLUSTERS_0_KAFKACONNECT_0_ADDRESS: http://kafka-connect0:8083
       DYNAMIC_CONFIG_ENABLED: true
-#    volumes:
-#      - ~/kui/config.yml:/etc/kafkaui/dynamic_config.yaml
+  #    volumes:
+  #      - ~/kui/config.yml:/etc/kafkaui/dynamic_config.yaml
 
   # https://hub.docker.com/r/obsidiandynamics/kafdrop
   kafdrop:
     container_name: kafdrop
     image: obsidiandynamics/kafdrop:latest
-    pull_policy: always
+#    pull_policy: always
     depends_on:
       - kafka
     ports:
