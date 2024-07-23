@@ -18,9 +18,20 @@ public class DockerHubController {
 
   private final DockerHubService service;
 
-  @GetMapping("/matching-tags")
-  public Mono<List<ImageTag>> getMatchingTags(@RequestParam String namespace,
-      @RequestParam String repository, @RequestParam String tag) {
+  @GetMapping("/tags")
+  public Mono<List<ImageTag>> getAllTags(
+      @RequestParam String namespace,
+      @RequestParam String repository
+  ) {
+    return service.listImageTags(namespace, repository);
+  }
+
+  @GetMapping("/tags/matching")
+  public Mono<List<ImageTag>> getMatchingTags(
+      @RequestParam String namespace,
+      @RequestParam String repository,
+      @RequestParam String tag
+  ) {
     return Mono.zip(
         service.getImageTag(namespace, repository, tag),
         service.listImageTags(namespace, repository)
