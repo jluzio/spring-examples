@@ -3,19 +3,16 @@ spring.application.name: kafka
 management.endpoints.web.exposure.include: health,info,bindings
 
 spring:
-  kafka:
-    bootstrap-servers: localhost:9094
+#  kafka:
+#    bootstrap-servers: localhost:9094
   cloud:
     function:
 #      definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer;pingSupplier;pingConsumer;randomNameSupplier|uppercaseFunction|reverseFunction;stringConsumer;unreliableDataSupplier;unreliableDataConsumer
       definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer
     stream:
-      function:
-        bindings:
-          fizzBuzzProducer-out-0: numbers
-          fizzBuzzProcessor-in-0: numbers
-          fizzBuzzProcessor-out-0: fizz-buzz
-          fizzBuzzConsumer-in-0: fizz-buzz
+      kafka:
+        binder:
+          brokers: localhost:9094
       bindings:
         fizzBuzzProducer-out-0:
           destination: numbers
@@ -25,6 +22,12 @@ spring:
           destination: fizz-buzz
         fizzBuzzConsumer-in-0:
           destination: fizz-buzz
+#      function:
+#        bindings:
+#          fizzBuzzProducer-out-0: numbers
+#          fizzBuzzProcessor-in-0: numbers
+#          fizzBuzzProcessor-out-0: fizz-buzz
+#          fizzBuzzConsumer-in-0: fizz-buzz
 
 app:
   producers:
