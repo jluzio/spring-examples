@@ -6,7 +6,6 @@ services:
   kafka:
     container_name: kafka
     image: bitnami/kafka:latest
-#    pull_policy: always
     ports:
       - "9092:9092"
       - "9094:9094"
@@ -24,7 +23,6 @@ services:
   kafka-ui:
     container_name: kafka-ui
     image: provectuslabs/kafka-ui:latest
-#    pull_policy: always
     depends_on:
       - kafka
     ports:
@@ -45,7 +43,6 @@ services:
   kafdrop:
     container_name: kafdrop
     image: obsidiandynamics/kafdrop:latest
-#    pull_policy: always
     depends_on:
       - kafka
     ports:
