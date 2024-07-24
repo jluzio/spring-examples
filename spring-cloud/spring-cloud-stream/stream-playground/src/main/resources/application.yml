@@ -12,9 +12,9 @@ logging:
 ## This setting can control which function method in our code will be triggered if there are multiple
 ## spring.cloud.function.definition=supplyLoan
 
+management.endpoints.web.exposure.include: health,info,bindings
+
 spring:
-  profiles:
-    active: ${stream.binder:kafka},${stream.profile:ping}
   cloud:
     function:
       definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer;pingSupplier;pingConsumer;randomNameSupplier|uppercaseFunction|reverseFunction;stringConsumer;unreliableDataSupplier;unreliableDataConsumer
@@ -22,13 +22,6 @@ spring:
       function:
         bindings:
           randomNameSupplier|uppercaseFunction|reverseFunction-out-0: randomNameUppercaseReversed
-      # https://docs.spring.io/spring-cloud-stream/docs/3.1.5/reference/html/spring-cloud-stream.html#_polling_configuration_properties
-      poller:
-        # default is 1000 (1s)
-        fixedDelay: 5000
-#        timeUnit: MILLISECONDS
-#        initialDelay: 0
-#        cron: ~
       bindings:
         fizzBuzzProducer-out-0:
           destination: numbers
@@ -52,3 +45,10 @@ spring:
         unreliableDataConsumer-in-0:
           destination: unreliable-data
           group: watchlist
+
+app:
+  interceptors: false
+  producers:
+    pingSupplier: false
+    fizzBuzzProducer: false
+    randomNameSupplier: false

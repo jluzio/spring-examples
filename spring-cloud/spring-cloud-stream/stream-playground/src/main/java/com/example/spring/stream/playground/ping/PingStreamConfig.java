@@ -4,16 +4,17 @@ import java.time.LocalDateTime;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile("ping")
 @Slf4j
 public class PingStreamConfig {
 
   @Bean
+  @ConditionalOnProperty(value = "app.producers.pingSupplier", havingValue = "true")
   public Supplier<String> pingSupplier() {
     return () -> {
       String pingMsg = "ping-%s".formatted(LocalDateTime.now());
