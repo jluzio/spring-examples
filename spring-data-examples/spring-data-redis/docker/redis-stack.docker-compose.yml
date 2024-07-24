@@ -7,7 +7,6 @@ services:
   redis:
     image: redis/redis-stack:7.2.0-v11
     container_name: springdata-redis-stack
-    pull_policy: always
     ports:
       - "6379:6379"
       - "8001:8001"

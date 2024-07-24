@@ -3,11 +3,14 @@ package com.example.spring.tools.dockerhub
 import com.fasterxml.jackson.annotation.JsonProperty
 import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.http.MediaType
+import org.springframework.http.codec.ClientCodecConfigurer
 import org.springframework.stereotype.Service
 import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.reactive.function.client.ExchangeStrategies
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.util.UriComponentsBuilder
 import kotlin.math.ceil
+
 
 @Service
 class DockerHubService {
@@ -21,7 +24,15 @@ class DockerHubService {
     const val GET_TAG: String = "/namespaces/{namespace}/repositories/{repository}/tags/{tag}"
   }
 
-  private val webClient: WebClient = WebClient.create(BASE_URL)
+  private val webClient: WebClient = WebClient
+    .builder()
+    .baseUrl(BASE_URL)
+    .exchangeStrategies(
+      // max 2MB for transfers
+      ExchangeStrategies.builder()
+        .codecs { it.defaultCodecs().maxInMemorySize(2 * 1024 * 1024) }
+        .build())
+    .build()
 
   @Throws(HttpClientErrorException::class)
   suspend fun getImageTag(namespace: String, repository: String, tag: String): ImageTag {
@@ -38,20 +49,20 @@ class DockerHubService {
 
   @Throws(HttpClientErrorException::class)
   suspend fun listImageTags(namespace: String, repository: String): List<ImageTag> {
-      val pageSize = 100
-      val imageTags = mutableListOf<ImageTag>()
+    val pageSize = 100
+    val imageTags = mutableListOf<ImageTag>()
 
-      val firstResult = listImageTags(namespace, repository, pageSize, 1)
-      val pages = ceil(firstResult.tag.count.toFloat() / pageSize).toInt()
-      imageTags.addAll(firstResult.tag.results)
+    val firstResult = listImageTags(namespace, repository, pageSize, 1)
+    val pages = ceil(firstResult.tag.count.toFloat() / pageSize).toInt()
+    imageTags.addAll(firstResult.tag.results)
 
-      for (page in 2..pages) {
-        val pagedResult = listImageTags(namespace, repository, pageSize, page)
-        imageTags.addAll(pagedResult.tag.results)
-      }
-
-      return imageTags
+    for (page in 2..pages) {
+      val pagedResult = listImageTags(namespace, repository, pageSize, page)
+      imageTags.addAll(pagedResult.tag.results)
     }
+
+    return imageTags
+  }
 
   private suspend fun listImageTags(
     namespace: String, repository: String, pageSize: Int,

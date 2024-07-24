@@ -16,12 +16,12 @@ spring:
   profiles:
     active: ${stream.binder:kafka},${stream.profile:ping}
   cloud:
+    function:
+      definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer;pingSupplier;pingConsumer;randomNameSupplier|uppercaseFunction|reverseFunction;stringConsumer;unreliableDataSupplier;unreliableDataConsumer
     stream:
       function:
-        definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer;pingSupplier;pingConsumer;randomNameSupplier|uppercaseFunction|reverseFunction;stringConsumer;unreliableDataSupplier;unreliableDataConsumer
         bindings:
           randomNameSupplier|uppercaseFunction|reverseFunction-out-0: randomNameUppercaseReversed
-
       # https://docs.spring.io/spring-cloud-stream/docs/3.1.5/reference/html/spring-cloud-stream.html#_polling_configuration_properties
       poller:
         # default is 1000 (1s)
