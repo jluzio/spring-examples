@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Mono;
@@ -22,20 +23,15 @@ public class DockerHubService {
   public static final String PAGE_PARAM = "page";
   public static final String GET_TAG = "/namespaces/{namespace}/repositories/{repository}/tags/{tag}";
 
-  public record ImageTag(String name, String digest, @JsonProperty("tag_status") String tagStatus,
-                         @JsonProperty("last_updated") String lastUpdated) {
-
-  }
-
-  public record ImageTagList(int count, List<ImageTag> results) {
-
-  }
-
-  private record PagedImageTagList(ImageTagList tag, int page) {
-
-  }
-
-  private final WebClient webClient = WebClient.create(BASE_URL);
+  private final WebClient webClient = WebClient.builder()
+      .baseUrl(BASE_URL)
+      .exchangeStrategies(
+          // max 2MB for transfers
+          ExchangeStrategies.builder()
+              .codecs(it -> it.defaultCodecs().maxInMemorySize(2 * 1024 * 1024))
+              .build()
+      )
+      .build();
 
   public Mono<ImageTag> getImageTag(String namespace, String repository, String tag)
       throws HttpClientErrorException {
@@ -90,4 +86,18 @@ public class DockerHubService {
         .filter(tag -> Objects.equals(tag.digest(), digest))
         .toList();
   }
+
+  public record ImageTag(String name, String digest, @JsonProperty("tag_status") String tagStatus,
+                         @JsonProperty("last_updated") String lastUpdated) {
+
+  }
+
+  public record ImageTagList(int count, List<ImageTag> results) {
+
+  }
+
+  public record PagedImageTagList(ImageTagList tag, int page) {
+
+  }
+
 }
