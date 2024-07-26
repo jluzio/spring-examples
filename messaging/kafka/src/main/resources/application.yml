@@ -1,10 +1,15 @@
 spring.application.name: kafka
 
+logging:
+  level:
+    root: INFO
+    com.example.spring: DEBUG
+
 management.endpoints.web.exposure.include: health,info,bindings
 
 spring:
 #  kafka:
-#    bootstrap-servers: localhost:9094
+#    bootstrap-servers: localhost:9093
   cloud:
     function:
 #      definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer;pingSupplier;pingConsumer;randomNameSupplier|uppercaseFunction|reverseFunction;stringConsumer;unreliableDataSupplier;unreliableDataConsumer
@@ -14,7 +19,7 @@ spring:
       default-binder: kafka
       kafka:
         binder:
-          brokers: localhost:9094
+          brokers: localhost:9093
       bindings:
         fizzBuzzProducer-out-0:
           destination: numbers
@@ -34,3 +39,8 @@ spring:
 app:
   producers:
     fizzBuzzProducer: false
+  course:
+    wikimedia:
+      recent-change-endpoint: https://stream.wikimedia.org/v2/stream/recentchange
+      topic: wikimedia.change
+      partitions: 3

@@ -1,5 +1,6 @@
 package com.example.spring.messaging.kafka.course.basics.runner;
 
+import com.example.spring.messaging.kafka.course.helper.KafkaFormatters;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,17 +24,8 @@ class ProducerCallbackDemo extends BasicDemoRunner {
       var producerRecord = new ProducerRecord<String, String>(config.defaultTopic(), "val=" + i);
 
       producer.send(producerRecord, (metadata, exception) -> {
-        log.info("metadata: {} | exception: {}", metadata, exception);
-        if (exception == null) {
-          log.info("Successfully sent: topic={} | partition={} | offset={} | timestamp={}",
-              metadata.topic(),
-              metadata.partition(),
-              metadata.offset(),
-              metadata.timestamp());
-          recordMetadataList.add(metadata);
-        } else {
-          log.info("Error while producing");
-        }
+        log.info("metadata: {} | exception: {}", KafkaFormatters.format(metadata), exception);
+        recordMetadataList.add(metadata);
       });
     });
 

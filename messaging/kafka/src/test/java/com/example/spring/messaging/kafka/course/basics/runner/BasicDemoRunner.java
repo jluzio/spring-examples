@@ -4,6 +4,8 @@ import com.example.spring.messaging.kafka.course.basics.config.AppConfig;
 import jakarta.annotation.PostConstruct;
 import java.util.function.Consumer;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -13,17 +15,15 @@ import org.springframework.kafka.core.KafkaAdmin;
 
 class BasicDemoRunner {
 
-  public final org.apache.logging.log4j.Logger log =
-      org.apache.logging.log4j.LogManager.getLogger(getClass());
-
   @Configuration
   @Import({AppConfig.class})
   static class BaseConfig {
 
   }
 
+  final Logger log = LogManager.getLogger(getClass());
   @Autowired
-  protected AppConfig config;
+  AppConfig config;
 
 
   public static <T> void runApp(Class<T> clazz, Consumer<T> runner) {
