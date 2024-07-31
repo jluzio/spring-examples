@@ -1,6 +1,6 @@
 package com.example.spring.messaging.kafka.course.wikimedia;
 
-import com.example.spring.messaging.kafka.test.TestSupport;
+import com.example.spring.messaging.kafka.course.wikimedia.test.TestSupport;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

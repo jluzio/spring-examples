@@ -1,0 +1,16 @@
+spring.application.name: kafka-wikimedia-producer
+
+logging:
+  level:
+    root: INFO
+    com.example.spring: DEBUG
+
+spring:
+  kafka.bootstrap-servers: localhost:9093
+
+app:
+  course:
+    wikimedia:
+      recent-change-endpoint: https://stream.wikimedia.org/v2/stream/recentchange
+      topic: wikimedia.change
+      partitions: 3

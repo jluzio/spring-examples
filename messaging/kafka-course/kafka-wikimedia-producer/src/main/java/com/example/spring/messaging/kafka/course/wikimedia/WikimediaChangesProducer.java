@@ -3,20 +3,21 @@ package com.example.spring.messaging.kafka.course.wikimedia;
 import jakarta.annotation.PreDestroy;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.codec.ServerSentEvent;
 import org.springframework.kafka.core.KafkaAdmin;
+import org.springframework.stereotype.Component;
+import org.springframework.util.unit.DataSize;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.Disposable;
 
+@Component
 @RequiredArgsConstructor
 public class WikimediaChangesProducer implements ApplicationRunner {
 
@@ -26,11 +27,12 @@ public class WikimediaChangesProducer implements ApplicationRunner {
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
-    Map<String, Object> kafkaConfig = Map.of(
-        CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, config.getBootstrapServers(),
-        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName(),
-        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName()
-    );
+    Map<String, Object> kafkaConfig = config.kafkaConfig(Map.of(
+        // high throughput config
+        ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy",
+        ProducerConfig.LINGER_MS_CONFIG, 20,
+        ProducerConfig.BATCH_SIZE_CONFIG, (int) DataSize.ofKilobytes(32).toBytes()
+    ));
 
     // create topic
     var admin = new KafkaAdmin(kafkaConfig);
