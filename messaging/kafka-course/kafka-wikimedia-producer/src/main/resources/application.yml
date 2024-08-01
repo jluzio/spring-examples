@@ -1,16 +1,21 @@
 spring.application.name: kafka-wikimedia-producer
 
+server:
+  port: 8081
+
 logging:
   level:
     root: INFO
     com.example.spring: DEBUG
 
 spring:
-  kafka.bootstrap-servers: localhost:9093
+  kafka.bootstrap-servers: &k-bootstrap-servers localhost:9093
 
 app:
   course:
-    wikimedia:
-      recent-change-endpoint: https://stream.wikimedia.org/v2/stream/recentchange
+    kafka:
+      bootstrap-servers: *k-bootstrap-servers
       topic: wikimedia.change
       partitions: 3
+    wikimedia:
+      recent-change-endpoint: https://stream.wikimedia.org/v2/stream/recentchange

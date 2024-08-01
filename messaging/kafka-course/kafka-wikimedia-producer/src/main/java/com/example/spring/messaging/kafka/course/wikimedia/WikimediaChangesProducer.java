@@ -1,8 +1,10 @@
 package com.example.spring.messaging.kafka.course.wikimedia;
 
+import com.google.common.base.Strings;
 import jakarta.annotation.PreDestroy;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -19,15 +21,17 @@ import reactor.core.Disposable;
 
 @Component
 @RequiredArgsConstructor
+@Log4j2
 public class WikimediaChangesProducer implements ApplicationRunner {
 
-  private final WikimediaConfig config;
+  private final KafkaConfigProps kafkaConfigProps;
+  private final WikimediaConfigProps wikimediaConfigProps;
   private KafkaProducer<String, String> producer;
   private Disposable wikimediaSubscriber;
 
   @Override
   public void run(ApplicationArguments args) throws Exception {
-    Map<String, Object> kafkaConfig = config.kafkaConfig(Map.of(
+    Map<String, Object> kafkaConfig = kafkaConfigProps.kafkaConfig(Map.of(
         // high throughput config
         ProducerConfig.COMPRESSION_TYPE_CONFIG, "snappy",
         ProducerConfig.LINGER_MS_CONFIG, 20,
@@ -36,26 +40,32 @@ public class WikimediaChangesProducer implements ApplicationRunner {
 
     // create topic
     var admin = new KafkaAdmin(kafkaConfig);
-    admin.createOrModifyTopics(new NewTopic(config.getTopic(), config.getPartitions(), (short) 1));
+    admin.createOrModifyTopics(new NewTopic(kafkaConfigProps.getTopic(), kafkaConfigProps.getPartitions(), (short) 1));
 
     producer = new KafkaProducer<>(kafkaConfig);
 
-    wikimediaSubscriber = WebClient.create(config.getRecentChangeEndpoint())
+    wikimediaSubscriber = WebClient.create(wikimediaConfigProps.getRecentChangeEndpoint())
         .get()
         .retrieve()
         .bodyToFlux(new ParameterizedTypeReference<ServerSentEvent<String>>() {
         })
         .doOnNext(event -> {
-          var producerRecord = new ProducerRecord<>(
-              config.getTopic(), event.id(), event.data());
-          producer.send(producerRecord);
+          String eventData = event.data();
+          if (Strings.isNullOrEmpty(eventData)) {
+            log.trace("Ignoring message without data");
+          } else {
+            var producerRecord = new ProducerRecord<>(
+                kafkaConfigProps.getTopic(), event.id(), eventData);
+            producer.send(producerRecord);
+          }
         })
         .subscribe();
   }
 
   @PreDestroy
   public void shutdown() {
-    wikimediaSubscriber.dispose();
+    log.info("Shutting down Producer");
     producer.close();
+    wikimediaSubscriber.dispose();
   }
 }

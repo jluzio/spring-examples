@@ -1,4 +1,4 @@
-package com.example.spring.messaging.kafka.course.wikimedia;
+package com.example.spring.messaging.kafka.course.opensearch;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,18 +8,15 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration(proxyBeanMethods = false)
-@ConfigurationProperties("app.course.wikimedia")
+@ConfigurationProperties("app.course.kafka")
 @Data
-public class WikimediaConfig {
+public class KafkaConfigProps {
 
-  @Value("${spring.kafka.bootstrap-servers}")
   private String bootstrapServers;
-  private String recentChangeEndpoint;
   private String topic;
   private int partitions;
 

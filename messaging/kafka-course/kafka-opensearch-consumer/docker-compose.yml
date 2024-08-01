@@ -5,6 +5,9 @@ services:
   # https://hub.docker.com/r/opensearchproject/opensearch
   # ISSUE with vm.max_map_count
   # https://stackoverflow.com/questions/69214301/using-docker-desktop-for-windows-how-can-sysctl-parameters-be-configured-to-sur
+  # wsl.exe -d docker-desktop sh -c "sysctl -w vm.max_map_count=262144"
+  # wsl.exe -d rancher-desktop sh -c "sysctl -w vm.max_map_count=262144"
+  # Password strength checker: https://lowe.github.io/tryzxcvbn
   opensearch-node:
     container_name: opensearch-node
     image: opensearchproject/opensearch:latest
@@ -16,15 +19,15 @@ services:
     volumes:
       - opensearch-data:/usr/share/opensearch/data
     environment:
-      cluster.name: opensearch-cluster
-      node.name: opensearch-node
-      discovery.seed_hosts: opensearch-node
-      cluster.initial_cluster_manager_nodes: opensearch-node
+      discovery.type: single-node
+#      plugins.security.ssl.http.enabled: false
+#      cluster.name: opensearch-cluster
+#      node.name: opensearch-node
+#      discovery.seed_hosts: opensearch-node
+#      cluster.initial_cluster_manager_nodes: opensearch-node
       bootstrap.memory_lock: true  # along with the memlock settings below, disables swapping
       OPENSEARCH_JAVA_OPTS: -Xms512m -Xmx512m  # minimum and maximum Java heap size, recommend setting both to 50% of system RAM
-      OPENSEARCH_INITIAL_ADMIN_PASSWORD: openPWD123!"#
-#    sysctls:
-#      - vm.max_map_count=262144
+      OPENSEARCH_INITIAL_ADMIN_PASSWORD: OPENsearch123!
     ulimits:
       memlock:
         soft: -1

@@ -1,44 +1,75 @@
 package com.example.spring.messaging.kafka.course.opensearch;
 
-import java.util.HashMap;
-import java.util.Map;
-import lombok.Data;
-import org.apache.kafka.clients.CommonClientConfigs;
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.common.serialization.StringDeserializer;
-import org.apache.kafka.common.serialization.StringSerializer;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.nio.PoolingAsyncClientConnectionManagerBuilder;
+import org.apache.hc.client5.http.ssl.ClientTlsStrategyBuilder;
+import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
+import org.opensearch.client.json.jackson.JacksonJsonpMapper;
+import org.opensearch.client.opensearch.OpenSearchClient;
+import org.opensearch.client.transport.OpenSearchTransport;
+import org.opensearch.client.transport.httpclient5.ApacheHttpClient5TransportBuilder;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration(proxyBeanMethods = false)
-@ConfigurationProperties("app.course.wikimedia")
-@Data
+@Configuration
+@RequiredArgsConstructor
+@Log4j2
 public class OpenSearchConfig {
 
-  @Value("${spring.kafka.bootstrap-servers}")
-  private String bootstrapServers;
-  private String recentChangeEndpoint;
-  private String topic;
-  private int partitions;
+  private final OpenSearchConfigProps openSearchConfigProps;
 
-  public Map<String, Object> basicKafkaConfig() {
-    return Map.of(
-        CommonClientConfigs.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers,
-        // Producer config
-        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName(),
-        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName(),
-        // Consumer config
-        ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName(),
-        ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName()
-    );
+  @Bean
+  public OpenSearchClient openSearchClient()
+      throws NoSuchAlgorithmException, KeyStoreException, KeyManagementException {
+    final HttpHost[] hosts = new HttpHost[]{
+        new HttpHost(
+            openSearchConfigProps.getScheme(),
+            openSearchConfigProps.getHost(),
+            openSearchConfigProps.getPort()
+        )
+    };
+
+    var sslContext = SSLContextBuilder.create()
+        .loadTrustMaterial(null, (chains, authType) -> true)
+        .build();
+
+    OpenSearchTransport transport = ApacheHttpClient5TransportBuilder
+        .builder(hosts)
+        .setMapper(new JacksonJsonpMapper())
+        .setHttpClientConfigCallback(httpClientBuilder -> {
+          final var credentialsProvider = new BasicCredentialsProvider();
+          for (final var host : hosts) {
+            credentialsProvider.setCredentials(
+                new AuthScope(host),
+                new UsernamePasswordCredentials(
+                    openSearchConfigProps.getUsername(),
+                    openSearchConfigProps.getPassword().toCharArray()));
+          }
+
+          // Disable SSL/TLS verification as our local testing clusters use self-signed certificates
+          final var tlsStrategy = ClientTlsStrategyBuilder.create()
+              .setSslContext(sslContext)
+              .setHostnameVerifier(NoopHostnameVerifier.INSTANCE)
+              .build();
+
+          var connectionManager = PoolingAsyncClientConnectionManagerBuilder.create()
+              .setTlsStrategy(tlsStrategy)
+              .build();
+
+          return httpClientBuilder
+              .setDefaultCredentialsProvider(credentialsProvider)
+              .setConnectionManager(connectionManager);
+        })
+        .build();
+    return new OpenSearchClient(transport);
   }
-
-  public Map<String, Object> kafkaConfig(Map<String, Object> extraConfig) {
-    var config = new HashMap<>(basicKafkaConfig());
-    config.putAll(extraConfig);
-    return config;
-  }
-
 }

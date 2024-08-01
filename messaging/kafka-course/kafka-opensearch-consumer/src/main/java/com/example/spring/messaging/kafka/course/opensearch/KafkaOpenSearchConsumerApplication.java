@@ -1,4 +1,4 @@
-package com.example.spring.messaging.kafka;
+package com.example.spring.messaging.kafka.course.opensearch;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
