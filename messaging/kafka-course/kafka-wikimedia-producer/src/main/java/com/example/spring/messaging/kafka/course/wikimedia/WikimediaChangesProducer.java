@@ -1,5 +1,7 @@
 package com.example.spring.messaging.kafka.course.wikimedia;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import jakarta.annotation.PreDestroy;
 import java.util.Map;
@@ -26,6 +28,7 @@ public class WikimediaChangesProducer implements ApplicationRunner {
 
   private final KafkaConfigProps kafkaConfigProps;
   private final WikimediaConfigProps wikimediaConfigProps;
+  private final ObjectMapper objectMapper;
   private KafkaProducer<String, String> producer;
   private Disposable wikimediaSubscriber;
 
@@ -54,12 +57,23 @@ public class WikimediaChangesProducer implements ApplicationRunner {
           if (Strings.isNullOrEmpty(eventData)) {
             log.trace("Ignoring message without data");
           } else {
+            var eventDataId = getEventDataId(event);
             var producerRecord = new ProducerRecord<>(
-                kafkaConfigProps.getTopic(), event.id(), eventData);
+                kafkaConfigProps.getTopic(), eventDataId, eventData);
             producer.send(producerRecord);
           }
         })
         .subscribe();
+  }
+
+  private String getEventDataId(ServerSentEvent<String> event) {
+    try {
+      var eventDataNode = objectMapper.readTree(event.data());
+      return eventDataNode.at("/meta/id").asText();
+    } catch (JsonProcessingException e) {
+      log.trace("Unable to get Id, ignoring");
+      return null;
+    }
   }
 
   @PreDestroy

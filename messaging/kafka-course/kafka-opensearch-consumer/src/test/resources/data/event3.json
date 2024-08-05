@@ -1,0 +1,36 @@
+{
+  "$schema": "/mediawiki/recentchange/1.0.0",
+  "meta": {
+    "uri": "https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D1%81%D0%BC%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F_%D1%87%D1%91%D1%80%D0%BD%D0%BE%D0%B9_%D0%B4%D1%8B%D1%80%D1%8B",
+    "request_id": "18351100-7194-4ec8-ac04-e36f2c6f38de",
+    "id": "653f68ff-c5b5-4aa2-8f82-90d741bfc042",
+    "dt": "2024-08-01T15:44:37Z",
+    "domain": "ru.wikipedia.org",
+    "stream": "mediawiki.recentchange",
+    "topic": "eqiad.mediawiki.recentchange",
+    "partition": 0,
+    "offset": 5303269027
+  },
+  "type": "log",
+  "namespace": 0,
+  "title": "Космология чёрной дыры",
+  "title_url": "https://ru.wikipedia.org/wiki/%D0%9A%D0%BE%D1%81%D0%BC%D0%BE%D0%BB%D0%BE%D0%B3%D0%B8%D1%8F_%D1%87%D1%91%D1%80%D0%BD%D0%BE%D0%B9_%D0%B4%D1%8B%D1%80%D1%8B",
+  "comment": "",
+  "timestamp": 1722527077,
+  "user": "Lvova",
+  "bot": false,
+  "log_id": 101996003,
+  "log_type": "review",
+  "log_action": "approve",
+  "log_params": [
+    138757011,
+    134342663,
+    "20240706052237"
+  ],
+  "log_action_comment": "Lvova отпатрулировала версию страницы [[Космология чёрной дыры]]",
+  "server_url": "https://ru.wikipedia.org",
+  "server_name": "ru.wikipedia.org",
+  "server_script_path": "/w",
+  "wiki": "ruwiki",
+  "parsedcomment": ""
+}

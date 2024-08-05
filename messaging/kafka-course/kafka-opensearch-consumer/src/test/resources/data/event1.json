@@ -1,0 +1,36 @@
+{
+  "$schema": "/mediawiki/recentchange/1.0.0",
+  "meta": {
+    "uri": "https://sr.wikipedia.org/wiki/%D0%A8%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD:%D0%95%D0%9F2024%D0%98%D0%A2%D0%90%D0%B2",
+    "request_id": "72af4a7e-2850-46b2-9cc4-39153af255fe",
+    "id": "c26d46fc-fc72-40b6-9ba8-233daa587651",
+    "dt": "2024-08-01T15:44:32Z",
+    "domain": "sr.wikipedia.org",
+    "stream": "mediawiki.recentchange",
+    "topic": "eqiad.mediawiki.recentchange",
+    "partition": 0,
+    "offset": 5303268899
+  },
+  "id": 57305111,
+  "type": "log",
+  "namespace": 10,
+  "title": "Шаблон:ЕП2024ИТАв",
+  "title_url": "https://sr.wikipedia.org/wiki/%D0%A8%D0%B0%D0%B1%D0%BB%D0%BE%D0%BD:%D0%95%D0%9F2024%D0%98%D0%A2%D0%90%D0%B2",
+  "comment": "",
+  "timestamp": 1722527072,
+  "user": "DJ0302",
+  "bot": false,
+  "log_id": 20202232,
+  "log_type": "move",
+  "log_action": "move",
+  "log_params": {
+    "target": "Шаблон:ЕПВ2024-ИТА",
+    "noredir": "0"
+  },
+  "log_action_comment": "moved [[Шаблон:ЕП2024ИТАв]] to [[Шаблон:ЕПВ2024-ИТА]]",
+  "server_url": "https://sr.wikipedia.org",
+  "server_name": "sr.wikipedia.org",
+  "server_script_path": "/w",
+  "wiki": "srwiki",
+  "parsedcomment": ""
+}

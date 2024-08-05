@@ -1,4 +1,4 @@
-package com.example.spring.messaging.kafka.fizzbuzz;
+package com.example.spring.messaging.kafka.spring.stream.fizzbuzz;
 
 import java.time.Duration;
 import java.util.Random;

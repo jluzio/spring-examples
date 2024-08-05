@@ -1,4 +1,4 @@
-package com.example.spring.messaging.kafka.fizzbuzz;
+package com.example.spring.messaging.kafka.spring.stream.fizzbuzz;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.stream.function.StreamBridge;

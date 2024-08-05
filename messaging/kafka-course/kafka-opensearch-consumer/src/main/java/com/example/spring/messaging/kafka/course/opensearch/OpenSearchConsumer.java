@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -58,8 +57,8 @@ public class OpenSearchConsumer implements ApplicationRunner {
         log.info("Polling");
         ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
         log.info("Processing Wikimedia records: {}", records.count());
-        for (var record : records) {
-          openSearchService.index(record);
+        if (!records.isEmpty()) {
+          openSearchService.bulkIndex(records);
         }
       }
     } catch (WakeupException e) {
