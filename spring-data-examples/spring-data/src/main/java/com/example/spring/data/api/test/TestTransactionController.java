@@ -5,7 +5,6 @@ import com.example.spring.data.repository.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestTransactionController {
 
   private final UserRepository userRepository;
-  private final TransactionTestService service;
+  private final TestTransactionService service;
 
   /**
    * @see org.springframework.transaction.interceptor.TransactionInterceptor
