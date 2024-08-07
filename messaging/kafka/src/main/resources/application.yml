@@ -8,18 +8,21 @@ logging:
 management.endpoints.web.exposure.include: health,info,bindings
 
 spring:
-#  kafka:
-#    bootstrap-servers: localhost:9093
+  kafka:
+    bootstrap-servers: &k-bootstrap-servers localhost:9093
+    consumer:
+      auto-offset-reset: earliest
   cloud:
     function:
 #      definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer;pingSupplier;pingConsumer;randomNameSupplier|uppercaseFunction|reverseFunction;stringConsumer;unreliableDataSupplier;unreliableDataConsumer
       definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer
+
     stream:
       # since we have several binders due to spring-cloud-stream-binder-kafka-streams
       default-binder: kafka
       kafka:
         binder:
-          brokers: localhost:9093
+          brokers: *k-bootstrap-servers
       bindings:
         fizzBuzzProducer-out-0:
           destination: numbers
@@ -39,8 +42,6 @@ spring:
 app:
   producers:
     fizzBuzzProducer: false
-  course:
-    wikimedia:
-      recent-change-endpoint: https://stream.wikimedia.org/v2/stream/recentchange
-      topic: wikimedia.change
-      partitions: 3
+  words-config:
+    default: true
+    producers: false
