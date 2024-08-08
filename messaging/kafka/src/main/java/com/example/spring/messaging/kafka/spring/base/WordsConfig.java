@@ -32,7 +32,7 @@ public class WordsConfig {
     Could also configure and use a RoutingKafkaTemplate.
    */
 
-  @Bean
+//  @Bean
   KafkaTemplate<String, String> stringTemplate(ProducerFactory<String, String> producerFactory) {
     return new KafkaTemplate<>(
         producerFactory,
@@ -51,8 +51,8 @@ public class WordsConfig {
   }
 
   @Bean
-  @ConditionalOnProperty(value = "app.word-config.producers", havingValue = "true")
-  public ApplicationRunner runner(KafkaTemplate<String, String> template) {
+//  @ConditionalOnProperty(value = "app.word-config.producers", havingValue = "true")
+  public ApplicationRunner runner(KafkaTemplate<Object, Object> template) {
     return args -> template.send("spring.words", "test");
   }
 

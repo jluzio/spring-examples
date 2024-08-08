@@ -12,6 +12,11 @@ spring:
     bootstrap-servers: &k-bootstrap-servers localhost:9093
     consumer:
       auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
   cloud:
     function:
 #      definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer;pingSupplier;pingConsumer;randomNameSupplier|uppercaseFunction|reverseFunction;stringConsumer;unreliableDataSupplier;unreliableDataConsumer
