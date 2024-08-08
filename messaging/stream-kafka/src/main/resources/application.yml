@@ -1,4 +1,4 @@
-spring.application.name: kafka
+spring.application.name: stream-kafka
 
 logging:
   level:
@@ -38,5 +38,10 @@ spring:
 #          fizzBuzzConsumer-in-0: fizz-buzz
 
 app:
-  producers:
-    fizzBuzzProducer: false
+  kafka-apps:
+    fizzbuzz:
+      enabled: true
+      producers.enabled: false
+    words:
+      enabled: true
+      producers.enabled: false

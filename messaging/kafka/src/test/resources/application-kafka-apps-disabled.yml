@@ -1,0 +1,2 @@
+app.kafka-apps:
+  words.enabled: false

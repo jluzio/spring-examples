@@ -17,4 +17,4 @@ app:
   kafka-apps:
     words:
       enabled: true
-      producers-enabled: true
+      producers.enabled: false

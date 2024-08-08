@@ -3,6 +3,7 @@ package com.example.spring.messaging.kafka.core;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
@@ -21,7 +22,7 @@ import org.apache.kafka.streams.state.KeyValueStore;
 import org.springframework.kafka.core.KafkaAdmin;
 
 @Log4j2
-public class WordCountStreamApplication {
+public class WordCountStreamsApp {
 
   public static void main(String[] args) throws Exception {
     Properties props = new Properties();
@@ -31,7 +32,7 @@ public class WordCountStreamApplication {
     props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
     Map<String, Object> configProps = props.entrySet().stream()
-        .collect(Collectors.toMap(e -> (String) e.getKey(), e -> e.getValue()));
+        .collect(Collectors.toMap(e -> (String) e.getKey(), Entry::getValue));
 
     var adminClient = new KafkaAdmin(configProps);
     adminClient.createOrModifyTopics(new NewTopic("streams-plaintext-input", 3, (short) 1));

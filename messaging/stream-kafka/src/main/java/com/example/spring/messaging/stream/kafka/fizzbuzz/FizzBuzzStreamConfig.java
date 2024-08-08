@@ -12,13 +12,14 @@ import org.springframework.context.annotation.Configuration;
 import reactor.core.publisher.Flux;
 
 @Configuration
+@ConditionalOnProperty(value = "app.kafka-apps.fizzbuzz.enabled", havingValue = "true")
 @Slf4j
 public class FizzBuzzStreamConfig {
 
   Random random = new Random();
 
   @Bean
-  @ConditionalOnProperty(value = "app.producers.fizzBuzzProducer", havingValue = "true")
+  @ConditionalOnProperty(value = "app.kafka-apps.fizzbuzz.producers.enabled", havingValue = "true")
   public Supplier<Flux<Integer>> fizzBuzzProducer(){
     return () ->
         Flux.interval(Duration.ofSeconds(5))

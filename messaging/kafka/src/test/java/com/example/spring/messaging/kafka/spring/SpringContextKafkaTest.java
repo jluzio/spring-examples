@@ -1,5 +1,7 @@
 package com.example.spring.messaging.kafka.spring;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
@@ -14,8 +16,10 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.test.EmbeddedKafkaBroker;
 import org.springframework.kafka.test.context.EmbeddedKafka;
 import org.springframework.kafka.test.utils.KafkaTestUtils;
+import org.springframework.test.context.ActiveProfiles;
 
 @SpringBootTest
+@ActiveProfiles("kafka-apps-disabled")
 @EmbeddedKafka(kraft = true, topics = SpringContextKafkaTest.TOPIC)
 @Log4j2
 class SpringContextKafkaTest {
@@ -39,8 +43,13 @@ class SpringContextKafkaTest {
     ));
     try (var consumer = new KafkaConsumer<String, String>(consumerProps)) {
       consumer.subscribe(List.of(TOPIC));
-      var results = consumer.poll(Duration.ofMillis(100));
+      var results = KafkaTestUtils.getRecords(consumer);
+
       log.info("consumer results: {}", results.count());
+      results.forEach(log::info);
+
+      assertThat(results.count())
+          .isOne();
     }
   }
 
