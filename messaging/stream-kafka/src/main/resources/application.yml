@@ -1,0 +1,42 @@
+spring.application.name: kafka
+
+logging:
+  level:
+    root: INFO
+    com.example.spring: DEBUG
+
+management.endpoints.web.exposure.include: health,info,bindings
+
+spring:
+  kafka:
+    bootstrap-servers: &k-bootstrap-servers localhost:9093
+  cloud:
+    function:
+#      definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer;pingSupplier;pingConsumer;randomNameSupplier|uppercaseFunction|reverseFunction;stringConsumer;unreliableDataSupplier;unreliableDataConsumer
+      definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer
+
+    stream:
+      # since we have several binders due to spring-cloud-stream-binder-kafka-streams
+      default-binder: kafka
+      kafka:
+        binder:
+          brokers: *k-bootstrap-servers
+      bindings:
+        fizzBuzzProducer-out-0:
+          destination: numbers
+        fizzBuzzProcessor-in-0:
+          destination: numbers
+        fizzBuzzProcessor-out-0:
+          destination: fizz-buzz
+        fizzBuzzConsumer-in-0:
+          destination: fizz-buzz
+#      function:
+#        bindings:
+#          fizzBuzzProducer-out-0: numbers
+#          fizzBuzzProcessor-in-0: numbers
+#          fizzBuzzProcessor-out-0: fizz-buzz
+#          fizzBuzzConsumer-in-0: fizz-buzz
+
+app:
+  producers:
+    fizzBuzzProducer: false
