@@ -36,8 +36,7 @@ repositories {
 dependencies {
   implementation("org.springframework.boot:spring-boot-starter")
   implementation("org.springframework.boot:spring-boot-starter-data-rest")
-  implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
-  implementation("org.springframework.retry:spring-retry")
+  implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
 
   developmentOnly("org.springframework.boot:spring-boot-devtools")
   testCompileOnly("org.springframework.boot:spring-boot-devtools")
@@ -55,7 +54,7 @@ dependencies {
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.springframework.boot:spring-boot-testcontainers")
   testImplementation("org.testcontainers:junit-jupiter")
-  testImplementation("org.testcontainers:mongodb")
+  testImplementation("org.testcontainers:elasticsearch")
 }
 
 tasks.withType<Test> {
