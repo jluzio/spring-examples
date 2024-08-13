@@ -50,6 +50,7 @@ dependencies {
   testRuntimeOnly("org.springframework.boot:spring-boot-docker-compose")
 
   implementation("com.google.guava:guava:33.2.1-jre")
+  implementation("net.logstash.logback:logstash-logback-encoder:8.0")
 
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("org.springframework.boot:spring-boot-testcontainers")
