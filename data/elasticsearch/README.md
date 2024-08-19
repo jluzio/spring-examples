@@ -5,6 +5,7 @@
 - Elasticsearch
   - https://hub.docker.com/_/elasticsearch
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/run-elasticsearch-locally.html
+  - https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
   - https://hub.docker.com/r/bitnami/elasticsearch
 - Kibana
   - https://hub.docker.com/_/kibana
@@ -14,6 +15,8 @@
   - https://hub.docker.com/_/logstash
   - https://www.elastic.co/guide/en/logstash/current/docker-config.html
   - https://hub.docker.com/r/bitnami/logstash
+- Filebeat
+  - https://www.elastic.co/guide/en/beats/filebeat/current/running-on-docker.html
 
 - Other
   - https://elk-docker.readthedocs.io
