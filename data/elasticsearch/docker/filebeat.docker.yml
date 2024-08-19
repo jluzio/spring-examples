@@ -10,6 +10,8 @@ filebeat.autodiscover:
 
 processors:
   - add_cloud_metadata: ~
+#  - add_docker_metadata:
+#      host: "unix:///var/run/docker.sock"
 
 #output.elasticsearch:
 #  hosts: '${ELASTICSEARCH_HOSTS:elasticsearch:9200}'
@@ -17,4 +19,4 @@ processors:
 #  password: '${ELASTICSEARCH_PASSWORD:}'
 
 output.logstash:
-  hosts: "logstash:5044"
+  hosts: 'logstash:5044'

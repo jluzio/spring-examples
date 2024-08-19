@@ -3,7 +3,7 @@ version: '3.9'
 services:
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTIC_VERSION}
+    image: docker.elastic.co/elasticsearch/elasticsearch:${TAG}
     container_name: elasticsearch
     environment:
       discovery.type: single-node
@@ -18,7 +18,7 @@ services:
       - esdata:/usr/share/elasticsearch/data
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:8.15.0
+    image: docker.elastic.co/logstash/logstash:${TAG}
     container_name: logstash
     ports:
       - "5000:5000"
@@ -30,7 +30,7 @@ services:
       - elasticsearch
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:8.15.0
+    image: docker.elastic.co/kibana/kibana:${TAG}
     container_name: kibana
     environment:
       ELASTICSEARCH_URL: http://elasticsearch:9200
@@ -45,7 +45,7 @@ services:
       - elasticsearch
 
   filebeat:
-    image: docker.elastic.co/beats/filebeat:8.15.0
+    image: docker.elastic.co/beats/filebeat:${TAG}
     container_name: filebeat
     user: root
     command: filebeat -e --strict.perms=false
@@ -53,8 +53,8 @@ services:
       - ./docker/filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-#      - registry:/usr/share/filebeat/data:rw
       - filebeat-data:/usr/share/filebeat/data:rw
+#      - registry:/usr/share/filebeat/data:rw
     environment:
 #      output.elasticsearch.hosts: elasticsearch:9200
       ELASTICSEARCH_HOSTS: elasticsearch:9200
