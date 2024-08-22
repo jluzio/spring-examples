@@ -14,3 +14,5 @@ curl -L http://media.sundog-soft.com/es8/movies.json -O
 - Flattened examples: http://media.sundog-soft.com/es/flattened.txt
 - Exception examples: http://media.sundog-soft.com/es/exceptions.txt
 - Sample log: http://media.sundog-soft.com/es/access_log
+- sample csv: https://github.com/coralogix-resources/elk-course-samples/raw/master/csv-schema-short-numerical.csv
+- 
