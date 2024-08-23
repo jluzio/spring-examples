@@ -1,0 +1,4 @@
+2020-05-07T03:07:11Z INFO log1 with pattern1
+2020-05-07T03:07:11Z INFO log2 with pattern1
+127.0.0.1 GET /log3/pattern2
+127.0.0.1 GET /log4/pattern2
