@@ -3,5 +3,12 @@ filebeat.config:
     path: /demo/config/modules.d/*.yml
     reload.enabled: false
 
-output.logstash:
-  hosts: 'logstash:5044'
+output.elasticsearch:
+  hosts: 'elasticsearch:9200'
+  username: 'elastic'
+  password: 'changeme'
+
+# logstash configuration at time of testing was not setting the timestamp of the log lines
+# sending directly to elasticsearch to demo correct values
+#output.logstash:
+#  hosts: 'logstash:5044'

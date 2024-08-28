@@ -1,0 +1,11 @@
+filebeat.config:
+  modules:
+    path: /demo/config/modules.d/*.yml
+    reload.enabled: false
+
+output.elasticsearch:
+  hosts: 'elasticsearch:9200'
+  username: 'elastic'
+  password: 'changeme'
+
+setup.kibana.host: "http://kibana:5601"
