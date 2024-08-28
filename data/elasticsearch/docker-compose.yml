@@ -55,6 +55,7 @@ services:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - filebeat-data:/usr/share/filebeat/data:rw
+      - ./docker/files/filebeat_demo:/demo
 #      - registry:/usr/share/filebeat/data:rw
     environment:
 #      output.elasticsearch.hosts: elasticsearch:9200
