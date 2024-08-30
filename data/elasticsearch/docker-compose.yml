@@ -26,7 +26,7 @@ services:
       - "9600:9600"
     volumes:
       - ./docker/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-      - ./docker/files/logstash_demo:/demo
+#      - ./docker/files/logstash_demo:/demo
     depends_on:
       - elasticsearch
 
@@ -55,7 +55,7 @@ services:
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - filebeat-data:/usr/share/filebeat/data:rw
-      - ./docker/files/filebeat_demo:/demo
+#      - ./docker/files/filebeat_demo:/demo
 #      - registry:/usr/share/filebeat/data:rw
     environment:
 #      output.elasticsearch.hosts: elasticsearch:9200

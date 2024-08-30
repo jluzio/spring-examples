@@ -1,0 +1,11 @@
+version: '3.9'
+
+services:
+
+  logstash:
+    volumes:
+      - ./docker/files/logstash_demo:/demo
+
+  filebeat:
+    volumes:
+      - ./docker/files/filebeat_demo:/demo
