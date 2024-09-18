@@ -76,7 +76,7 @@ class RestTemplateInterceptorExternalApiTest {
       return new ErrorInterceptor(
           request -> request.getMethod().equals(HttpMethod.GET),
           HttpStatusCode::isError,
-          _ -> new IllegalArgumentException("GENERIC ERROR")
+          ignored -> new IllegalArgumentException("GENERIC ERROR")
       );
     }
 
@@ -86,7 +86,7 @@ class RestTemplateInterceptorExternalApiTest {
       return new ErrorInterceptor(
           request -> request.getMethod().equals(HttpMethod.GET),
           HttpStatus.NOT_FOUND::equals,
-          _ -> new NoSuchElementException("NOT_FOUND")
+          ignored -> new NoSuchElementException("NOT_FOUND")
       );
     }
 

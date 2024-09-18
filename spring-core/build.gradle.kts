@@ -13,7 +13,7 @@ java {
 }
 
 // enable Java preview features
-val compileJvmArgs = listOf("--enable-preview")
+val compileJvmArgs = listOf<String>()
 val runtimeJvmArgs = listOf(
   "--enable-preview",
   "--add-opens", "java.base/java.lang=ALL-UNNAMED",

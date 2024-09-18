@@ -31,10 +31,10 @@ class WebTestClientFilterTest {
     WebTestClient webTestClient() {
       var errorFilter1 = errorFilter(
           HttpStatusCode::isError,
-          _ -> new IllegalArgumentException("Error"));
+          ignored -> new IllegalArgumentException("Error"));
       var errorFilter2 = errorFilter(
           HttpStatus.I_AM_A_TEAPOT::equals,
-          _ -> new UnsupportedOperationException("I_AM_A_TEAPOT"));
+          ignored -> new UnsupportedOperationException("I_AM_A_TEAPOT"));
       var logFilter = logFilter();
 
       return WebTestClient
