@@ -21,7 +21,6 @@ class WebTestClientSimpleControllerTest {
           .bindToController(new GreetingController())
           .build();
     }
-
   }
 
   // Spring Boot will create a `WebTestClient` for you,

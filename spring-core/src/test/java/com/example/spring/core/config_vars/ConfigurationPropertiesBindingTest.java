@@ -1,4 +1,4 @@
-package com.example.spring.core.config;
+package com.example.spring.core.config_vars;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
