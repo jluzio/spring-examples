@@ -117,6 +117,36 @@ class CaffeineCacheTest {
   }
 
   @Test
+  void basic_cache_multi_key() {
+    assertThat(cachedCalculationService.messageCall("Foo", "Bar"))
+        .isEqualTo("Hello Foo and Bar!");
+    assertThat(cachedCalculationService.messageCall("Foo", "Bar"))
+        .isEqualTo("Hello Foo and Bar!");
+    assertThat(cachedCalculationService.messageCall("Foo", "Baz"))
+        .isEqualTo("Hello Foo and Baz!");
+    verify(expensiveCalculationApi, times(1)).expensiveMessageCall("Foo", "Bar");
+    verify(expensiveCalculationApi, times(1)).expensiveMessageCall("Foo", "Baz");
+
+    Arrays.stream(CacheId.VALUES)
+        .forEach(name -> log.info("stats[{}]: {}", name, getNativeCache(name).stats()));
+  }
+
+  @Test
+  void basic_cache_multi_key_customCache() {
+    assertThat(cachedCalculationService.messageCallCustomCache("Foo", "Bar"))
+        .isEqualTo("Hello Foo and Bar!");
+    assertThat(cachedCalculationService.messageCallCustomCache("Foo", "Bar"))
+        .isEqualTo("Hello Foo and Bar!");
+    assertThat(cachedCalculationService.messageCallCustomCache("Foo", "Baz"))
+        .isEqualTo("Hello Foo and Baz!");
+    verify(expensiveCalculationApi, times(1)).expensiveMessageCall("Foo", "Bar");
+    verify(expensiveCalculationApi, times(1)).expensiveMessageCall("Foo", "Baz");
+
+    Arrays.stream(CacheId.VALUES)
+        .forEach(name -> log.info("stats[{}]: {}", name, getNativeCache(name).stats()));
+  }
+
+  @Test
   void expiry() {
     var startTime = LocalDateTime.now();
     assertThat(cachedCalculationService.calculationCall())

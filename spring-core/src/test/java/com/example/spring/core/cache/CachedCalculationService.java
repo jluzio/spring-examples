@@ -19,4 +19,14 @@ public class CachedCalculationService {
   public String messageCall(String name) {
     return api.expensiveMessageCall(name);
   }
+
+  @Cacheable(value = CacheId.MESSAGES)
+  public String messageCall(String name1, String name2) {
+    return api.expensiveMessageCall(name1, name2);
+  }
+
+  @Cacheable(value = CacheId.MESSAGES_MULTI_KEY, key = "#name1 + ':' + #name2")
+  public String messageCallCustomCache(String name1, String name2) {
+    return api.expensiveMessageCall(name1, name2);
+  }
 }
