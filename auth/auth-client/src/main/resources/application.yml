@@ -1,13 +1,15 @@
 spring.application.name: auth-client
 
+#spring.profiles.active: local
+
 logging.level:
   com.example: DEBUG
   org.springframework: INFO
   org.springframework.security: TRACE
 
 # GitHub login
-spring.security.oauth2.client.registration:
-  github:
-    clientId: ""
-    clientSecret: ""
-
+spring.security.oauth2.client:
+  registration:
+    github:
+      clientId: ${GITHUB_CLIENT_ID}
+      clientSecret: ${GITHUB_CLIENT_SECRET}
