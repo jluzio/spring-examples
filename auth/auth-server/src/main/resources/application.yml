@@ -24,7 +24,7 @@ spring:
           oidc-client:
             registration:
               client-id: "oidc-client"
-              client-secret: "{noop}secret"
+              client-secret: "{noop}secret-oidc-cli"
               client-authentication-methods:
                 - "client_secret_basic"
                 - "client_secret_post"

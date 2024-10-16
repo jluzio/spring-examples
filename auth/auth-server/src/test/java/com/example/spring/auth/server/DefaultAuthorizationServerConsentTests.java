@@ -55,7 +55,7 @@ class DefaultAuthorizationServerConsentTests {
   @Test
   @WithMockUser("user")
   void whenUserConsentsToAllScopesThenReturnAuthorizationCode() throws IOException {
-    final HtmlPage consentPage = webClient.getPage(authorizationRequestUri);
+    HtmlPage consentPage = webClient.getPage(authorizationRequestUri);
     assertThat(consentPage.getTitleText()).isEqualTo("Consent required");
 
     List<HtmlCheckBoxInput> scopes = new ArrayList<>();
@@ -87,7 +87,7 @@ class DefaultAuthorizationServerConsentTests {
   @Test
   @WithMockUser("user")
   void whenUserCancelsConsentThenReturnAccessDeniedError() throws IOException {
-    final HtmlPage consentPage = webClient.getPage(authorizationRequestUri);
+    HtmlPage consentPage = webClient.getPage(authorizationRequestUri);
     assertThat(consentPage.getTitleText()).isEqualTo("Consent required");
 
     DomElement cancelConsentButton = consentPage.querySelector("button[id='cancel-consent']");
