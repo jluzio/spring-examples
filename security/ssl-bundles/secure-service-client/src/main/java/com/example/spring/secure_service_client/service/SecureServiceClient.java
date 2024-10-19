@@ -1,21 +1,25 @@
 package com.example.spring.secure_service_client.service;
 
-import org.springframework.boot.ssl.SslBundles;
-import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.boot.autoconfigure.web.client.RestClientSsl;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.client.RestClient;
 
 @Service
 public class SecureServiceClient {
 
-  private final RestTemplate restTemplate;
+  private final RestClient client;
 
-  public SecureServiceClient(RestTemplateBuilder restTemplateBuilder, SslBundles sslBundles) {
-    this.restTemplate = restTemplateBuilder.setSslBundle(sslBundles.getBundle("client")).build();
+  public SecureServiceClient(RestClient.Builder restClientBuilder, RestClientSsl ssl) {
+    this.client = restClientBuilder
+        .baseUrl("https://localhost")
+        .apply(ssl.fromBundle("client"))
+        .build();
   }
 
   public String hello() {
-    return restTemplate.getForEntity("https://localhost/hello", String.class)
-        .getBody();
+    return client
+        .get().uri("/hello")
+        .retrieve()
+        .body(String.class);
   }
 }
