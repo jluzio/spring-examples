@@ -4,7 +4,7 @@ spring.ssl.bundle:
   jks:
     web-server:
       key:
-        alias: "server"
+        alias: "sec_svc"
       keystore:
         location: "classpath:certs/keystore.p12"
         password: "s3cr3t"

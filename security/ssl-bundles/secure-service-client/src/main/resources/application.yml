@@ -1,1 +1,7 @@
-spring.application.name=secure-service-client
+spring.application.name: secure-service-client
+
+spring.ssl.bundle:
+  pem:
+    client:
+      truststore:
+        certificate: "classpath:certs/sec_svc.crt"
