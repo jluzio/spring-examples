@@ -1,0 +1,18 @@
+spring.application.name: secure-service-server
+
+spring.ssl.bundle:
+  jks:
+    web-server:
+      key:
+        alias: "server"
+      keystore:
+        location: "classpath:certs/keystore.p12"
+        password: "s3cr3t"
+        type: "PKCS12"
+
+server:
+  port: 443
+  ssl:
+    bundle: "web-server"
+    client-auth: WANT
+#    client-auth: NEED
