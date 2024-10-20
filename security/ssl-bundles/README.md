@@ -1,8 +1,9 @@
 # Refs
-https://docs.spring.io/spring-boot/reference/features/ssl.html
-https://spring.io/blog/2023/06/07/securing-spring-boot-applications-with-ssl
-https://www.baeldung.com/spring-boot-security-ssl-bundles
-https://github.com/nlinhvu/spring-boot-ssl-demo-2024
+- https://docs.spring.io/spring-boot/reference/features/ssl.html
+- https://spring.io/blog/2023/06/07/securing-spring-boot-applications-with-ssl
+- https://www.baeldung.com/spring-boot-security-ssl-bundles
+- https://github.com/nlinhvu/spring-boot-ssl-demo-2024
+- 2 way ssl: https://medium.com/@salarai.de/how-to-enable-mutual-tls-in-a-sprint-boot-application-77144047940f
 
 # Keystore
 ~~~bash

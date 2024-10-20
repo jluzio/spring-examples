@@ -3,11 +3,11 @@ package com.example.spring.core.api;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import lombok.extern.slf4j.Slf4j;
+import com.example.spring.core.api.model.JsonPlaceholderModels.Todo;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -16,7 +16,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
 
 @SpringBootTest
-@Slf4j
+@Log4j2
 class RestClientExternalApiTest {
 
   public static final String ROOT_URI = "https://jsonplaceholder.typicode.com";
@@ -53,9 +53,10 @@ class RestClientExternalApiTest {
     var responseBody = restClient
         .get().uri("/todos/1")
         .retrieve()
-        .body(String.class);
+        .body(Todo.class);
     assertThat(responseBody)
-        .isNotEmpty();
+        .isNotNull()
+        .satisfies(log::debug);
   }
 
   @Test
