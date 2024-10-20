@@ -14,5 +14,9 @@ server:
   port: 443
   ssl:
     bundle: "web-server"
+    # for mutual TLS or 2-way SSL authentication
+    # specifies the requirement of certificate for the client to be able to communicate with the server
+    # options: NONE (only server certificate), WANT (want client certificate but not required), NEED (requires client certificate)
+    # for testing in browser and curl (i.e. without client certificate) NONE or WANT can be used
     client-auth: WANT
 #    client-auth: NEED
