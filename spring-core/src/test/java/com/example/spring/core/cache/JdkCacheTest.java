@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Import;
 
 @SpringBootTest
 @Slf4j
-class CacheTest {
+class JdkCacheTest {
 
   @Configuration
   @EnableCaching

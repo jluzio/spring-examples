@@ -12,10 +12,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Stream;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,21 +47,16 @@ class CaffeineCacheTest {
   static class Config {
 
     @ConfigurationProperties(prefix = "app.cache")
-    @Data
-    @RequiredArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    public static class CacheProperties {
+    @Builder(toBuilder = true)
+    public record CacheProperties(String templateSpec, Map<String, String> specs) {
 
-      private String templateSpec;
-      private Map<String, String> specs;
     }
 
     @Bean
     public CacheManager cacheManager(CacheProperties properties) {
       var cacheManager = new CaffeineCacheManager();
-      cacheManager.setCaffeine(Caffeine.from(properties.getTemplateSpec()));
-      properties.getSpecs().forEach((key, value) -> {
+      cacheManager.setCaffeine(Caffeine.from(properties.templateSpec()));
+      properties.specs().forEach((key, value) -> {
         var cache = new CaffeineCache(
             key,
             Caffeine.from(value).build()
