@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCache;
@@ -35,7 +39,7 @@ import org.springframework.context.annotation.Import;
 
 @SpringBootTest(
     properties = {
-        "spring.cache.cache-names=default,hello,book",
+        "spring.cache.cache-names=default,hello,book,crud",
         "app.cache.templateSpec=maximumSize=500,expireAfterWrite=PT10S,expireAfterAccess=PT60S,recordStats",
         "app.cache.specs.hello=maximumSize=50,expireAfterWrite=PT10S,recordStats",
     }
@@ -45,7 +49,7 @@ class CachePlaygroundTest {
 
   @Configuration
   @EnableCaching
-  @Import({CacheableService.class})
+  @Import({PlaygroundService.class, BasicCrudService.class})
   @EnableConfigurationProperties(CacheProperties.class)
   static class Config {
 
@@ -72,9 +76,32 @@ class CachePlaygroundTest {
   }
 
   @Autowired
-  CacheableService service;
+  BasicCrudService basicCrudService;
+  @Autowired
+  PlaygroundService playgroundService;
   @Autowired
   CacheManager cacheManager;
+
+  @Test
+  void test_basic_crud() {
+    var id1 = "id1";
+    var id2 = "id2";
+
+    var valueId1 = basicCrudService.get(id1);
+    assertThat(valueId1)
+        .isEqualTo(basicCrudService.get(id1))
+        .isNotEqualTo(basicCrudService.get(id2));
+
+    basicCrudService.put(id1, "new-value");
+    var valueId1Update1 = basicCrudService.get(id1);
+    assertThat(valueId1Update1)
+        .isNotEqualTo(valueId1);
+
+    basicCrudService.evict(id1);
+    var valueId1Update2 = basicCrudService.get(id1);
+    assertThat(valueId1Update2)
+        .isNotEqualTo(valueId1Update1);
+  }
 
   @Test
   void test_customCache_does_not_inherit_template() {
@@ -98,7 +125,8 @@ class CachePlaygroundTest {
         helloCache, helloNativeCache, helloNativeCachePolicy);
 
     assertThat(defaultNativeCachePolicy)
-        .doesNotContainEntry("expireAfterAccess", Optional.empty());;
+        .doesNotContainEntry("expireAfterAccess", Optional.empty());
+    ;
     assertThat(helloNativeCachePolicy)
         .containsEntry("expireAfterAccess", Optional.empty());
   }
@@ -110,8 +138,8 @@ class CachePlaygroundTest {
 
     log.debug("stats: {}", nativeCache.stats());
 
-    assertThat(service.sayHello("target1"))
-        .isEqualTo(service.sayHello("target1"));
+    assertThat(playgroundService.sayHello("target1"))
+        .isEqualTo(playgroundService.sayHello("target1"));
 
     log.debug("stats: {}", nativeCache.stats());
     assertThat(nativeCache.stats().hitCount())
@@ -120,10 +148,10 @@ class CachePlaygroundTest {
 
   @Test
   void test_same_cache_different_methods_different_keys() {
-    assertThat(service.defaultValue("name1"))
-        .isEqualTo(service.defaultValue("name1"));
-    assertThat(service.defaultValue(1))
-        .isEqualTo(service.defaultValue(1));
+    assertThat(playgroundService.defaultValue("name1"))
+        .isEqualTo(playgroundService.defaultValue("name1"));
+    assertThat(playgroundService.defaultValue(1))
+        .isEqualTo(playgroundService.defaultValue(1));
   }
 
   @Test
@@ -131,37 +159,37 @@ class CachePlaygroundTest {
     var cache = cacheManager.getCache("book");
     var nativeCache = nativeCache(cache);
 
-    var bookNameShortestPaperback = service.books().stream()
+    var bookNameShortestPaperback = playgroundService.books().stream()
         .filter(Predicates.not(Book::hardback))
         .map(Book::name)
         .min(Comparator.comparing(String::length))
         .orElseThrow();
-    var bookNameHardcover = service.books().stream()
+    var bookNameHardcover = playgroundService.books().stream()
         .filter(Book::hardback)
         .map(Book::name)
         .findAny()
         .orElseThrow();
-    var bookNameLargest = service.books().stream()
+    var bookNameLargest = playgroundService.books().stream()
         .map(Book::name)
         .max(Comparator.comparing(String::length))
         .orElseThrow();
 
-    assertThat(service.findBook(bookNameShortestPaperback)).isNotNull();
-    assertThat(service.findBook(bookNameShortestPaperback)).isNotNull();
+    assertThat(playgroundService.findBook(bookNameShortestPaperback)).isNotNull();
+    assertThat(playgroundService.findBook(bookNameShortestPaperback)).isNotNull();
     assertThat(nativeCache.stats().hitCount())
         .isOne();
     assertThat(nativeCache.stats().missCount())
         .isOne();
 
-    assertThat(service.findBook(bookNameLargest)).isNotNull();
-    assertThat(service.findBook(bookNameLargest)).isNotNull();
+    assertThat(playgroundService.findBook(bookNameLargest)).isNotNull();
+    assertThat(playgroundService.findBook(bookNameLargest)).isNotNull();
     assertThat(nativeCache.stats().hitCount())
         .isOne();
     assertThat(nativeCache.stats().missCount())
         .isOne();
 
-    assertThat(service.findBook(bookNameHardcover)).isNotNull();
-    assertThat(service.findBook(bookNameHardcover)).isNotNull();
+    assertThat(playgroundService.findBook(bookNameHardcover)).isNotNull();
+    assertThat(playgroundService.findBook(bookNameHardcover)).isNotNull();
     assertThat(nativeCache.stats().hitCount())
         .isOne();
     assertThat(nativeCache.stats().missCount())
@@ -174,7 +202,37 @@ class CachePlaygroundTest {
     return (com.github.benmanes.caffeine.cache.Cache<Object, Object>) cache.getNativeCache();
   }
 
-  static class CacheableService {
+  @CacheConfig(cacheNames = "crud")
+  static class BasicCrudService {
+
+    @Builder(toBuilder = true)
+    record CrudData(String id, String value) {
+
+    }
+
+    AtomicInteger counter = new AtomicInteger();
+
+    @Cacheable
+    public CrudData get(String id) {
+      CrudData value = new CrudData(id, String.valueOf(counter.incrementAndGet()));
+      log.debug("get[{}] = {}", id, value);
+      return value;
+    }
+
+    @CacheEvict
+    public void evict(String id) {
+      log.debug("evict: {}", id);
+    }
+
+    @CachePut(key = "#id")
+    public CrudData put(String id, String partialValue) {
+      CrudData value = new CrudData(id, partialValue);
+      log.debug("put[{}] = {}", id, value);
+      return value;
+    }
+  }
+
+  static class PlaygroundService {
 
     @Cacheable("hello")
     public String sayHello(String who) {
