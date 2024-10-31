@@ -5,13 +5,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.example.spring.data.jpa.config.DataPopulatorConfig;
 import com.example.spring.data.jpa.model.Role;
 import com.example.spring.data.jpa.model.User;
+import com.example.spring.data.jpa.model.UserStatus;
 import com.google.common.collect.Lists;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Subquery;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.util.function.Supplier;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,6 +32,10 @@ class UserRepositoryTest {
 
   @Autowired
   UserRepository userRepository;
+  @Autowired
+  RoleRepository roleRepository;
+  @Autowired
+  EntityManager entityManager;
 
   @Test
   void findAll() {
@@ -50,11 +57,44 @@ class UserRepositoryTest {
     userRepository.save(user);
     assertThat(user.getId())
         .isNotNull()
-        .isEqualTo(4L);
+        .isGreaterThan(3L);
 
-    assertThat(userRepository.findById(4L))
+    assertThat(userRepository.findById(user.getId()))
         .isPresent()
         .hasValue(user);
+  }
+
+  @Test
+  void updateStatusByName() {
+    Supplier<User> userSupplier = () -> {
+      var user = new User();
+      user.setName("temp");
+      user.setEmail("temp@mail.org");
+      user.setRole(new Role(1L));
+      user.setStatus(UserStatus.INACTIVE);
+      user.setCreatedAt(OffsetDateTime.now(ZoneOffset.UTC).withNano(0));
+      return user;
+    };
+    var user = userSupplier.get();
+
+    userRepository.saveAndFlush(user);
+    entityManager.clear();
+
+    userRepository.updateStatusByName(UserStatus.ACTIVE, "temp");
+    entityManager.clear();
+
+    Role role = roleRepository.findById(user.getRole().getId()).orElseThrow();
+    var expectedUpdatedEntity = userSupplier.get();
+    expectedUpdatedEntity.setId(user.getId());
+    expectedUpdatedEntity.setStatus(UserStatus.ACTIVE);
+    expectedUpdatedEntity.setRole(role);
+
+    assertThat(userRepository.findById(user.getId()))
+        .isPresent()
+        .get()
+        .satisfies(it -> log.debug("updatedEntity: {}", it))
+//        .usingRecursiveComparison()
+        .isEqualTo(expectedUpdatedEntity);
   }
 
   @Test
