@@ -28,7 +28,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 public class MessagesJpaConfig {
 
   @Bean
-  @ConfigurationProperties("spring.datasource.messages")
+  @ConfigurationProperties("messages.datasource")
   public DataSourceProperties messagesDataSourceProperties() {
     return new DataSourceProperties();
   }
@@ -41,7 +41,7 @@ public class MessagesJpaConfig {
   }
 
   @Bean
-  @ConfigurationProperties("spring.jpa.messages")
+  @ConfigurationProperties("messages.jpa")
   public Map<String, String> messagesJpaProperties() {
     return new HashMap<>();
   }

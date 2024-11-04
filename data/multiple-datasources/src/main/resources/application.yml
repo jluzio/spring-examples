@@ -26,20 +26,19 @@ spring.jpa:
 #  jpa:
 #    defer-datasource-initialization: true
 
-spring:
+todos:
   datasource:
-    todos:
-      url: jdbc:hsqldb:mem:todos_testdb
-      username: sa
-      password: ''
-      driver-class-name: org.hsqldb.jdbc.JDBCDriver
-    messages:
-      url: jdbc:h2:mem:messages_testdb
-      username: sa
-      password: ''
-      driver-class-name: org.h2.Driver
+    url: jdbc:hsqldb:mem:todos_testdb
+    username: sa
+    password: ''
+    driver-class-name: org.hsqldb.jdbc.JDBCDriver
   jpa:
-    todos:
-      hibernate.hbm2ddl.auto: create-drop
-    messages:
-      hibernate.hbm2ddl.auto: create-drop
+    hibernate.hbm2ddl.auto: create-drop
+messages:
+  datasource:
+    url: jdbc:h2:mem:messages_testdb
+    username: sa
+    password: ''
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate.hbm2ddl.auto: create-drop

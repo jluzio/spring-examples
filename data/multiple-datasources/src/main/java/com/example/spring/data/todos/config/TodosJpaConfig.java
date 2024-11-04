@@ -29,7 +29,7 @@ public class TodosJpaConfig {
 
 
   @Bean
-  @ConfigurationProperties("spring.datasource.todos")
+  @ConfigurationProperties("todos.datasource")
   public DataSourceProperties todosDataSourceProperties() {
     return new DataSourceProperties();
   }
@@ -42,7 +42,7 @@ public class TodosJpaConfig {
   }
 
   @Bean
-  @ConfigurationProperties("spring.jpa.todos")
+  @ConfigurationProperties("todos.jpa")
   public Map<String, String> todosJpaProperties() {
     return new HashMap<>();
   }
