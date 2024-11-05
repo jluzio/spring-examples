@@ -41,7 +41,7 @@ public class MessagesJpaConfig {
   }
 
   @Bean
-  @ConfigurationProperties("messages.jpa")
+  @ConfigurationProperties("messages.jpa.properties")
   public Map<String, String> messagesJpaProperties() {
     return new HashMap<>();
   }

@@ -42,7 +42,7 @@ public class TodosJpaConfig {
   }
 
   @Bean
-  @ConfigurationProperties("todos.jpa")
+  @ConfigurationProperties("todos.jpa.properties")
   public Map<String, String> todosJpaProperties() {
     return new HashMap<>();
   }
