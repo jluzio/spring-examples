@@ -13,6 +13,8 @@ logging:
     com.example.spring.data: DEBUG
 #    org.hibernate: ERROR
     org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+    # deprecated???
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
 
 spring.jpa:
