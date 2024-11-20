@@ -50,7 +50,6 @@ class JsonConfigurationPropertiesTest {
       ObjectMapper objectMapper = JsonMapper.builder().build();
       return objectMapper.readValue(json, JsonData.class);
     }
-
   }
 
   JsonData expectedJsonData = new JsonData("key1", "value1");
