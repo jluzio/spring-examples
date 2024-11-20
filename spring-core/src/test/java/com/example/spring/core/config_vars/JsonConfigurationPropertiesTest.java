@@ -1,11 +1,15 @@
 package com.example.spring.core.config_vars;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static uk.org.webcompere.systemstubs.SystemStubs.withEnvironmentVariable;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,21 +21,32 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.mock.env.MockEnvironment;
-import uk.org.webcompere.systemstubs.environment.EnvironmentVariables;
 
 @Log4j2
 class JsonConfigurationPropertiesTest {
 
-  @ConfigurationProperties("app.json-data")
+  @Data
+  @RequiredArgsConstructor
+  @AllArgsConstructor
   @Builder
-  public record JsonData(String key, String value) {}
+  public static class JsonData {
 
-  @Configuration
-  @EnableConfigurationProperties(JsonData.class)
+    private String key;
+    private String value;
+  }
+
+  @Configuration(proxyBeanMethods = false)
+  @EnableConfigurationProperties
   static class Config {
 
     @Bean
-    JsonData jsonDataEnv(@Value("${app.json-data}") String json) throws JsonProcessingException {
+    @ConfigurationProperties("app.json-data")
+    JsonData jsonDataDefault() {
+      return new JsonData();
+    }
+
+    @Bean
+    JsonData jsonDataEnv(@Value("${app.json-data:{}}") String json) throws JsonProcessingException {
       ObjectMapper objectMapper = JsonMapper.builder().build();
       return objectMapper.readValue(json, JsonData.class);
     }
@@ -50,27 +65,29 @@ class JsonConfigurationPropertiesTest {
     var environment = app.getBean(Environment.class);
     log.info("env: {}", environment.getProperty("app.json-data"));
 
-    var jsonData = app.getBean(JsonData.class);
-    log.info("data: {}", jsonData);
-    assertThat(jsonData).isEqualTo(expectedJsonData);
+    var jsonDataDefault = app.getBean("jsonDataDefault", JsonData.class);
+    var jsonDataEnv = app.getBean("jsonDataEnv", JsonData.class);
+    log.info("jsonDataDefault: {} | jsonDataEnv: {}", jsonDataDefault, jsonDataEnv);
+    assertThat(jsonDataDefault).isEqualTo(expectedJsonData);
+    assertThat(jsonDataEnv).isNotEqualTo(expectedJsonData);
   }
 
   @Test
   void test_environment() throws Exception {
-    EnvironmentVariables environmentVariables = new EnvironmentVariables(
-        "APP_JSON_DATA", objectMapper.writeValueAsString(expectedJsonData));
+    withEnvironmentVariable("APP_JSON_DATA", objectMapper.writeValueAsString(expectedJsonData))
+        .execute(() -> {
+          var app = app()
+              .run();
 
-    environmentVariables.execute(() -> {
-      var app = app()
-          .run();
+          var environment = app.getBean(Environment.class);
+          log.info("env: {}", environment.getProperty("app.json-data"));
 
-      var environment = app.getBean(Environment.class);
-      log.info("env: {}", environment.getProperty("app.json-data"));
-
-      var jsonData = app.getBean("jsonDataEnv", JsonData.class);
-      log.info("data: {}", jsonData);
-      assertThat(jsonData).isEqualTo(new JsonData("key1", "value1"));
-    });
+          var jsonDataDefault = app.getBean("jsonDataDefault", JsonData.class);
+          var jsonDataEnv = app.getBean("jsonDataEnv", JsonData.class);
+          log.info("jsonDataDefault: {} | jsonDataEnv: {}", jsonDataDefault, jsonDataEnv);
+          assertThat(jsonDataDefault).isNotEqualTo(expectedJsonData);
+          assertThat(jsonDataEnv).isEqualTo(expectedJsonData);
+        });
   }
 
   @Test
@@ -83,14 +100,15 @@ class JsonConfigurationPropertiesTest {
     var environment = app.getBean(Environment.class);
     log.info("env: {}", environment.getProperty("app.json-data"));
 
-    var jsonData = app.getBean("jsonDataEnv", JsonData.class);
-    log.info("data: {}", jsonData);
-    assertThat(jsonData).isEqualTo(new JsonData("key1", "value1"));
+    var jsonDataDefault = app.getBean("jsonDataDefault", JsonData.class);
+    var jsonDataEnv = app.getBean("jsonDataEnv", JsonData.class);
+    log.info("jsonDataDefault: {} | jsonDataEnv: {}", jsonDataDefault, jsonDataEnv);
+    assertThat(jsonDataDefault).isNotEqualTo(expectedJsonData);
+    assertThat(jsonDataEnv).isEqualTo(expectedJsonData);
   }
 
   SpringApplicationBuilder app() {
     return new SpringApplicationBuilder(Config.class)
         .web(WebApplicationType.NONE);
   }
-
 }
