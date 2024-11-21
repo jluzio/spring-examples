@@ -75,8 +75,8 @@ dependencies {
   testImplementation("com.maciejwalkowiak.spring:wiremock-spring-boot:2.1.1") {
 		exclude("org.wiremock", "wiremock")
 	}
-	testImplementation("uk.org.webcompere:system-stubs-core:2.1.6")
-	testImplementation("uk.org.webcompere:system-stubs-jupiter:2.1.6")
+	testImplementation("uk.org.webcompere:system-stubs-core:2.1.7")
+	testImplementation("uk.org.webcompere:system-stubs-jupiter:2.1.7")
 }
 
 jsonSchema2Pojo {

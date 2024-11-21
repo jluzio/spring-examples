@@ -1,27 +1,41 @@
 package com.example.spring.core.validator.jsr380;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.example.spring.core.validator.jsr380.MethodValidatorTest.ConsumerService;
-import com.example.spring.core.validator.jsr380.MethodValidatorTest.TestConfig;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.WebApplicationType;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Import;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
 
-@SpringBootTest(classes = {TestConfig.class, ConsumerService.class})
+@SpringBootTest
 @Slf4j
 class MethodValidatorTest {
 
+  static final Person VALID_PERSON = Person.builder()
+      .id("id")
+      .name("required-name")
+      .age(42)
+      .build();
+  static final Person INVALID_PERSON = Person.builder()
+      .id("id")
+      .name("")
+      .age(123)
+      .build();
+
   @Configuration
-  static class TestConfig {
+  @Import({SomeService.class})
+  static class Config {
 
     @Bean
     MethodValidationPostProcessor methodValidationPostProcessor() {
@@ -29,34 +43,58 @@ class MethodValidatorTest {
     }
   }
 
-  @Service
   @Validated
-  static class ConsumerService {
+  static class FactoryConfig {
+
+    @Bean
+    @Valid
+    public Person invalidPersonByConfig() {
+      return INVALID_PERSON;
+    }
+  }
+
+  @Validated
+  static class SomeService {
 
     public void consume(@Valid Person person) {
       log.info("valid person: {}", person);
     }
+
+    @Valid
+    public Person invalidPersonSupplier() {
+      return INVALID_PERSON;
+    }
+
+    @Valid
+    public Person validPersonSupplier() {
+      return VALID_PERSON;
+    }
   }
 
   @Autowired
-  ConsumerService service;
+  SomeService service;
 
   @Test
-  void test() {
-    var validPerson = Person.builder()
-        .id("id")
-        .name("required-name")
-        .age(42)
-        .build();
-    var invalidPerson = Person.builder()
-        .id("id")
-        .name("")
-        .age(123)
-        .build();
+  void test_consumer_and_supplier() {
+    service.consume(VALID_PERSON);
 
-    service.consume(validPerson);
-
-    assertThatThrownBy(() -> service.consume(invalidPerson))
+    assertThatThrownBy(() -> service.consume(INVALID_PERSON))
         .isInstanceOf(ConstraintViolationException.class);
+
+    assertThat(service.validPersonSupplier())
+        .isEqualTo(VALID_PERSON);
+
+    assertThatThrownBy(() -> service.invalidPersonSupplier())
+        .isInstanceOf(ConstraintViolationException.class);
+  }
+
+  @Test
+  void test_config_supplier() {
+    var app = new SpringApplicationBuilder(Config.class, FactoryConfig.class)
+        .web(WebApplicationType.NONE);
+
+    assertThatThrownBy(app::run)
+        .isInstanceOf(BeanCreationException.class)
+        .satisfies((Throwable throwable) -> log.info("Throwable", throwable));
   }
 }
