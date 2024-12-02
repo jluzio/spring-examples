@@ -6,7 +6,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -19,14 +18,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.event.EventListener;
 import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 @SpringBootTest
 @Slf4j
-class CustomEventTest {
+class CustomEventTypesTest {
 
   @Configuration
-  @Import(EventListenerBean.class)
+  @Import({EventListenerBean.class})
   static class Config {
 
   }
@@ -65,7 +63,6 @@ class CustomEventTest {
     clearInvocations(eventListener);
   }
 
-  @Component
   static class EventListenerBean {
 
     @EventListener
