@@ -51,8 +51,8 @@ class ConcurrencyEventTest {
     private final ApplicationEventPublisher eventPublisher;
 
     @Override
-    public void handleUncaughtException(Throwable e, Method method, Object... params) {
-      log.info("Caught exception!!", e);
+    public void handleUncaughtException(Throwable ex, Method method, Object... params) {
+      log.info("Caught exception!!", ex);
       eventPublisher.publishEvent(new DoneEvent("error"));
     }
   }
