@@ -137,7 +137,7 @@ class ConcurrencyEventTest {
   }
 
   @Test
-  void processAsyncSuccessThrowError() {
+  void processAsyncThrowError() {
     eventPublisher.publishEvent(new StartEvent("processAsyncThrowError"));
     assertThat(applicationEvents.stream(StartEvent.class).count())
         .isOne();
