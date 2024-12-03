@@ -1,21 +1,26 @@
 package com.example.spring.observability;
 
+import brave.Tracing;
 import io.micrometer.tracing.Tracer;
+import io.micrometer.tracing.propagation.Propagator;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.tracing.BraveAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
 @SpringBootTest
 @Slf4j
-class LogTest {
+class MinimalConfigLogTest {
 
   @TestConfiguration
   // needed?
 //  @AutoConfigureObservability
-  @Import({SomeSyncService.class})
+  @Import({SomeSyncService.class, BraveAutoConfiguration.class})
   static class Config {
 
   }

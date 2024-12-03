@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.actuate.observability.AutoConfigureObservability;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +21,7 @@ class LogAsyncPropagationTest {
   @TestConfiguration
   @EnableAsync
   // needed?
-  @AutoConfigureObservability
+//  @AutoConfigureObservability
   @Import({SomeAsyncService.class})
   static class Config {
 
