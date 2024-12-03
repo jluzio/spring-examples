@@ -15,12 +15,10 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @SpringBootTest
 @Slf4j
-class LogAsyncPropagationTest {
+class TraceContextAwareExecutorTest {
 
   @TestConfiguration
   @EnableAsync
-  // needed?
-//  @AutoConfigureObservability
   @Import({SomeAsyncService.class})
   static class Config {
 
@@ -37,9 +35,13 @@ class LogAsyncPropagationTest {
   }
 
   static class SomeAsyncService {
+    @Async
+    public void execute() {
+      log.info("SomeAsyncService.execute()");
+    }
 
     @Async("tracingExecutor")
-    public void execute() {
+    public void executeWithTracingExecutor() {
       log.info("SomeAsyncService.execute()");
     }
   }
@@ -54,5 +56,6 @@ class LogAsyncPropagationTest {
     tracer.startScopedSpan("test");
     log.info("test");
     someAsyncService.execute();
+    someAsyncService.executeWithTracingExecutor();
   }
 }
