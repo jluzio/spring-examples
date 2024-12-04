@@ -4,11 +4,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.util.UriTemplate;
 
 /**
  * @see <a href="https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-uri-building.html">URI Links</a>
@@ -86,6 +86,35 @@ class UriComponentsBuilderTest {
         .build();
     assertThat(uriComponentsPartial.toUriString())
         .isEqualTo("/base-path/res1?param1=qp1");
+  }
+
+  @Test
+  void optional_values() {
+    UriComponents uriComponents;
+
+    uriComponents = UriComponentsBuilder
+        .fromUriString("http://server.com/base-path/some_func")
+        .queryParamIfPresent("param1", Optional.of("test"))
+        .build();
+    assertThat(uriComponents.toUriString())
+        .isEqualTo("http://server.com/base-path/some_func?param1=test");
+
+    uriComponents = UriComponentsBuilder
+        .fromUriString("http://server.com/base-path/some_func")
+        .queryParamIfPresent("param1", Optional.empty())
+        .build();
+    assertThat(uriComponents.toUriString())
+        .isEqualTo("http://server.com/base-path/some_func");
+
+    // always included, can't be used for optional values
+    uriComponents = UriComponentsBuilder
+        .fromUriString("http://server.com/base-path/some_func?param1={param1}")
+        .uriVariables(Map.of(
+        ))
+        .build();
+    assertThat(uriComponents.toUriString())
+        .isEqualTo("http://server.com/base-path/some_func?param1={param1}");
+
   }
 
 }
