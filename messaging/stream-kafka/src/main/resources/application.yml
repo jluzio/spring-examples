@@ -22,13 +22,17 @@ spring:
         binder:
           brokers: *k-bootstrap-servers
       bindings:
+        # use 'group' to name the consumer, alternatively it will be an anonymous consumer
         fizzBuzzProducer-out-0:
           destination: numbers
         fizzBuzzProcessor-in-0:
+          group: fizzBuzzProcessor
           destination: numbers
         fizzBuzzProcessor-out-0:
+          group: fizzBuzzProcessor
           destination: fizz-buzz
         fizzBuzzConsumer-in-0:
+          group: fizzBuzzConsumer
           destination: fizz-buzz
 #      function:
 #        bindings:
