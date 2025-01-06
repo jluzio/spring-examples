@@ -13,7 +13,7 @@ spring:
   cloud:
     function:
 #      definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer;pingSupplier;pingConsumer;randomNameSupplier|uppercaseFunction|reverseFunction;stringConsumer;unreliableDataSupplier;unreliableDataConsumer
-      definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer
+      definition: fizzBuzzProducer;fizzBuzzProcessor;fizzBuzzConsumer;errorDlqProducer;errorDlqConsumer
 
     stream:
       # since we have several binders due to spring-cloud-stream-binder-kafka-streams
@@ -21,6 +21,11 @@ spring:
       kafka:
         binder:
           brokers: *k-bootstrap-servers
+        bindings:
+          errorDlqConsumer-in-0:
+            consumer:
+              enableDlq: true
+              dlqName: error-dlq-input-dlq
       bindings:
         # use 'group' to name the consumer group, alternatively it will be an anonymous consumer group
         fizzBuzzProducer-out-0:
@@ -34,6 +39,13 @@ spring:
         fizzBuzzConsumer-in-0:
           group: fizzBuzzConsumer
           destination: fizz-buzz
+        errorDlqConsumer-in-0:
+          group: errorDlqConsumer
+          destination: error-dlq-input
+          consumer:
+            maxAttempts: 3
+        errorDlqConsumer-output-0:
+          destination: error-dlq-output
 #      function:
 #        bindings:
 #          fizzBuzzProducer-out-0: numbers
@@ -47,5 +59,8 @@ app:
       enabled: true
       producers.enabled: false
     words:
+      enabled: true
+      producers.enabled: false
+    error_dlq:
       enabled: true
       producers.enabled: false
