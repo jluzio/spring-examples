@@ -21,11 +21,16 @@ spring:
       kafka:
         binder:
           brokers: *k-bootstrap-servers
+#        default.consumer:
+#          enableDlq: true
+#          dlqName: error-dlq-input-dlq
         bindings:
           errorDlqConsumer-in-0:
             consumer:
               enableDlq: true
               dlqName: error-dlq-input-dlq
+              configuration:
+                max.poll.records: 1
       bindings:
         # use 'group' to name the consumer group, alternatively it will be an anonymous consumer group
         fizzBuzzProducer-out-0:
