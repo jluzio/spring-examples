@@ -21,6 +21,8 @@ spring:
       kafka:
         binder:
           brokers: *k-bootstrap-servers
+#          consumer-properties:
+#            max.poll.records: 1
 #        default.consumer:
 #          enableDlq: true
 #          dlqName: error-dlq-input-dlq
@@ -30,7 +32,7 @@ spring:
               enableDlq: true
               dlqName: error-dlq-input-dlq
               configuration:
-                max.poll.records: 1
+                max.poll.records: 3
       bindings:
         # use 'group' to name the consumer group, alternatively it will be an anonymous consumer group
         fizzBuzzProducer-out-0:
@@ -39,7 +41,6 @@ spring:
           group: fizzBuzzProcessor
           destination: numbers
         fizzBuzzProcessor-out-0:
-          group: fizzBuzzProcessor
           destination: fizz-buzz
         fizzBuzzConsumer-in-0:
           group: fizzBuzzConsumer
@@ -48,9 +49,18 @@ spring:
           group: errorDlqConsumer
           destination: error-dlq-input
           consumer:
-            maxAttempts: 3
-        errorDlqConsumer-output-0:
+            # default maxAttempts: 3
+            maxAttempts: 4
+            # default backOffInitialInterval: 1000
+            backOffInitialInterval: 1500
+            # default backOffMaxInterval: 10000
+            backOffMaxInterval: 11000
+            # default backOffMultiplier: 2.0
+            backOffMultiplier: 2.0
+        errorDlqConsumer-out-0:
           destination: error-dlq-output
+        errorDlqProducer-out-0:
+          destination: error-dlq-input
 #      function:
 #        bindings:
 #          fizzBuzzProducer-out-0: numbers
