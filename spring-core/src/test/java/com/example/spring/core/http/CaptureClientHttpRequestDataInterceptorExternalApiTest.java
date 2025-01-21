@@ -17,8 +17,8 @@ import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -77,11 +77,11 @@ class CaptureClientHttpRequestDataInterceptorExternalApiTest {
   @Autowired
   @Qualifier("restTemplateWithExceptionHandlingInterceptor")
   RestTemplate restTemplateWithExceptionHandlingInterceptor;
-  @SpyBean
+  @MockitoSpyBean
   LoggingEventListener eventListener;
   @Captor
   ArgumentCaptor<ClientHttpRequestDataEvent> eventArgCaptor;
-  @MockBean
+  @MockitoBean
   Clock clock;
   Instant instant1 = Instant.parse("2020-01-02T03:04:05Z");
   Instant instant2 = Instant.parse("2020-01-02T03:04:06Z");

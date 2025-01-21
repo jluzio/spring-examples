@@ -13,7 +13,7 @@ import org.slf4j.ILoggerFactory;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 @SpringBootTest(
     classes = LoggingConfig.class,
@@ -25,7 +25,7 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 @Slf4j
 class LoggingConfigTest {
 
-  @SpyBean
+  @MockitoSpyBean
   MaskConverter maskConverter;
 
   @Test

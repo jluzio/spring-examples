@@ -13,7 +13,7 @@ import org.ehcache.jsr107.Eh107Configuration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.context.annotation.Bean;
@@ -58,7 +58,7 @@ class EhCacheTest {
   org.springframework.cache.CacheManager cacheManager;
   @Autowired
   CachedCalculationService cachedCalculationService;
-  @SpyBean
+  @MockitoSpyBean
   ExpensiveCalculationApi expensiveCalculationApi;
 
   @Test

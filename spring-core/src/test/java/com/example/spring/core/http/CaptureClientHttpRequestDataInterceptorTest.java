@@ -17,8 +17,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.event.EventListener;
@@ -46,9 +46,9 @@ class CaptureClientHttpRequestDataInterceptorTest {
   CaptureClientHttpRequestDataInterceptor interceptor;
   @Captor
   ArgumentCaptor<ClientHttpRequestDataEvent> eventArgCaptor;
-  @SpyBean
+  @MockitoSpyBean
   NopEventListener eventListener;
-  @MockBean
+  @MockitoBean
   Clock clock;
   Instant instant1 = Instant.parse("2020-01-02T03:04:05Z");
   Instant instant2 = Instant.parse("2020-01-02T03:04:06Z");

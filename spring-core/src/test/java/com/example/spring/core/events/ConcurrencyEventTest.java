@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -23,6 +22,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.test.context.event.ApplicationEvents;
 import org.springframework.test.context.event.RecordApplicationEvents;
 
@@ -36,7 +36,7 @@ class ConcurrencyEventTest {
   @Import({MyAsyncUncaughtExceptionHandler.class, Listeners.class})
   static class Config implements AsyncConfigurer {
 
-    @SpyBean
+    @Autowired
     MyAsyncUncaughtExceptionHandler asyncUncaughtExceptionHandler;
 
     @Override
@@ -101,9 +101,9 @@ class ConcurrencyEventTest {
   ApplicationEventPublisher eventPublisher;
   @Autowired
   ApplicationEvents applicationEvents;
-  @SpyBean
+  @MockitoSpyBean
   Listeners listeners;
-  @SpyBean
+  @MockitoSpyBean
   AsyncUncaughtExceptionHandler asyncUncaughtExceptionHandler;
 
   @Test

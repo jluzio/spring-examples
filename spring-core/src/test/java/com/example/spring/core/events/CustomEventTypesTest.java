@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +31,7 @@ class CustomEventTypesTest {
 
   @Autowired
   ApplicationEventPublisher eventPublisher;
-  @SpyBean
+  @MockitoSpyBean
   EventListenerBean eventListener;
 
   @Test

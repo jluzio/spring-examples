@@ -25,10 +25,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.aop.AopAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.stereotype.Component;
+import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 
 @SpringBootTest
 @Slf4j
@@ -85,7 +85,7 @@ class PointcutAspectTest {
   private SomeService someService;
   @Autowired
   private AnotherService anotherService;
-  @SpyBean
+  @MockitoSpyBean
   private CommonPointcutAspect commonPointcutAspect;
 
   @Test
