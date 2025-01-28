@@ -1,3 +1,16 @@
 app.some-map-bean:
   key2: val2.2
   key3: val3
+
+app.some-data-bean:
+  value: val1.2
+
+app.some-list-map-bean:
+  - key2: val2.2
+  - key3: val3
+
+app.some-list-data-bean:
+  - key: key2
+    value: val2.2
+  - key: key3
+    value: val3
