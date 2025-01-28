@@ -13,7 +13,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 
-@SpringBootTest(classes = MergedProfileConfigurationPropertiesTest.Config.class)
+@SpringBootTest
 class MergedProfileConfigurationPropertiesTest {
 
   @Configuration
