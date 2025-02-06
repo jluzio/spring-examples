@@ -32,6 +32,6 @@ class RoleRepositoryTest {
         .isPresent()
         .get()
         .extracting(Role::getId)
-        .isEqualTo(1L);
+        .isEqualTo("1");
   }
 }

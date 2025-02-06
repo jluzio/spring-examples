@@ -1,8 +1,6 @@
 package com.example.spring.data.jpa.model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -18,11 +16,10 @@ import lombok.NoArgsConstructor;
 public class Role {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private String id;
   private String value;
 
-  public Role(Long id) {
+  public Role(String id) {
     this.id = id;
   }
 }

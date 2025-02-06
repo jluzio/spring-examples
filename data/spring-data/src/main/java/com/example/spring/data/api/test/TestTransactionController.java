@@ -29,7 +29,7 @@ public class TestTransactionController {
    */
   @GetMapping("/users/{id}")
   @Transactional(propagation = Propagation.NEVER)
-  public Optional<User> usersByRepository(@PathVariable Long id) {
+  public Optional<User> usersByRepository(@PathVariable String id) {
     log.debug("begin");
 
     // method is not intercepted, due to no @Transactional

@@ -1,5 +1,6 @@
 package com.example.spring.data.repository;
 
+import static com.example.spring.data.repository.Identifiers.generateUuid;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.spring.data.jpa.config.DataPopulatorConfig;
@@ -11,7 +12,6 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Subquery;
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.function.Supplier;
@@ -48,29 +48,33 @@ class UserRepositoryTest {
   @Test
   void saveUser() {
     var user = new User();
+    String id = generateUuid();
+    user.setId(id);
     user.setName("custom");
     user.setEmail("custom@mail.org");
-    user.setRole(new Role(1L));
+    user.setRole(new Role("1"));
     user.setCreatedAt(OffsetDateTime.now(ZoneOffset.UTC));
     log.debug("{}", user);
 
     userRepository.save(user);
     assertThat(user.getId())
         .isNotNull()
-        .isGreaterThan(3L);
+        .isEqualTo(id);
 
     assertThat(userRepository.findById(user.getId()))
         .isPresent()
-        .hasValue(user);
+        .get()
+        .hasFieldOrPropertyWithValue("id", id);
   }
 
   @Test
   void updateStatusByName() {
     Supplier<User> userSupplier = () -> {
       var user = new User();
+      user.setId(generateUuid());
       user.setName("temp");
       user.setEmail("temp@mail.org");
-      user.setRole(new Role(1L));
+      user.setRole(new Role("1"));
       user.setStatus(UserStatus.INACTIVE);
       user.setCreatedAt(OffsetDateTime.now(ZoneOffset.UTC).withNano(0));
       return user;
@@ -113,7 +117,7 @@ class UserRepositoryTest {
         .isNotEmpty()
         .hasSize(2)
         .extracting("id")
-        .containsExactly(1L, 2L)
+        .containsExactly("1", "2")
     ;
   }
 
@@ -129,7 +133,7 @@ class UserRepositoryTest {
         .isNotEmpty()
         .hasSize(2)
         .extracting("id")
-        .containsExactly(2L, 1L)
+        .containsExactly("2", "1")
     ;
   }
 
@@ -142,7 +146,7 @@ class UserRepositoryTest {
         .isNotEmpty()
         .hasSize(1)
         .extracting("id")
-        .containsExactly(3L)
+        .containsExactly("3")
     ;
   }
 
@@ -159,13 +163,13 @@ class UserRepositoryTest {
   private Specification<User> roleIdIsInRolesWithValue(String roleValue) {
     return (root, query, criteriaBuilder) ->
         criteriaBuilder
-            .in(root.<Role>get("role").<Long>get("id"))
+            .in(root.<Role>get("role").<String>get("id"))
             .value(roleIdSubquery(query, criteriaBuilder, roleValue));
   }
 
-  private Subquery<Long> roleIdSubquery(CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder,
+  private Subquery<String> roleIdSubquery(CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder,
       String roleValue) {
-    var subquery = query.subquery(Long.class);
+    var subquery = query.subquery(String.class);
     var root = subquery.from(Role.class);
     return subquery
         .where(criteriaBuilder.equal(root.get("value"), roleValue))

@@ -18,7 +18,7 @@ public class TestTransactionService {
   }
 
   @Transactional
-  public void getUserById(Long id) {
+  public void getUserById(String id) {
     log.debug("{}.getUserById()", getClass().getSimpleName());
     log.debug(userRepository.findById(id));
   }
