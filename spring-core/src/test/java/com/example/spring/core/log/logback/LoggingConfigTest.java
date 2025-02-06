@@ -19,7 +19,10 @@ import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
     classes = LoggingConfig.class,
     // Using CONSOLE_LOG_PATTERN/FILE_LOG_PATTERN from logback.xml
     // Test changes with logging.pattern.console property here if necessary
-    properties = "tmp.logging.pattern.console=%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %mask(%m){}%n"
+    properties = {
+        "tmp.logging.pattern.console=%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %mask(%m){}%n",
+        "logging.config=classpath:logback-spring-mask-converter.xml"
+    }
 )
 @EnableConfigurationProperties
 @Slf4j

@@ -1,0 +1,7 @@
+@import com.example.spring.template_engines.jte.Page
+
+@param page: Page
+
+@template.layout(page = page, content = @`
+    <p>Welcome to my example page using layouts!</p>
+`)
