@@ -10,7 +10,7 @@
     </thead>
     <tbody>
     <tr th:each="todo, iterStat : *{todos}"
-        th:hx-get="@{${'/components/thymeleaf/todos/' + todo.id}}"
+        th:hx-get="@{${'/components/thymeleaf/todos/' + todo.id }}"
         hx-trigger="click"
         hx-target="#todos-item"
         hx-swap="innerHTML"
