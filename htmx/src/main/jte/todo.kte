@@ -1,0 +1,15 @@
+@import com.example.spring.htmx.model.Todo
+
+@param todo: Todo
+
+<div id="todos-item-inner" class="card row offset-md-3 col-md-6">
+  <div class="card-body">
+    <h5 class="card-title">${todo.name}</h5>
+    <p class="card-text">${todo.description}</p>
+    <button type="button" class="btn btn-primary"
+            _="on click remove #todos-item-inner"
+    >
+      Close
+    </button>
+  </div>
+</div>

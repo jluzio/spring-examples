@@ -31,6 +31,14 @@
   >
     Load (j2html)!
   </button>
+  <button type="button" class="btn btn-primary"
+          th:hx-get="@{/components/jte/todos}"
+          hx-trigger="click"
+          hx-target="#todos-list"
+          hx-swap="innerHTML swap:0.5s"
+  >
+    Load (jte)!
+  </button>
   <div id="todos-container">
     <div id="todos-list">
     </div>

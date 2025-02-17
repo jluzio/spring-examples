@@ -5,6 +5,7 @@ plugins {
   id 'io.spring.dependency-management' version '1.1.7'
   id 'org.jetbrains.kotlin.jvm' version '1.9.25'
   id 'org.jetbrains.kotlin.plugin.spring' version '1.9.25'
+  id 'gg.jte.gradle' version '3.1.12'
 }
 
 group = 'com.example.spring'
@@ -47,17 +48,27 @@ dependencies {
   implementation "org.jetbrains.kotlinx:kotlinx-html-jvm:$kotlinxHtmlVersion"
   // include for JS target
   //	implementation "org.jetbrains.kotlinx:kotlinx-html-js:$kotlinxHtmlVersion"
+  implementation 'gg.jte:jte:3.1.12'
+  implementation 'gg.jte:jte-spring-boot-starter-3:3.1.12'
+  implementation 'gg.jte:jte-kotlin:3.1.12'
+//  compileOnly 'gg.jte:jte-kotlin:3.1.12'
+//  testRuntimeOnly 'gg.jte:jte-kotlin:3.1.12'
   developmentOnly 'org.springframework.boot:spring-boot-devtools'
   annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
   testImplementation 'org.springframework.boot:spring-boot-starter-test'
   testImplementation 'org.springframework.security:spring-security-test'
 }
 
-tasks.withType(KotlinCompile) {
-  kotlinOptions {
-    freeCompilerArgs += '-Xjsr305=strict'
-    jvmTarget = '21'
+kotlin {
+  compilerOptions {
+    freeCompilerArgs.addAll("-Xjsr305=strict")
   }
+}
+
+
+jte {
+  generate()
+  binaryStaticContent = true
 }
 
 tasks.named('test') {
