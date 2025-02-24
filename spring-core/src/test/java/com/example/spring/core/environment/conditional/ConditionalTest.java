@@ -19,7 +19,7 @@ import org.springframework.util.MultiValueMap;
 @SpringBootTest
 @Slf4j
 @ActiveProfiles("test")
-public class ConditionalTest {
+class ConditionalTest {
 
   @Autowired(required = false)
   List<String> beans;
