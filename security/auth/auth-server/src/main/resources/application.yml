@@ -13,6 +13,9 @@ app:
   security-config: properties
 #  security-config: java
 
+springdoc:
+  show-oauth2-endpoints: true
+
 spring:
   security:
     user:
