@@ -1,0 +1,13 @@
+spring.security.oauth2.client:
+  provider:
+    messaging-client:
+      issuerUri: http://localhost:9000
+  registration:
+    messaging-client:
+      provider: messaging-client
+      clientId: messaging-client
+      clientSecret: secret-msg-cli
+      authorizationGrantType: authorization_code
+      clientAuthenticationMethod: client_secret_basic
+      redirectUri: "{baseUrl}/login/oauth2/code/{registrationId}"
+      scope: message.read,openid

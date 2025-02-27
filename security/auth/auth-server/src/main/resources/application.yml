@@ -20,7 +20,7 @@ spring:
   security:
     user:
       name: user
-      password: password
+      password: pass
     oauth2:
       authorizationserver:
         client:
@@ -47,6 +47,7 @@ spring:
             registration:
               client-id: "messaging-client"
               client-secret: "{noop}secret-msg-cli"
+#              client-secret: "{bcrypt}$2a$10$TiiC5Jl.HOjrDvblQ5RNJ.KHBcBFEX17wDA1aLwyFOmk4Qz5lsM26"
               client-authentication-methods:
                 - "client_secret_basic"
               authorization-grant-types:
