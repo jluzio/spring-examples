@@ -10,8 +10,9 @@ logging:
     org.springframework: info
 
 app:
-  security-config: properties
+#  security-config: properties
 #  security-config: java
+  security-config: custom-authenticators
 
 springdoc:
   show-oauth2-endpoints: true
@@ -65,3 +66,18 @@ spring:
                 - "message.read"
                 - "message.write"
             require-authorization-consent: true
+          custom-code-client:
+            registration:
+              client-id: "custom-code-client"
+              client-secret: "{noop}secret-custom-code-cli"
+              client-authentication-methods:
+                - "client_secret_basic"
+                - "client_secret_post"
+              authorization-grant-types:
+                - "client_credentials"
+                - "urn:ietf:params:oauth:grant-type:custom_code"
+              scopes:
+                - "openid"
+                - "profile"
+                - "message.read"
+                - "message.write"
