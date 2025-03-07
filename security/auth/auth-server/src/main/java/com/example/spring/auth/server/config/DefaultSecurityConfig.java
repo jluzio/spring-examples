@@ -1,5 +1,7 @@
 package com.example.spring.auth.server.config;
 
+import com.example.spring.auth.server.customcode.CustomCodeGrantAuthenticationConverter;
+import com.example.spring.auth.server.customcode.CustomCodeGrantAuthenticationProvider;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -28,10 +30,12 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationConverter;
@@ -53,20 +57,18 @@ public class DefaultSecurityConfig {
   @Order(Ordered.HIGHEST_PRECEDENCE)
   public SecurityFilterChain authorizationServerSecurityFilterChain(
       HttpSecurity http,
-      List<AuthenticationConverter> authenticationConverters,
-      List<AuthenticationProvider> authenticationProviders
+      List<Customizer<OAuth2AuthorizationServerConfigurer>> oAuth2AuthorizationServerConfigurerCustomizers
   ) throws Exception {
     OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
         OAuth2AuthorizationServerConfigurer.authorizationServer();
 
     http
         .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
-        .with(authorizationServerConfigurer, authorizationServer ->
-            authorizationServer
-                .oidc(Customizer.withDefaults())  // Enable OpenID Connect 1.0
-                .tokenEndpoint(tokenEndpoint -> tokenEndpoint
-                    .accessTokenRequestConverters(converters -> converters.addAll(authenticationConverters))
-                    .authenticationProviders(providers -> providers.addAll(authenticationProviders)))
+        .with(authorizationServerConfigurer, authorizationServer -> {
+              authorizationServer
+                  .oidc(Customizer.withDefaults()); // Enable OpenID Connect 1.0
+              oAuth2AuthorizationServerConfigurerCustomizers.forEach(it -> it.customize(authorizationServer));
+            }
         )
         .authorizeHttpRequests(authorize ->
             authorize
