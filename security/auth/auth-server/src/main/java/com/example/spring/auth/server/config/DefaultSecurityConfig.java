@@ -1,7 +1,5 @@
 package com.example.spring.auth.server.config;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -11,65 +9,84 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.util.Set;
+import java.util.List;
 import java.util.UUID;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.util.StringUtils;
 
 /**
  * @see org.springframework.boot.autoconfigure.security.oauth2.server.servlet.OAuth2AuthorizationServerWebSecurityConfiguration
  */
 @Configuration
-@ConditionalOnProperty(value = "app.security-config", havingValue = "java")
+@Profile("default")
+@Import({AuthenticatorsBaseConfig.class, CustomAuthenticatorsConfig.class})
 @EnableWebSecurity
-public class SecurityConfigJavaConfig {
+@Slf4j
+public class DefaultSecurityConfig {
 
   @Bean
   @Order(Ordered.HIGHEST_PRECEDENCE)
-  public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http)
-      throws Exception {
-    OAuth2AuthorizationServerConfigurer authorizationServer = OAuth2AuthorizationServerConfigurer
-        .authorizationServer();
-    http.securityMatcher(authorizationServer.getEndpointsMatcher());
-    http.with(authorizationServer, withDefaults());
-    http.authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
-    http.getConfigurer(OAuth2AuthorizationServerConfigurer.class).oidc(withDefaults());
-    http.oauth2ResourceServer(resourceServer -> resourceServer.jwt(withDefaults()));
-    http.exceptionHandling(exceptions -> exceptions.defaultAuthenticationEntryPointFor(
-        new LoginUrlAuthenticationEntryPoint("/login"), createRequestMatcher()));
+  public SecurityFilterChain authorizationServerSecurityFilterChain(
+      HttpSecurity http,
+      List<AuthenticationConverter> authenticationConverters,
+      List<AuthenticationProvider> authenticationProviders
+  ) throws Exception {
+    OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
+        OAuth2AuthorizationServerConfigurer.authorizationServer();
+
+    http
+        .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
+        .with(authorizationServerConfigurer, authorizationServer ->
+            authorizationServer
+                .oidc(Customizer.withDefaults())  // Enable OpenID Connect 1.0
+                .tokenEndpoint(tokenEndpoint -> tokenEndpoint
+                    .accessTokenRequestConverters(converters -> converters.addAll(authenticationConverters))
+                    .authenticationProviders(providers -> providers.addAll(authenticationProviders)))
+        )
+        .authorizeHttpRequests(authorize ->
+            authorize
+                .anyRequest().authenticated()
+        )
+        // Redirect to the login page when not authenticated from the
+        // authorization endpoint
+        .exceptionHandling(exceptions -> exceptions
+            .defaultAuthenticationEntryPointFor(
+                new LoginUrlAuthenticationEntryPoint("/login"),
+                new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
+            )
+        );
+
     return http.build();
   }
 
   @Bean
   @Order(SecurityProperties.BASIC_AUTH_ORDER)
-  public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http)
-      throws Exception {
+  public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
     http
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
@@ -77,38 +94,27 @@ public class SecurityConfigJavaConfig {
         )
         // Form login handles the redirect to the login page from the
         // authorization server filter chain
-        .formLogin(withDefaults());
+        .formLogin(Customizer.withDefaults());
 
     return http.build();
   }
 
   @Bean
-  public UserDetailsService userDetailsService() {
+  public UserDetailsService userDetailsService(SecurityProperties properties) {
+    SecurityProperties.User user = properties.getUser();
     UserDetails userDetails = User.withDefaultPasswordEncoder()
-        .username("user")
-        .password("password")
-        .roles("USER")
+        .username(user.getName())
+        .password(user.getPassword())
+        .roles(StringUtils.toStringArray(user.getRoles()))
         .build();
 
     return new InMemoryUserDetailsManager(userDetails);
   }
 
-  @Bean
+  // Using registry created with properties
+//  @Bean
   public RegisteredClientRepository registeredClientRepository() {
-    RegisteredClient oidcClient = RegisteredClient.withId(UUID.randomUUID().toString())
-        .clientId("oidc-client")
-        .clientSecret("{noop}secret")
-        .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-        .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-        .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-        .redirectUri("http://127.0.0.1:8080/login/oauth2/code/oidc-client")
-        .postLogoutRedirectUri("http://127.0.0.1:8080/")
-        .scope(OidcScopes.OPENID)
-        .scope(OidcScopes.PROFILE)
-        .clientSettings(ClientSettings.builder().requireAuthorizationConsent(true).build())
-        .build();
-
-    return new InMemoryRegisteredClientRepository(oidcClient);
+    throw new UnsupportedOperationException("Unsupported");
   }
 
   @Bean
@@ -146,9 +152,4 @@ public class SecurityConfigJavaConfig {
     return AuthorizationServerSettings.builder().build();
   }
 
-  private static RequestMatcher createRequestMatcher() {
-    MediaTypeRequestMatcher requestMatcher = new MediaTypeRequestMatcher(MediaType.TEXT_HTML);
-    requestMatcher.setIgnoredMediaTypes(Set.of(MediaType.ALL));
-    return requestMatcher;
-  }
 }

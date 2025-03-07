@@ -1,13 +1,14 @@
 spring.security.oauth2.client:
   provider:
-    messaging-client:
+    spring:
       issuerUri: http://localhost:9000
   registration:
     messaging-client:
-      provider: messaging-client
+      provider: spring
       clientId: messaging-client
       clientSecret: secret-msg-cli
       authorizationGrantType: authorization_code
       clientAuthenticationMethod: client_secret_basic
-      redirectUri: "{baseUrl}/login/oauth2/code/{registrationId}"
+#      redirectUri: "{baseUrl}/login/oauth2/code/{registrationId}"
+      redirectUri: "http://127.0.0.1:8080/login/oauth2/code/{registrationId}"
       scope: message.read,openid

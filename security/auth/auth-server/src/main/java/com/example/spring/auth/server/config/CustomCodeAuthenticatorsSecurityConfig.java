@@ -7,9 +7,9 @@ import com.example.spring.auth.server.customcode.CustomCodeGrantAuthenticationPr
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
 import java.util.UUID;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -30,8 +30,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@ConditionalOnProperty(value = "app.security-config", havingValue = "custom-authenticators")
-public class CustomAuthenticatorsSecurityConfig {
+@Profile("custom-code-authenticator")
+public class CustomCodeAuthenticatorsSecurityConfig {
 
   @Bean
   SecurityFilterChain authorizationServerSecurityFilterChain(
@@ -63,8 +63,7 @@ public class CustomAuthenticatorsSecurityConfig {
     return http.build();
   }
 
-  // Using client from properties, otherwise it would require this config
-  // @Bean
+  @Bean
   RegisteredClientRepository registeredClientRepository() {
     RegisteredClient messagingClient = RegisteredClient.withId(UUID.randomUUID().toString())
         .clientId("custom-code-client")
