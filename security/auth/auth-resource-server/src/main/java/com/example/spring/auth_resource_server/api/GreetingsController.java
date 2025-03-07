@@ -16,7 +16,7 @@ public class GreetingsController {
 
   private final GreetingsService greetingsService;
 
-  @GetMapping({"/greetings", "/"})
+  @GetMapping("/greetings")
   public Map<String, String> greet(
       @AuthenticationPrincipal Jwt jwt
     ) {
