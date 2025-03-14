@@ -1,0 +1,10 @@
+﻿dn: cn=jdoe,ou=test_person_data,dc=example,dc=org
+changetype: delete
+
+dn: cn=jdoe,ou=test_person_data,dc=example,dc=org
+objectClass: top
+objectClass: inetOrgPerson
+sn: surname
+cn: jdoe
+mail: mail1@server.org
+mail: mail2@server.org

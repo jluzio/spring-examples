@@ -1,0 +1,14 @@
+dn: cn=jdoe,ou=test_person_data,dc=example,dc=org
+changetype: modify
+delete: mail
+mail: mail2@server.org
+-
+delete: mail
+# can ommit spaces
+mail: mail_spaces_end@server.org
+-
+add: mail
+mail: mail_replace@server.org
+-
+add: mail
+mail: mail_spaces_end@server.org

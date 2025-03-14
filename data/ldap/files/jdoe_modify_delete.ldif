@@ -1,0 +1,7 @@
+dn: cn=jdoe,ou=test_person_data,dc=example,dc=org
+changetype: modify
+delete: mail
+mail: mail2@server.org
+-
+add: mail
+mail: mail_replace@server.org

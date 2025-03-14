@@ -1,0 +1,13 @@
+spring.application.name: ldap
+
+logging:
+  level:
+    root: INFO
+    com.example.spring: DEBUG
+
+spring:
+  ldap:
+    urls: ldap://localhost:1389
+    base: dc=example,dc=org
+    username: cn=admin,dc=example,dc=org
+    password: adminpassword
