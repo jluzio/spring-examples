@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @SpringBootTest(properties = "app.somevar=bean1")
-class ConditionalOnEnvironmentTest {
+class ConditionalOnExpressionTest {
 
   @Configuration
   static class Config {
