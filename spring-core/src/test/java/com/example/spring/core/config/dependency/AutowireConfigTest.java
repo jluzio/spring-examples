@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 @SpringBootTest
 @Slf4j
-public class AutowireConfigTest {
+class AutowireConfigTest {
 
   @Autowired
   TransferService transferService;

@@ -2,21 +2,16 @@ package com.example.spring.core.config.auto_configuration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.spring.core.config.auto_configuration.sample.SampleAutoConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @SpringBootTest
-class AutoConfigurationTest {
-
-  @Configuration
-  @EnableAutoConfiguration
-  static class Config {
-
-  }
+class AutoConfigurationImportTest {
 
   @Autowired
   ApplicationContext context;
@@ -29,7 +24,10 @@ class AutoConfigurationTest {
         .isEqualTo("innerBean");
     assertThat(context.getBean("someImportedBean"))
         .isEqualTo("someImportedBean");
+    // this config is included due to ComponentScan instead of AutoConfiguration
     assertThat(context.containsBean("someNotImportedBean"))
-        .isFalse();
+        .isTrue();
+    assertThat(context.getBean("someNotImportedBean"))
+        .isEqualTo("someNotImportedBean");
   }
 }
