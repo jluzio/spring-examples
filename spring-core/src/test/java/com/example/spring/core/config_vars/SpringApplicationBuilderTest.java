@@ -4,15 +4,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.mock.env.MockEnvironment;
-import uk.org.webcompere.systemstubs.jupiter.SystemStubsExtension;
 
-@ExtendWith(SystemStubsExtension.class)
 @Slf4j
 class SpringApplicationBuilderTest {
 
@@ -22,6 +19,11 @@ class SpringApplicationBuilderTest {
 
   }
 
+  /*
+   * !!! NOTE !!!
+   * As a general rule use ApplicationContextRunner instead of SpringApplicationBuilder, since it's specialized for tests and is more lightweight.
+   * For example, simple tests with conditional bean on properties with on/off is almost 2x the time with SpringApplicationBuilder.
+   */
   @Test
   void var_source_priority() {
     var app = new SpringApplicationBuilder(Config.class, ExampleServiceConfig.class)
@@ -41,7 +43,7 @@ class SpringApplicationBuilderTest {
       log.debug("config: {}", config);
 
       assertThat(config.getEnabled())
-          .isEqualTo(true);
+          .isTrue();
       assertThat(config.getName())
           .isEqualTo("mock-example-service");
       assertThat(config.getEndpoint())

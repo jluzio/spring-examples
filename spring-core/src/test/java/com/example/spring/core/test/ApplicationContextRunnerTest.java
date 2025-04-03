@@ -59,6 +59,11 @@ class ApplicationContextRunnerTest {
       .withInitializer(new ConfigDataApplicationContextInitializer())
       .withUserConfiguration(TestConfig.class);
 
+  /*
+   * !!! NOTE !!!
+   * As a general rule use ApplicationContextRunner instead of SpringApplicationBuilder, since it's specialized for tests and is more lightweight.
+   * For example, simple tests with conditional bean on properties with on/off is almost 2x the time with SpringApplicationBuilder.
+   */
   @Test
   void testContextLoad() {
     contextRunner.run(context -> {

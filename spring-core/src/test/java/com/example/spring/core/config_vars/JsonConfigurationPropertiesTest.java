@@ -13,14 +13,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.mock.env.MockEnvironment;
 
 @Log4j2
 class JsonConfigurationPropertiesTest {
@@ -57,57 +56,57 @@ class JsonConfigurationPropertiesTest {
 
   @Test
   void test_application_properties() {
-    var app = app()
-        .profiles("json-config-props")
-        .run();
+    appCtxRunner()
+        .withPropertyValues("spring.profiles.active=json-config-props")
+        .run(ctx -> {
+          var environment = ctx.getBean(Environment.class);
+          log.info("env: {}", environment.getProperty("app.json-data"));
 
-    var environment = app.getBean(Environment.class);
-    log.info("env: {}", environment.getProperty("app.json-data"));
-
-    var jsonDataDefault = app.getBean("jsonDataDefault", JsonData.class);
-    var jsonDataEnv = app.getBean("jsonDataEnv", JsonData.class);
-    log.info("jsonDataDefault: {} | jsonDataEnv: {}", jsonDataDefault, jsonDataEnv);
-    assertThat(jsonDataDefault).isEqualTo(expectedJsonData);
-    assertThat(jsonDataEnv).isNotEqualTo(expectedJsonData);
+          var jsonDataDefault = ctx.getBean("jsonDataDefault", JsonData.class);
+          var jsonDataEnv = ctx.getBean("jsonDataEnv", JsonData.class);
+          log.info("jsonDataDefault: {} | jsonDataEnv: {}", jsonDataDefault, jsonDataEnv);
+          assertThat(jsonDataDefault).isEqualTo(expectedJsonData);
+          assertThat(jsonDataEnv).isNotEqualTo(expectedJsonData);
+        });
   }
 
   @Test
   void test_environment() throws Exception {
     withEnvironmentVariable("APP_JSON_DATA", objectMapper.writeValueAsString(expectedJsonData))
         .execute(() -> {
-          var app = app()
-              .run();
+          appCtxRunner()
+              .run(ctx -> {
+                var environment = ctx.getBean(Environment.class);
+                log.info("env: {}", environment.getProperty("app.json-data"));
 
-          var environment = app.getBean(Environment.class);
+                var jsonDataDefault = ctx.getBean("jsonDataDefault", JsonData.class);
+                var jsonDataEnv = ctx.getBean("jsonDataEnv", JsonData.class);
+                log.info("jsonDataDefault: {} | jsonDataEnv: {}", jsonDataDefault, jsonDataEnv);
+                assertThat(jsonDataDefault).isNotEqualTo(expectedJsonData);
+                assertThat(jsonDataEnv).isEqualTo(expectedJsonData);
+              });
+        });
+  }
+
+  @Test
+  void test_mock_environment_properties() throws JsonProcessingException {
+    appCtxRunner()
+        .withSystemProperties("app.json-data=%s".formatted(objectMapper.writeValueAsString(expectedJsonData)))
+        .run(ctx -> {
+          var environment = ctx.getBean(Environment.class);
           log.info("env: {}", environment.getProperty("app.json-data"));
 
-          var jsonDataDefault = app.getBean("jsonDataDefault", JsonData.class);
-          var jsonDataEnv = app.getBean("jsonDataEnv", JsonData.class);
+          var jsonDataDefault = ctx.getBean("jsonDataDefault", JsonData.class);
+          var jsonDataEnv = ctx.getBean("jsonDataEnv", JsonData.class);
           log.info("jsonDataDefault: {} | jsonDataEnv: {}", jsonDataDefault, jsonDataEnv);
           assertThat(jsonDataDefault).isNotEqualTo(expectedJsonData);
           assertThat(jsonDataEnv).isEqualTo(expectedJsonData);
         });
   }
 
-  @Test
-  void test_mock_environment_properties() throws JsonProcessingException {
-    var app = app()
-        .environment(new MockEnvironment()
-            .withProperty("app.json-data", objectMapper.writeValueAsString(expectedJsonData)))
-        .run();
-
-    var environment = app.getBean(Environment.class);
-    log.info("env: {}", environment.getProperty("app.json-data"));
-
-    var jsonDataDefault = app.getBean("jsonDataDefault", JsonData.class);
-    var jsonDataEnv = app.getBean("jsonDataEnv", JsonData.class);
-    log.info("jsonDataDefault: {} | jsonDataEnv: {}", jsonDataDefault, jsonDataEnv);
-    assertThat(jsonDataDefault).isNotEqualTo(expectedJsonData);
-    assertThat(jsonDataEnv).isEqualTo(expectedJsonData);
-  }
-
-  SpringApplicationBuilder app() {
-    return new SpringApplicationBuilder(Config.class)
-        .web(WebApplicationType.NONE);
+  ApplicationContextRunner appCtxRunner() {
+    return new ApplicationContextRunner()
+        .withUserConfiguration(Config.class)
+        .withInitializer(new ConfigDataApplicationContextInitializer());
   }
 }

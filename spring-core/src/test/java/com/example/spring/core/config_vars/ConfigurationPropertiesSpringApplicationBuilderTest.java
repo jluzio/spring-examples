@@ -5,10 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Configuration;
 
 @Log4j2
@@ -32,64 +32,58 @@ class ConfigurationPropertiesSpringApplicationBuilderTest {
 
   @Test
   void test_default() {
-    try (
-        var app = new SpringApplicationBuilder()
-            .sources(Config.class)
-            .web(WebApplicationType.NONE)
-            .profiles("test")
-            .run()
-    ) {
-      var configProps = app.getBean(ConfigProps.class);
-      log.debug(configProps);
+    appCtxRunner()
+        .withPropertyValues("spring.profiles.active=test")
+        .run(ctx -> {
+              var configProps = ctx.getBean(ConfigProps.class);
+              log.debug(configProps);
 
-      assertThat(configProps)
-          .hasNoNullFieldsOrProperties()
-          .satisfies(it -> assertThat(it.getProp1()).isEqualTo("appval1"));
-    }
+              assertThat(configProps)
+                  .hasNoNullFieldsOrProperties()
+                  .satisfies(it -> assertThat(it.getProp1()).isEqualTo("appval1"));
+            }
+        );
   }
 
   @Test
   void test_custom_props() {
-    try (
-        var app = new SpringApplicationBuilder()
-            .sources(Config.class)
-            .web(WebApplicationType.NONE)
-            .properties(
-                "configprops.prop1=value1",
-                "configprops.prop2=value2",
-                "configprops.prop3=value3"
-            )
-            .run()
-    ) {
-      var configProps = app.getBean(ConfigProps.class);
-      log.debug(configProps);
+    appCtxRunner()
+        .withPropertyValues(
+            "configprops.prop1=value1",
+            "configprops.prop2=value2",
+            "configprops.prop3=value3"
+        )
+        .run(ctx -> {
+          var configProps = ctx.getBean(ConfigProps.class);
+          log.debug(configProps);
 
-      assertThat(configProps)
-          .hasNoNullFieldsOrProperties()
-          .satisfies(it -> assertThat(it.getProp1()).isEqualTo("value1"));
-    }
+          assertThat(configProps)
+              .hasNoNullFieldsOrProperties()
+              .satisfies(it -> assertThat(it.getProp1()).isEqualTo("value1"));
+        });
   }
 
   @Test
   void test_optionals() {
-    try (
-        var app = new SpringApplicationBuilder()
-            .sources(Config.class)
-            .web(WebApplicationType.NONE)
-            .properties(
-                "configprops.prop1=value1"
-            )
-            .run()
-    ) {
-      var configProps = app.getBean(ConfigProps.class);
-      log.debug(configProps);
+    appCtxRunner()
+        .withPropertyValues(
+            "configprops.prop1=value1"
+        )
+        .run(ctx -> {
+          var configProps = ctx.getBean(ConfigProps.class);
+          log.debug(configProps);
 
-      assertThat(configProps)
-          .hasNoNullFieldsOrProperties()
-          .satisfies(it -> assertThat(it.getProp1()).isEqualTo("value1"))
-          .satisfies(it -> assertThat(it.getProp2()).isEqualTo("v2"))
-      ;
-    }
+          assertThat(configProps)
+              .hasNoNullFieldsOrProperties()
+              .satisfies(it -> assertThat(it.getProp1()).isEqualTo("value1"))
+              .satisfies(it -> assertThat(it.getProp2()).isEqualTo("v2"))
+          ;
+        });
   }
 
+  private ApplicationContextRunner appCtxRunner() {
+    return new ApplicationContextRunner()
+        .withUserConfiguration(Config.class)
+        .withInitializer(new ConfigDataApplicationContextInitializer());
+  }
 }

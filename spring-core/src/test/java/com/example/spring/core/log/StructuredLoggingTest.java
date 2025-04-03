@@ -4,8 +4,7 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
 class StructuredLoggingTest {
 
@@ -25,18 +24,17 @@ class StructuredLoggingTest {
 
   void test_logging(String format) {
     var formatProperty = "logging.structured.format.console=%s".formatted(format);
-    try (var app = app()
-        .properties(formatProperty)
-        .run()
-    ) {
-      var log = LoggerFactory.getLogger(this.getClass());
-      log.info("Log using '{}'", formatProperty);
-    }
+    appCtxRunner()
+        .withPropertyValues(formatProperty)
+        .run(ctx -> {
+          var log = LoggerFactory.getLogger(this.getClass());
+          log.info("Log using '{}'", formatProperty);
+        });
   }
 
-  SpringApplicationBuilder app() {
-    return new SpringApplicationBuilder(StructuredLoggingTest.Config.class)
-        .web(WebApplicationType.NONE);
+  ApplicationContextRunner appCtxRunner() {
+    return new ApplicationContextRunner()
+        .withUserConfiguration(StructuredLoggingTest.Config.class);
   }
 
 }

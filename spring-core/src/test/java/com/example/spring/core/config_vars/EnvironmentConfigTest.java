@@ -80,7 +80,7 @@ class EnvironmentConfigTest {
     log.debug("config: {}", config);
 
     assertThat(config.getEnabled())
-        .isEqualTo(true);
+        .isTrue();
     assertThat(config.getId())
         .isEqualTo("inline-json-example-service");
     assertThat(config.getName())

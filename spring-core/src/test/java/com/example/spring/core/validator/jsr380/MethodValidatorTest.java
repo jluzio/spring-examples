@@ -9,9 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanCreationException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.WebApplicationType;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -90,11 +89,20 @@ class MethodValidatorTest {
 
   @Test
   void test_config_supplier() {
-    var app = new SpringApplicationBuilder(Config.class, FactoryConfig.class)
-        .web(WebApplicationType.NONE);
+    var app = new ApplicationContextRunner()
+        // alternative to creating MethodValidationPostProcessor
+        //.withConfiguration(AutoConfigurations.of(ValidationAutoConfiguration.class))
+        .withUserConfiguration(Config.class, FactoryConfig.class);
 
-    assertThatThrownBy(app::run)
-        .isInstanceOf(BeanCreationException.class)
-        .satisfies((Throwable throwable) -> log.info("Throwable", throwable));
+    app.run(ctx -> {
+      log.info("context: {}", ctx);
+      assertThatThrownBy(() -> ctx.getBean("invalidPersonSupplier"))
+          .satisfies((Throwable throwable) -> log.info("Throwable", throwable))
+          // only due to ApplicationContextRunner
+          .isInstanceOf(IllegalStateException.class)
+          // expected cause
+          .hasCauseInstanceOf(BeanCreationException.class)
+      ;
+    });
   }
 }
