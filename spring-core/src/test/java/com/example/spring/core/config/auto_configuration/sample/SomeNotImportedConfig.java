@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 public class SomeNotImportedConfig {
 
   @Bean
-  String someNotImportedBean() {
-    return "someNotImportedBean";
+  String someNotImportedConfigBean() {
+    return "someNotImportedConfigBean";
   }
 }

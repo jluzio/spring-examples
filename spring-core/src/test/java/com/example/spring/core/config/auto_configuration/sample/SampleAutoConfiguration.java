@@ -15,12 +15,11 @@ public class SampleAutoConfiguration {
   }
 
   @Configuration
-  class InnerConfig {
+  static class InnerConfig {
 
     @Bean
-    String innerBean() {
-      return "innerBean";
+    String innerConfigBean() {
+      return "innerConfigBean";
     }
   }
-
 }

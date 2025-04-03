@@ -2,13 +2,10 @@ package com.example.spring.core.config.auto_configuration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.spring.core.config.auto_configuration.sample.SampleAutoConfiguration;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 
 @SpringBootTest
 class AutoConfigurationImportTest {
@@ -20,14 +17,16 @@ class AutoConfigurationImportTest {
   void test() {
     assertThat(context.getBean("autoConfiguredBean"))
         .isEqualTo("autoConfiguredBean");
-    assertThat(context.getBean("innerBean"))
-        .isEqualTo("innerBean");
-    assertThat(context.getBean("someImportedBean"))
-        .isEqualTo("someImportedBean");
-    // this config is included due to ComponentScan instead of AutoConfiguration
-    assertThat(context.containsBean("someNotImportedBean"))
+    assertThat(context.getBean("innerConfigBean"))
+        .isEqualTo("innerConfigBean");
+    assertThat(context.getBean("someImportedConfigBean"))
+        .isEqualTo("someImportedConfigBean");
+
+    // imported by ComponentScan, will exist
+    assertThat(context.containsBean("someNotImportedConfigBean"))
         .isTrue();
-    assertThat(context.getBean("someNotImportedBean"))
-        .isEqualTo("someNotImportedBean");
+    // not imported by AutoConfiguration or ComponentScan, will not exist
+    assertThat(context.containsBean("someNotImportedAutoConfigBean"))
+        .isFalse();
   }
 }

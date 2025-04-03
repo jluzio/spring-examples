@@ -25,11 +25,16 @@ class AutoConfigurationTest {
   void test() {
     assertThat(context.getBean("autoConfiguredBean"))
         .isEqualTo("autoConfiguredBean");
-    assertThat(context.getBean("innerBean"))
-        .isEqualTo("innerBean");
-    assertThat(context.getBean("someImportedBean"))
-        .isEqualTo("someImportedBean");
-    assertThat(context.containsBean("someNotImportedBean"))
+    assertThat(context.getBean("innerConfigBean"))
+        .isEqualTo("innerConfigBean");
+    assertThat(context.getBean("someImportedConfigBean"))
+        .isEqualTo("someImportedConfigBean");
+
+    // not imported by AutoConfiguration, will not exist
+    assertThat(context.containsBean("someNotImportedConfigBean"))
+        .isFalse();
+    // not imported by AutoConfiguration, will not exist
+    assertThat(context.containsBean("someNotImportedAutoConfigBean"))
         .isFalse();
   }
 }
