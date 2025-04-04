@@ -18,6 +18,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.context.properties.bind.ConstructorBinding;
 import org.springframework.boot.context.properties.bind.DefaultValue;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.convert.converter.Converter;
@@ -26,6 +27,8 @@ import org.springframework.core.convert.converter.Converter;
     properties = {
         "test-props.bean.value1=value1",
         "test-props.bean.value2=value2",
+        "test-props.bean2.value1=value1_2",
+        "test-props.bean2.value2=value2_2",
         "test-props.constructor.value1=value1",
         "test-props.constructor.value2=value2",
         "test-props.constructor-customize.value1And2=value1,value2",
@@ -41,6 +44,11 @@ class ConfigurationPropertiesTest {
       RecordConstructorBindingProps.class, CustomizeConstructorBindingProps.class, ConverterProps.class})
   static class Config {
 
+    @Bean
+    @ConfigurationProperties("test-props.bean2")
+    AnotherBeanProps beanProps2() {
+      return new AnotherBeanProps();
+    }
   }
 
   @ConfigurationProperties("test-props.bean")
@@ -49,6 +57,16 @@ class ConfigurationPropertiesTest {
   @AllArgsConstructor
   @Builder
   public static class BeanProps {
+
+    private String value1;
+    private String value2;
+  }
+
+  @Data
+  @RequiredArgsConstructor
+  @AllArgsConstructor
+  @Builder
+  public static class AnotherBeanProps {
 
     private String value1;
     private String value2;
@@ -101,6 +119,8 @@ class ConfigurationPropertiesTest {
   @Autowired
   BeanProps beanProps;
   @Autowired
+  AnotherBeanProps beanProps2;
+  @Autowired
   ValueConstructorBindingProps valueConstructorBindingProps;
   @Autowired
   RecordConstructorBindingProps recordConstructorBindingProps;
@@ -115,6 +135,11 @@ class ConfigurationPropertiesTest {
         .isEqualTo(BeanProps.builder()
             .value1("value1")
             .value2("value2")
+            .build());
+    assertThat(beanProps2)
+        .isEqualTo(AnotherBeanProps.builder()
+            .value1("value1_2")
+            .value2("value2_2")
             .build());
   }
 
