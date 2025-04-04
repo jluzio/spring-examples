@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Configuration;
 
 @Log4j2
-class ConfigurationPropertiesSpringApplicationBuilderTest {
+class ConfigurationPropertiesMultipleApplicationContextTest {
 
   @Configuration
   @EnableConfigurationProperties(ConfigProps.class)
