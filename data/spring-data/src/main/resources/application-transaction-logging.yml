@@ -1,0 +1,5 @@
+logging:
+  level:
+#    org.springframework.transaction: DEBUG
+    org.springframework.transaction.interceptor: TRACE
+    org.springframework.orm.jpa: DEBUG
