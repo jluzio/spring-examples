@@ -17,3 +17,10 @@ password=letmein
 ~~~bash
 liquibase execute-sql (--sql | --sql-file)
 ~~~
+
+## Using liquibase-maven-plugin
+Note: classpath is defined by the plugin declaration, so it's easier to include JDBC Drivers.
+
+~~~bash
+mvn liquibase:updateSQL -Dliquibase.propertyFile=liquibase-multiple-using-maven-plugin.properties
+~~~
