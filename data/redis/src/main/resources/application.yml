@@ -7,6 +7,9 @@
 # 2024/03/20 :: TODO: remove if not using docker compose support or if it doesn't enforce a required docker-compose file
 #spring.docker.compose.enabled: false
 
+spring.profiles.default: redis-stack
+# spring.docker.compose.file: docker/redis.docker-compose.yml
+
 logging:
   level:
     root: INFO
@@ -14,8 +17,6 @@ logging:
 #    org.hibernate: ERROR
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-
-spring.docker.compose.file: docker/redis.docker-compose.yml
 
 spring.jpa:
   show-sql: false # currently ignored

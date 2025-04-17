@@ -21,7 +21,7 @@ public class TestApplication {
   }
 
   public static void main(String[] args) {
-    SpringApplication.from(Application::main)
+    SpringApplication.from(MongoDbApplication::main)
         .with(LocalDevTestcontainersConfig.class)
         .run(args);
   }
