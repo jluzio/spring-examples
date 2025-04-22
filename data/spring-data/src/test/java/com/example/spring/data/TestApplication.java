@@ -23,7 +23,7 @@ public class TestApplication {
   }
 
   public static void main(String[] args) {
-    SpringApplication.from(Application::main)
+    SpringApplication.from(SpringDataApplication::main)
         .with(LocalDevTestcontainersConfig.class)
         .run(args);
   }
