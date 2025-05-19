@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,21 +33,38 @@ class ValidatorTest {
         .id("id")
         .name("required-name")
         .age(42)
+        .hobbies(List.of("dancing"))
         .build();
-    var invalidPerson = Person.builder()
+    var invalidPerson1 = Person.builder()
         .id("id")
         .name("")
         .age(6)
+        .hobbies(null)
+        .build();
+    var invalidPerson2 = Person.builder()
+        .id("id")
+        .name("")
+        .age(6)
+        .hobbies(List.of(""))
         .build();
 
     var validConstraintViolations = validator.validate(validPerson);
     assertThat(validConstraintViolations).isEmpty();
 
-    var invalidConstraintViolations = validator.validate(invalidPerson);
-    log.info("constraintViolations: {}", invalidConstraintViolations);
-    assertThat(invalidConstraintViolations).isNotEmpty();
-    assertThat(invalidConstraintViolations)
+    var invalidConstraintViolations1 = validator.validate(invalidPerson1);
+    log.info("constraintViolations: {}", invalidConstraintViolations1);
+    assertThat(invalidConstraintViolations1)
+        .isNotEmpty()
         .map(ConstraintViolation::getMessage)
-        .contains("must be able to vote!");
+        .contains("must be able to vote!")
+        .contains("must not be empty")
+        .contains("hobbies must not be null");
+
+    var invalidConstraintViolations2 = validator.validate(invalidPerson2);
+    log.info("constraintViolations: {}", invalidConstraintViolations2);
+    assertThat(invalidConstraintViolations2)
+        .isNotEmpty()
+        .map(ConstraintViolation::getMessage)
+        .contains("hobby must not be empty");
   }
 }
