@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.Builder;
 import lombok.Data;
@@ -19,6 +20,7 @@ public class Person {
   @Max(110)
   private Integer age;
   @NotNull(message = "hobbies must not be null")
-  private List<@NotEmpty(message = "hobby must not be empty") String> hobbies;
+  @Builder.Default
+  private List<@NotEmpty(message = "hobby must not be empty") String> hobbies = new ArrayList<>();
 
 }
