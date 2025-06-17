@@ -17,7 +17,9 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesBindin
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.ConstructorBinding;
 import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -141,6 +143,26 @@ class ConfigurationPropertiesTest {
             .value1("value1_2")
             .value2("value2_2")
             .build());
+  }
+
+  @Test
+  void test_beanProps_appCtxRunner() {
+    new ApplicationContextRunner()
+        .withUserConfiguration(Config.class)
+        // ConfigDataApplicationContextInitializer is required on certain scenarios
+        // but is not required in this one due to @EnableConfigurationProperties
+        .withInitializer(new ConfigDataApplicationContextInitializer())
+        .withPropertyValues(
+            "test-props.bean.value1=value1_2",
+            "test-props.bean.value2=value2_2"
+        ).run(ctx -> {
+          var appCtxRunnerBeanProps = ctx.getBean(BeanProps.class);
+          assertThat(appCtxRunnerBeanProps)
+              .isEqualTo(BeanProps.builder()
+                  .value1("value1_2")
+                  .value2("value2_2")
+                  .build());
+        });
   }
 
   @Test
