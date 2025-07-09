@@ -10,16 +10,16 @@ import org.springframework.context.annotation.Import;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-class ConditionalInnerComponentsConfigTest {
+class ConditionalInnerClassComponentsConfigTest {
 
-  @Import(ConditionalInnerComponentsConfig.class)
+  @Import(ConditionalInnerClassComponentsConfig.class)
   static class Config {
 
   }
 
   @Configuration
   @ConditionalOnProperty(value = "conditionalInnerComponentsConfig", havingValue = "true")
-  static class ConditionalInnerComponentsConfig {
+  static class ConditionalInnerClassComponentsConfig {
 
     @RestController
     class DebugController {
@@ -34,7 +34,7 @@ class ConditionalInnerComponentsConfigTest {
   @Test
   void enabledTest() {
     appCtxRunner(true).run(ctx -> {
-      assertThat(ctx.getBeanNamesForType(ConditionalInnerComponentsConfig.DebugController.class))
+      assertThat(ctx.getBeanNamesForType(ConditionalInnerClassComponentsConfig.DebugController.class))
           .isNotEmpty();
     });
   }
@@ -42,7 +42,7 @@ class ConditionalInnerComponentsConfigTest {
   @Test
   void disabledTest() {
     appCtxRunner(false).run(ctx -> {
-      assertThat(ctx.getBeanNamesForType(ConditionalInnerComponentsConfig.DebugController.class))
+      assertThat(ctx.getBeanNamesForType(ConditionalInnerClassComponentsConfig.DebugController.class))
           .isEmpty();
     });
   }
