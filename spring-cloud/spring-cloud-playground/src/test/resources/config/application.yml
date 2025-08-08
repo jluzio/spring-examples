@@ -1,0 +1,24 @@
+
+spring.cloud.openfeign:
+  okhttp.enabled: true
+  client:
+    config:
+      default:
+        loggerLevel: FULL
+      example-api:
+        url: https://jsonplaceholder.typicode.com
+        loggerLevel: FULL
+      #        loggerLevel: NONE
+      example-retryer-api:
+        url: http://doesnotexist.unknownserver.xpto
+        loggerLevel: FULL
+        retryer: feign.Retryer.Default
+      data-api:
+        url: https://jsonplaceholder.typicode.com
+        contract: feign.Contract.Default
+        loggerLevel: FULL
+      azure-ad:
+        url: https://login.microsoftonline.com
+        loggerLevel: FULL
+        decoder: com.example.spring.cloud.playground.feign.ConvertersTest.AzureAdResponseDecoder
+      #        loggerLevel: NONE
