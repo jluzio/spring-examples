@@ -4,17 +4,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import feign.FeignException;
-import feign.InvocationContext;
 import feign.Response;
-import feign.ResponseInterceptor;
 import feign.codec.DecodeException;
 import feign.codec.Decoder;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.ParseException;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -27,6 +23,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.support.SpringDecoder;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -39,6 +36,16 @@ class ConvertersTest {
   @EnableFeignClients(clients = AzureAdFeignClient.class)
   static class Config {
 
+  }
+
+  @FeignClient(name = "azure-ad")
+  public interface AzureAdFeignClient {
+
+    @GetMapping(path = "/common/discovery/v2.0/keys")
+    Map<String, Object> keysAsMap();
+
+    @GetMapping(path = "/common/discovery/v2.0/keys", consumes = MediaType.APPLICATION_JSON_VALUE)
+    JWKSet keysAsJwkSet();
   }
 
   @Component
@@ -68,16 +75,6 @@ class ConvertersTest {
         throw new DecodeException(400, "unable to decode to JWKSet", response.request(), e);
       }
     }
-  }
-
-  @FeignClient(name = "azure-ad")
-  public interface AzureAdFeignClient {
-
-    @GetMapping(path = "/common/discovery/v2.0/keys")
-    Map<String, Object> keysAsMap();
-
-    @GetMapping(path = "/common/discovery/v2.0/keys")
-    JWKSet keysAsJwkSet();
   }
 
   @Autowired
