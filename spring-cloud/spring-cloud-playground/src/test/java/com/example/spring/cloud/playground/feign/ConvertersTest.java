@@ -44,7 +44,7 @@ class ConvertersTest {
     @GetMapping(path = "/common/discovery/v2.0/keys")
     Map<String, Object> keysAsMap();
 
-    @GetMapping(path = "/common/discovery/v2.0/keys", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(path = "/common/discovery/v2.0/keys", produces = MediaType.APPLICATION_JSON_VALUE)
     JWKSet keysAsJwkSet();
   }
 
