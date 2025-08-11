@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 
@@ -17,8 +14,6 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
  * <p>Otherwise use the reactive libraries such as <code>feign-reactive</code></p>
  * @see  <a href="https://github.com/PlaytikaOSS/feign-reactive">feign-reactive</a>
  */
-@TestConfiguration
-@Import({JacksonAutoConfiguration.class})
 public class FeignWebFluxConfig {
 
   @Bean

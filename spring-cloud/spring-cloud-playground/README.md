@@ -10,6 +10,7 @@ For further reference, please consider the following sections:
 * [Spring Configuration Processor](https://docs.spring.io/spring-boot/docs/2.5.5/reference/htmlsingle/#configuration-metadata-annotation-processor)
 * [Function](https://cloud.spring.io/spring-cloud-function/)
 
+
 ### Additional Links
 These additional references should also help you:
 
@@ -28,3 +29,8 @@ curl --location --request POST 'http://localhost:8080/findUser,email' \
 "user-1",
 "user-3"
 ]'
+
+# Resilience4j
+- https://resilience4j.readme.io/docs/getting-started-3
+  - https://github.com/resilience4j/resilience4j-spring-boot3-demo
+- https://docs.spring.vmware.com/spring-cloud-circuitbreaker/docs/3.0.5/reference/html/index.html
