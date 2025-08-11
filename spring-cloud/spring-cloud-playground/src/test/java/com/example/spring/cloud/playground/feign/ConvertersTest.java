@@ -66,13 +66,11 @@ class ConvertersTest {
     }
 
     @NotNull
-    @SuppressWarnings("unchecked")
     private JWKSet decodeJwkSet(Response response) throws IOException, DecodeException {
       try {
-        Map<String, Object> decoded = (Map<String, Object>) delegate.decode(response, Map.class);
-        return JWKSet.parse(decoded);
+        return JWKSet.load(response.body().asInputStream());
       } catch (ParseException e) {
-        throw new DecodeException(400, "unable to decode to JWKSet", response.request(), e);
+        throw new DecodeException(500, "unable to decode to JWKSet", response.request(), e);
       }
     }
   }
