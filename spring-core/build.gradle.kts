@@ -9,7 +9,9 @@ group = "com.example.spring"
 version = "1.0.0"
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_21
+  toolchain {
+    languageVersion = JavaLanguageVersion.of(25)
+  }
 }
 
 // enable Java preview features

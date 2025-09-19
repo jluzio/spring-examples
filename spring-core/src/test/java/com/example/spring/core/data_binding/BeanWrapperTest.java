@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @Slf4j
-public class BeanWrapperTest {
+class BeanWrapperTest {
 
   @Test
   void test() {

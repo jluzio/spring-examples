@@ -23,7 +23,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.UrlResource;
 
-@SpringBootTest(classes = {})
+@SpringBootTest
 @Slf4j
 class ResourceTest implements ResourceLoaderAware {
 
@@ -35,7 +35,7 @@ class ResourceTest implements ResourceLoaderAware {
 
   @Test
   void test_url() throws IOException {
-    var resource = new UrlResource("https://www.wikipedia.org/");
+    var resource = new UrlResource("https://www.google.com");
     displayResource(resource, DisplayResourceParams.defaults());
 
     var someProjectFile = new File(System.getProperty("user.dir"), "README.md");
