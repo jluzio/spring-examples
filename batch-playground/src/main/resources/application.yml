@@ -1,3 +1,8 @@
+spring.application.name: batch-playground
+
+spring.profiles.default: hsqldb
+spring.docker.compose.enabled: false
+
 debug: true
 
 logging:
@@ -10,13 +15,17 @@ logging:
     org.springframework.boot.autoconfigure: DEBUG
     org.springframework.context.annotation: DEBUG
 #    org.springframework.core.io.support: DEBUG
+    #    org.hibernate: ERROR
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
 
-app:
-  auto-configure: true
+spring.batch:
+  # don't auto-start jobs
+  job.enabled: false
+  # initialize DB
+  jdbc.initialize-schema: ALWAYS
 
-spring:
-  datasource:
-#    driver-class-name: org.hsqldb.jdbcDriver
-    url: jdbc:hsqldb:mem:testdb;sql.enforce_strict_size=true;hsqldb.tx=mvcc
-#    username: sa
-#    password:
+app.features:
+  user_posts:
+    jobs-enabled: true
+    data-populator-enabled: true

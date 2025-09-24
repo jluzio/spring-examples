@@ -1,2 +1,4 @@
-app:
-  auto-configure: false
+app.features:
+  user_posts:
+    jobs-enabled: false
+    data-populator-enabled: false

@@ -1,0 +1,21 @@
+name: springbatch-mysql
+
+services:
+
+  mysql:
+    image: mysql:8
+    container_name: springbatch-mysql
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: test
+      MYSQL_USER: test
+      MYSQL_PASSWORD: test
+    volumes:
+      - type: volume
+        source: mysql-data
+        target: /var/lib/mysql
+
+volumes:
+  mysql-data:

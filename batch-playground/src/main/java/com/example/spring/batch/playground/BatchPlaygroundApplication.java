@@ -6,10 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BatchPlaygroundApplication {
 
-	public static void main(String[] args) {
-		System.exit(
-				SpringApplication.exit(
-						SpringApplication.run(BatchPlaygroundApplication.class, args)));
-	}
+  public static void main(String[] args) {
+    SpringApplication.run(BatchPlaygroundApplication.class, args);
+  }
 
 }

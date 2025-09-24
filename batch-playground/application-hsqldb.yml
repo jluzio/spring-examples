@@ -1,0 +1,14 @@
+# This spring-boot configuration is meant to be used with Docker Composed Support (org.springframework.boot:spring-boot-docker-compose)
+# Using this profile with bootRun or bootTestRun will start the container automatically
+spring:
+  docker.compose.enabled: false
+  jpa.hibernate.ddl-auto: update
+#  datasource:
+#    driver-class-name: org.hsqldb.jdbcDriver
+  datasource:
+    driver-class-name: org.hsqldb.jdbc.JDBCDriver
+    url: jdbc:hsqldb:mem:testdb;sql.enforce_strict_size=true;hsqldb.tx=mvcc
+#    url: jdbc:hsqldb:mem:testdb;DB_CLOSE_DELAY=-1
+#    url: jdbc:hsqldb:hsql://localhost/testdb
+    username: sa
+    password:

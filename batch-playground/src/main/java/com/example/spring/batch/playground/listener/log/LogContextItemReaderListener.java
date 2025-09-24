@@ -6,8 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.ItemReadListener;
 
 @Slf4j
-public class LogContextItemReaderListener extends LogContextStepExecutionListenerSupport implements
-    ItemReadListener<Object> {
+public class LogContextItemReaderListener
+    extends LogContextStepExecutionListenerSupport
+    implements ItemReadListener<Object> {
 
   @Override
   public void beforeRead() {
