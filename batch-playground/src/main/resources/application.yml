@@ -1,6 +1,6 @@
 spring.application.name: batch-playground
 
-spring.profiles.default: hsqldb
+spring.profiles.default: h2
 spring.docker.compose.enabled: false
 
 debug: true

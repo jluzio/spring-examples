@@ -2,6 +2,7 @@ package com.example.spring.batch.playground.features.core;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.spring.batch.playground.features.core.item.JobParameterCsvItemReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.retry.backoff.FixedBackOffPolicy;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -37,7 +37,6 @@ import org.springframework.transaction.PlatformTransactionManager;
 @SpringBatchTest
 @SpringJUnitConfig(ResilienceTest.JobConfiguration.class)
 @EnableAutoConfiguration
-@TestPropertySource(properties = "spring.batch.job.enabled=false")
 @Slf4j
 class ResilienceTest {
 

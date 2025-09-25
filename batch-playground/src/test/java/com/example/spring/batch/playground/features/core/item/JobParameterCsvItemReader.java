@@ -1,8 +1,7 @@
-package com.example.spring.batch.playground.features.core;
+package com.example.spring.batch.playground.features.core.item;
 
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,22 +16,22 @@ import org.springframework.batch.item.UnexpectedInputException;
 @Slf4j
 public class JobParameterCsvItemReader implements ItemReader<String>, StepExecutionListener {
 
+  private final ThreadLocal<Iterator<String>> itemsIteratorThreadLocal = new ThreadLocal<>();
   private final String propertyName;
-  private List<String> items;
-  private Iterator<String> itemsIterator;
 
   @Override
   public void beforeStep(StepExecution stepExecution) {
     String valuesCsv = Objects.requireNonNull(stepExecution.getJobParameters().getString(propertyName));
-    this.items = Arrays.asList(valuesCsv.split(","));
-    this.itemsIterator = items.iterator();
+    var items = Arrays.asList(valuesCsv.split(","));
     log.info("{} :: items={}", getClass().getSimpleName(), items);
+    this.itemsIteratorThreadLocal.set(items.iterator());
   }
 
   @Override
   public String read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-    return itemsIterator.hasNext()
-        ? itemsIterator.next()
+    var iterator = itemsIteratorThreadLocal.get();
+    return iterator.hasNext()
+        ? iterator.next()
         : null;
   }
 
