@@ -9,8 +9,8 @@ logging:
   level:
     ROOT: INFO
     com.example.spring.batch: DEBUG
-    com.example.spring.batch.playground.listener.log: DEBUG
-#    com.example.spring.batch.playground.listener.log: INFO
+    com.example.spring.batch.playground.batch.listener.log: DEBUG
+#    com.example.spring.batch.playground.batch.listener.log: INFO
     org.springframework: INFO
     org.springframework.boot.autoconfigure: DEBUG
     org.springframework.context.annotation: DEBUG
@@ -26,6 +26,6 @@ spring.batch:
   jdbc.initialize-schema: ALWAYS
 
 app.features:
-  user_posts:
+  user:
     jobs-enabled: true
     data-populator-enabled: true

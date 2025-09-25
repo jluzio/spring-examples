@@ -1,4 +1,4 @@
 app.features:
-  user_posts:
+  user:
     jobs-enabled: false
     data-populator-enabled: false
