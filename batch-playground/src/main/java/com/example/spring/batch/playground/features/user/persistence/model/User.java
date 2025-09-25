@@ -8,6 +8,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
+// "User" is Reserved keyword in some DBMS (H2 for example)
 @Entity(name = "APP_USER")
 @Data
 @RequiredArgsConstructor
