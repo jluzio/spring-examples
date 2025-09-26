@@ -19,9 +19,9 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @SpringBatchTest
-@SpringJUnitConfig(HelloWorldJobFunctionalTests.JobConfiguration.class)
+@SpringJUnitConfig(HelloWorldTest.JobConfiguration.class)
 @EnableAutoConfiguration
-class HelloWorldJobFunctionalTests {
+class HelloWorldTest {
 
   static class JobConfiguration {
 

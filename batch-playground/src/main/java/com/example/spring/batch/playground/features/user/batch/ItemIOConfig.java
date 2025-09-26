@@ -27,6 +27,7 @@ public class ItemIOConfig {
 
     return new FlatFileItemReaderBuilder<User>()
         .name("userItemReader")
+        .linesToSkip(1)
         .resource(new ClassPathResource("sample-data.csv"))
         .delimited()
         .names("id", "name", "username", "email")

@@ -1,0 +1,19 @@
+app.features:
+  scheduled-tasks:
+    enabled: true
+
+spring.quartz:
+  job-store-type: "jdbc"
+  jdbc:
+    initialize-schema: "always"
+#  properties:
+#    org.quartz:
+#      scheduler:
+#        instanceName: QuartzScheduler
+#        instanceId: AUTO
+#      jobStore:
+#        class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
+##        class: org.quartz.impl.jdbcjobstore.JobStoreTX
+#        driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+#        tablePrefix: QRTZ_
+#        isClustered: true

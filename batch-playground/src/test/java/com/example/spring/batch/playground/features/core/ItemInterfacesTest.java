@@ -33,10 +33,12 @@ import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemStream;
 import org.springframework.batch.item.ItemStreamException;
+import org.springframework.batch.item.ItemStreamReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
+import org.springframework.batch.item.support.CompositeItemReader;
 import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.batch.item.support.PassThroughItemProcessor;
 import org.springframework.batch.test.JobLauncherTestUtils;
@@ -63,26 +65,61 @@ class ItemInterfacesTest {
     @RequiredArgsConstructor
     static class JobParameterItemReader implements ItemReader<String>, ItemStream, StepExecutionListener {
 
-      private Iterator<String> itemsIterator;
+      public static final String CURRENT_INDEX = "CURRENT_INDEX";
+      private List<String> items;
+      private int currentIndex;
 
+      // restartable example implementation of open + update
       @Override
       public void open(ExecutionContext executionContext) throws ItemStreamException {
-        log.info("ItemStream.open()");
+        if (executionContext.containsKey(CURRENT_INDEX)) {
+          currentIndex = (int) executionContext.getLong(CURRENT_INDEX);
+        } else {
+          currentIndex = 0;
+        }
+      }
+
+      // restartable example implementation of open + update
+      public void update(ExecutionContext executionContext) throws ItemStreamException {
+        executionContext.putLong(CURRENT_INDEX, currentIndex);
       }
 
       @Override
       public void beforeStep(StepExecution stepExecution) {
         log.info("StepExecutionListener.beforeStep()");
         var itemsCsv = requireNonNull(stepExecution.getJobParameters().getString("data"));
-        List<String> items = List.of(itemsCsv.split(","));
-        itemsIterator = items.iterator();
+        this.items = List.of(itemsCsv.split(","));
       }
 
       @Override
       public String read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-        return itemsIterator.hasNext()
-            ? itemsIterator.next()
-            : null;
+        if (currentIndex < items.size()) {
+          return items.get(currentIndex++);
+        }
+
+        return null;
+      }
+    }
+
+    static class ListItemReaderWithListener<T> extends ListItemReader<T> implements ItemStreamReader<T> {
+
+      private boolean open = false;
+
+      public ListItemReaderWithListener(List<T> list) {
+        super(list);
+      }
+
+      @Override
+      public void open(ExecutionContext executionContext) throws ItemStreamException {
+        open = true;
+      }
+
+      @Override
+      public T read() {
+        if (!open) {
+          throw new IllegalStateException("Not opened!");
+        }
+        return super.read();
       }
     }
 
@@ -91,11 +128,21 @@ class ItemInterfacesTest {
       return new JobParameterItemReader();
     }
 
+    /**
+     * <b>NOTE</b>: when using any bean that is proxied by Spring, it must have the specific return type so that the
+     * proxy is recognized to implement the listeners.
+     * <h5>Options:</h5>
+     * <ul>
+     *   <li>return an interface that extends both ItemReader and the listener (e.g. ItemStreamReader)</li>
+     *   <li>return the concrete type (ListItemReaderWithListener)</li>
+     *   <li>configure as reader and also listener in the step</li>
+     * </ul>
+     */
     @Bean
     @StepScope
-    // NOTE: any listeners implemented by class will be ignored due to proxy ItemReader only
-    public ItemReader<String> itemReaderStepScope(@Value("#{jobParameters['data'].split(',')}") List<String> values) {
-      return new ListItemReader<>(values);
+    public ItemStreamReader<String> itemReaderStepScope(
+        @Value("#{jobParameters['data'].split(',')}") List<String> values) {
+      return new ListItemReaderWithListener<>(values);
     }
 
     @Bean
