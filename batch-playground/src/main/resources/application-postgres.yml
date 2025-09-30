@@ -5,7 +5,7 @@ spring:
     compose:
       enabled: true
       skip.in-tests: false
-      file: docker/postgres.docker-compose.yml
+      file: docker/postgres/docker-compose.yml
   jpa.hibernate.ddl-auto: update
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres

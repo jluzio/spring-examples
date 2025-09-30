@@ -31,9 +31,14 @@ dependencies {
   implementation 'org.springframework.boot:spring-boot-starter-validation'
   implementation 'org.springframework.boot:spring-boot-starter-quartz'
 
+  implementation 'org.springframework.boot:spring-boot-starter-integration'
+  implementation 'org.springframework.integration:spring-integration-jms'
+  implementation 'org.springframework.batch:spring-batch-integration'
+
   implementation 'com.h2database:h2'
   implementation 'com.mysql:mysql-connector-j:8.4.0'
   implementation 'org.postgresql:postgresql:42.7.3'
+  implementation 'org.apache.activemq:activemq-broker:6.1.7'
 
   compileOnly 'org.projectlombok:lombok'
 	testCompileOnly 'org.projectlombok:lombok'

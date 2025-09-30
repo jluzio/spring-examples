@@ -1,0 +1,6 @@
+app.features:
+  remote_chunking:
+    enabled: true
+    manager-enabled: true
+    worker-enabled: true
+    restart-failed-jobs-enabled: true

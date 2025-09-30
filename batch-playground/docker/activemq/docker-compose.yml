@@ -1,0 +1,14 @@
+services:
+  activemq:
+    image: apache/activemq-artemis:latest-alpine
+    container_name: springbatch-activemq
+    ports:
+      - "61616:61616"
+      - "8161:8161"
+    environment:
+      {}
+#      org.apache.activemq.SERIALIZABLE_PACKAGES: '*'
+#      JAVA_OPTS: "-Dorg.apache.activemq.SERIALIZABLE_PACKAGES=*"
+#      ARTEMIS_USER: artemis
+#      ARTEMIS_PASSWORD: artemis
+#      ANONYMOUS_LOGIN: false
