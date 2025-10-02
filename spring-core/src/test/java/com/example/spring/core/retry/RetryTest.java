@@ -1,11 +1,9 @@
 package com.example.spring.core.retry;
 
+import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import java.util.concurrent.atomic.AtomicInteger;
 import lombok.Getter;
@@ -17,9 +15,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.retry.RetryException;
+import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.retry.annotation.Recover;
 import org.springframework.retry.annotation.Retryable;
+import org.springframework.retry.support.RetrySynchronizationManager;
 import org.springframework.stereotype.Service;
 
 @SpringBootTest
@@ -33,18 +33,18 @@ class RetryTest {
 
   }
 
-  @Service
-  public static class FaultyService {
+  public static class BaseFaultyService {
 
     @Getter
     AtomicInteger callCounter = new AtomicInteger(0);
 
-    @Retryable(maxAttempts = 3)
+    @Retryable(maxAttempts = 3, backoff = @Backoff(100L))
     public void faultyCall(int faults) {
+      var retryCount = requireNonNull(RetrySynchronizationManager.getContext()).getRetryCount();
       if (callCounter.incrementAndGet() > faults) {
-        log.debug("faultyCall :: success");
+        log.debug("faultyCall({}) :: success", retryCount);
       } else {
-        log.debug("faultyCall :: error");
+        log.debug("faultyCall({}) :: error", retryCount);
         throw new IllegalArgumentException("Some exception");
       }
     }
@@ -55,29 +55,17 @@ class RetryTest {
   }
 
   @Service
-  public static class FaultyAndRecoverService {
+  public static class FaultyService extends BaseFaultyService {
 
-    @Getter
-    AtomicInteger callCounter = new AtomicInteger(0);
+  }
 
-    @Retryable(maxAttempts = 3)
-    public void faultyCall(int faults) {
-      if (callCounter.incrementAndGet() > faults) {
-        log.debug("faultyCall :: success");
-      } else {
-        log.debug("faultyCall :: error");
-        throw new IllegalArgumentException("Some exception");
-      }
-    }
+  @Service
+  public static class FaultyAndRecoverService extends BaseFaultyService {
 
     @Recover
     public void faultyCallRecover(IllegalArgumentException e, int faults) {
       log.debug("faultyCallRecover :: {} | {}", e.getMessage(), faults);
       throw new RetryException("max retries reached", e);
-    }
-
-    public void clear() {
-      callCounter.set(0);
     }
   }
 
@@ -94,26 +82,40 @@ class RetryTest {
 
   @Test
   void test_valid_retries() {
+    logStart();
     assertThatCode(() -> faultyService.faultyCall(2))
         .doesNotThrowAnyException();
     assertThat(faultyService.getCallCounter().get())
         .isEqualTo(3);
+    logEnd();
   }
 
   @Test
   void test_invalid_retries() {
+    logStart();
     assertThatThrownBy(() -> faultyService.faultyCall(3))
         .isInstanceOf(IllegalArgumentException.class);
     assertThat(faultyService.getCallCounter().get())
         .isEqualTo(3);
+    logEnd();
   }
 
   @Test
   void test_custom_recover() {
+    logStart();
     assertThatThrownBy(() -> faultyAndRecoverService.faultyCall(3))
         .isInstanceOf(RetryException.class);
     assertThat(faultyAndRecoverService.getCallCounter().get())
         .isEqualTo(3);
+    logEnd();
+  }
+
+  private void logStart() {
+    log.debug("=== start ===");
+  }
+
+  private void logEnd() {
+    log.debug("=== end ===");
   }
 
 }
