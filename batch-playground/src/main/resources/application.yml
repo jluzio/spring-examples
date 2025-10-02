@@ -29,3 +29,5 @@ app.features:
   user:
     jobs-enabled: true
     data-populator-enabled: true
+  resilience:
+    enabled: true
