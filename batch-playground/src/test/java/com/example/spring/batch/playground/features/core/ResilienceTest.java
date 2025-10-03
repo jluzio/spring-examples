@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.spring.batch.playground.features.core.item.JobParameterCsvItemReader;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -16,6 +18,8 @@ import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameter;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.Step;
+import org.springframework.batch.core.StepExecution;
+import org.springframework.batch.core.StepExecutionListener;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
@@ -27,10 +31,16 @@ import org.springframework.batch.item.support.PassThroughItemProcessor;
 import org.springframework.batch.test.JobLauncherTestUtils;
 import org.springframework.batch.test.context.SpringBatchTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ExitCodeEvent;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.retry.backoff.FixedBackOffPolicy;
+import org.springframework.retry.backoff.Sleeper;
+import org.springframework.retry.backoff.ThreadWaitSleeper;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.event.ApplicationEvents;
+import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -38,7 +48,10 @@ import org.springframework.transaction.PlatformTransactionManager;
 @SpringJUnitConfig(ResilienceTest.JobConfiguration.class)
 @EnableAutoConfiguration
 @Slf4j
+@RecordApplicationEvents
 class ResilienceTest {
+
+  record ExecutionEvent(String id, LocalDateTime localDateTime) {}
 
   static class JobConfiguration {
 
@@ -46,10 +59,29 @@ class ResilienceTest {
     public Step step(JobRepository jobRepository, PlatformTransactionManager transactionManager,
         ItemReader<String> itemReader,
         ItemProcessor<String, String> itemProcessor,
-        ItemWriter<String> itemWriter
+        ItemWriter<String> itemWriter,
+        ApplicationEventPublisher eventPublisher
     ) {
+      Sleeper delegateSleeper = new ThreadWaitSleeper();
       var backOffPolicy = new FixedBackOffPolicy();
       backOffPolicy.setBackOffPeriod(100);
+      backOffPolicy.setSleeper(backOffPeriod -> {
+        eventPublisher.publishEvent(new ExecutionEvent("sleep", LocalDateTime.now()));
+        delegateSleeper.sleep(backOffPeriod);
+      });
+
+      StepExecutionListener stepExecutionListener = new StepExecutionListener() {
+        @Override
+        public void beforeStep(StepExecution stepExecution) {
+          eventPublisher.publishEvent(new ExecutionEvent("beforeStep", LocalDateTime.now()));
+        }
+
+        @Override
+        public ExitStatus afterStep(StepExecution stepExecution) {
+          eventPublisher.publishEvent(new ExecutionEvent("afterStep", LocalDateTime.now()));
+          return StepExecutionListener.super.afterStep(stepExecution);
+        }
+      };
 
       return new StepBuilder("step", jobRepository)
           .<String, String>chunk(1, transactionManager)
@@ -60,6 +92,7 @@ class ResilienceTest {
           .retryLimit(3)
           .retry(IOException.class)
           .backOffPolicy(backOffPolicy)
+          .listener(stepExecutionListener)
           .build();
     }
 
@@ -87,6 +120,8 @@ class ResilienceTest {
   CompositeItemProcessor<String, String> itemProcessor;
   @MockitoBean
   ItemWriter<String> itemWriter;
+  @Autowired
+  ApplicationEvents applicationEvents;
 
   @Test
   void testJob_retriable_fail_then_success() throws Exception {
@@ -102,6 +137,9 @@ class ResilienceTest {
         .isEqualTo(ExitStatus.COMPLETED);
     assertThat(callCounter.get())
         .isEqualTo(3);
+
+    var executionEvents = applicationEvents.stream(ExecutionEvent.class).toList();
+    log.info("executionEvents: {}", executionEvents);
   }
 
   @Test
