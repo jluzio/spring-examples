@@ -1,0 +1,15 @@
+debug: true
+
+app.tasks:
+  jobrunr:
+    enabled: true
+    startup-tasks:
+      enabled: true
+
+jobrunr:
+  dashboard:
+    enabled: true
+    port: 8000
+  background-job-server:
+    enabled: true
+    worker-count: 4

@@ -1,0 +1,11 @@
+# refs
+- quartz 
+  - https://www.quartz-scheduler.org/
+- db-scheduler
+  - https://github.com/kagkarlsson/db-scheduler
+  - init schemas: 
+    - https://github.com/kagkarlsson/db-scheduler/blob/master/db-scheduler/src/test/resources/
+    - https://github.com/kagkarlsson/db-scheduler/blob/master/db-scheduler/src/test/resources/mysql_tables.sql
+- jobrunr
+  - https://www.jobrunr.io/en/
+  - https://github.com/jobrunr/jobrunr

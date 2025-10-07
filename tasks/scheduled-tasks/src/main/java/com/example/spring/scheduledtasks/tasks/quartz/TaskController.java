@@ -1,5 +1,6 @@
 package com.example.spring.scheduledtasks.tasks.quartz;
 
+import com.example.spring.scheduledtasks.tasks.model.GenericData;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -27,7 +28,7 @@ public class TaskController {
   private final JobDetail logDataJobDetail;
 
   @PostMapping("/logData")
-  public void logData(@RequestBody Map<String, Object> data) throws SchedulerException {
+  public void logData(@RequestBody GenericData data) throws SchedulerException {
     var jobDataMap = new JobDataMap();
     jobDataMap.put("data", data);
     var trigger = TriggerBuilder.newTrigger()
@@ -35,7 +36,6 @@ public class TaskController {
         .withIdentity("logDataTrigger")
         .usingJobData(jobDataMap)
         .startAt(Date.from(Instant.now().plusSeconds(10)))
-//        .endAt(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
         .withSchedule(SimpleScheduleBuilder.simpleSchedule()
             .withMisfireHandlingInstructionFireNow()
         )
