@@ -1,0 +1,6 @@
+app.features:
+  user:
+    jobs-enabled: false
+    data-populator-enabled: false
+  remote_chunking:
+    enabled: false

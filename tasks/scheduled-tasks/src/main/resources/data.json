@@ -1,0 +1,16 @@
+[
+  {
+    "_class": "com.example.spring.scheduledtasks.persistence.model.User",
+    "id": "1",
+    "name": "Foo",
+    "username": "foo",
+    "email": "foo@mail.org"
+  },
+  {
+    "_class": "com.example.spring.scheduledtasks.persistence.model.User",
+    "id": "2",
+    "name": "Bar",
+    "username": "bar",
+    "email": "bar@mail.org"
+  }
+]

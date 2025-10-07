@@ -1,0 +1,26 @@
+app.tasks:
+  quartz:
+    enabled: true
+    startup-tasks:
+      enabled: true
+#      enabled: false
+      helloWorld.trigger-type: SINGLE
+#      helloWorld.trigger-type: CRON
+
+spring.quartz:
+  job-store-type: "jdbc"
+  jdbc:
+    initialize-schema: ALWAYS
+#    initialize-schema: NEVER
+#  properties:
+#    org.quartz:
+#      scheduler:
+#        instanceName: QuartzScheduler
+#        instanceId: AUTO
+#      jobStore:
+#        class: org.springframework.scheduling.quartz.LocalDataSourceJobStore
+##        class: org.quartz.impl.jdbcjobstore.JobStoreTX
+#        driverDelegateClass: org.quartz.impl.jdbcjobstore.StdJDBCDelegate
+#        tablePrefix: QRTZ_
+#        isClustered: true
+#        misfireThreshold: 1000
