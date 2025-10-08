@@ -25,7 +25,7 @@ public class JpaConfig {
       JpaVendorAdapter jpaVendorAdapter,
       ObjectProvider<PersistenceUnitManager> persistenceUnitManagerProvider
   ) {
-    return new EntityManagerFactoryBuilder(jpaVendorAdapter, Map.of(), persistenceUnitManagerProvider.getIfAvailable());
+    return new EntityManagerFactoryBuilder(jpaVendorAdapter, _ -> Map.of(), persistenceUnitManagerProvider.getIfAvailable());
   }
 
 }

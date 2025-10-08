@@ -1,6 +1,6 @@
-INSERT INTO role (id, value) VALUES (1, 'USER');
-INSERT INTO role (id, value) VALUES (2, 'ADMIN');
+INSERT INTO role (id, value) VALUES ('1', 'USER');
+INSERT INTO role (id, value) VALUES ('2', 'ADMIN');
 
-INSERT INTO user (id, name, email, fk_role_id) VALUES (1, 'John Doe', 'john.doe@mail.org', 1);
-INSERT INTO user (id, name, email, fk_role_id) VALUES (2, 'Jane Doe', 'jane.doe@mail.org', 1);
-INSERT INTO user (id, name, email, fk_role_id) VALUES (3, 'Tom Doe', 'tom.doe@othermail.org', 2);
+INSERT INTO user (id, name, email, fk_role_id) VALUES '(1', 'John Doe', 'john.doe@mail.org', '1');
+INSERT INTO user (id, name, email, fk_role_id) VALUES ('2', 'Jane Doe', 'jane.doe@mail.org', '1');
+INSERT INTO user (id, name, email, fk_role_id) VALUES ('3', 'Tom Doe', 'tom.doe@othermail.org', '2');
