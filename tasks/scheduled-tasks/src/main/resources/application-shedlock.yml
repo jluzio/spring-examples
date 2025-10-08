@@ -1,0 +1,7 @@
+app.tasks:
+  shedlock:
+    enabled: true
+    startup-tasks:
+      enabled: true
+
+spring.sql.init.mode: ALWAYS

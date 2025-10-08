@@ -1,5 +1,3 @@
-debug: true
-
 app.tasks:
   jobrunr:
     enabled: true

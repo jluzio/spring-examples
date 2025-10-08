@@ -17,14 +17,12 @@ logging:
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
 
-spring.batch:
-  # don't auto-start jobs
-  job.enabled: false
-  # initialize DB
-  jdbc.initialize-schema: ALWAYS
+spring:
+  flyway:
+    locations: "classpath:db/migration/{vendor}"
 
 app.tasks:
   quartz.enabled: false
   db-scheduler.enabled: false
   jobrunr.enabled: false
-
+  shedlock.enabled: false

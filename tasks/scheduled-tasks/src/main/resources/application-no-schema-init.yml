@@ -1,0 +1,7 @@
+# no-schema-init for all
+
+# db-scheduler,?
+spring.sql.init.mode: NEVER
+
+# quartz
+spring.quartz.jdbc.initialize-schema: NEVER

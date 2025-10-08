@@ -1,0 +1,21 @@
+services:
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: flyway-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: secret
+      # default: postgres
+#      POSTGRES_USER: test
+      # default: <POSTGRES_USER>
+#      POSTGRES_DB: test
+    volumes:
+      - type: volume
+        source: postgres-data
+        target: /var/lib/mysql
+
+volumes:
+  postgres-data:
+    name: flyway-postgres-data

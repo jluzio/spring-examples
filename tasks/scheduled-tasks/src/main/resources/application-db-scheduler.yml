@@ -1,5 +1,3 @@
-debug: true
-
 app.tasks:
   db-scheduler:
     enabled: true

@@ -1,0 +1,22 @@
+spring.application.name: scheduled-tasks
+
+spring.profiles.default: h2
+spring.docker.compose.enabled: false
+
+debug: true
+
+logging:
+  level:
+    ROOT: INFO
+    com.example: DEBUG
+    org.springframework: INFO
+    org.springframework.boot.autoconfigure: DEBUG
+    org.springframework.context.annotation: DEBUG
+#    org.springframework.core.io.support: DEBUG
+    #    org.hibernate: ERROR
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+
+spring:
+  flyway:
+    locations: "classpath:db/migration/{vendor}"

@@ -1,3 +1,4 @@
+-- db-scheduler
 create table scheduled_tasks (
   task_name varchar(100) not null,
   task_instance varchar(100) not null,
@@ -20,3 +21,9 @@ create table scheduled_tasks (
 -- an optimization for users of priority might be to add priority to the execution_time_idx
 -- this _might_ save reads as the priority-value is already in the index
 -- CREATE INDEX execution_time_idx ON scheduled_tasks (execution_time asc, priority desc);
+
+
+-- SchedLock
+-- MySQL, MariaDB
+CREATE TABLE shedlock(name VARCHAR(64) NOT NULL, lock_until TIMESTAMP(3) NOT NULL,
+    locked_at TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3), locked_by VARCHAR(255) NOT NULL, PRIMARY KEY (name));

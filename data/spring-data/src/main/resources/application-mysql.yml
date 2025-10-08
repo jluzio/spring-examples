@@ -1,0 +1,13 @@
+# This spring-boot configuration is meant to be used with Docker Composed Support (org.springframework.boot:spring-boot-docker-compose)
+# Using this profile with bootRun or bootTestRun will start the container automatically
+spring:
+  docker:
+    compose:
+      enabled: true
+      skip.in-tests: false
+      file: docker/mysql/docker-compose.yml
+  jpa.hibernate.ddl-auto: update
+  datasource:
+    url: jdbc:mysql://localhost:3306/test
+    username: test
+    password: test

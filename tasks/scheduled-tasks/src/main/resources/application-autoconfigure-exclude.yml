@@ -1,0 +1,12 @@
+spring:
+  autoconfigure:
+    exclude:
+      - com.github.kagkarlsson.scheduler.boot.autoconfigure.DbSchedulerAutoConfiguration
+      - com.github.kagkarlsson.scheduler.boot.autoconfigure.DbSchedulerMetricsAutoConfiguration
+      - com.github.kagkarlsson.scheduler.boot.autoconfigure.DbSchedulerActuatorAutoConfiguration
+      - org.jobrunr.spring.autoconfigure.JobRunrAutoConfiguration
+      - org.jobrunr.spring.autoconfigure.storage.JobRunrInMemoryStorageAutoConfiguration
+      - org.jobrunr.spring.autoconfigure.storage.JobRunrMongoDBStorageAutoConfiguration
+      - org.jobrunr.spring.autoconfigure.storage.JobRunrDocumentDBStorageAutoConfiguration
+      - org.jobrunr.spring.autoconfigure.storage.JobRunrSqlStorageAutoConfiguration
+      - org.jobrunr.spring.autoconfigure.metrics.JobRunrMetricsAutoConfiguration
