@@ -1,3 +1,5 @@
+spring.profiles.default: h2-mem
+
 app.features:
   user:
     jobs-enabled: false

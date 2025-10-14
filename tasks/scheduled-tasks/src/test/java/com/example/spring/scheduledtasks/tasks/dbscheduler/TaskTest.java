@@ -2,7 +2,6 @@ package com.example.spring.scheduledtasks.tasks.dbscheduler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
-import static org.mockito.ArgumentMatchers.any;
 
 import com.github.kagkarlsson.scheduler.Scheduler;
 import com.github.kagkarlsson.scheduler.boot.autoconfigure.DbSchedulerAutoConfiguration;
@@ -22,15 +21,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.event.ApplicationEvents;
-import org.springframework.test.context.event.RecordApplicationEvents;
 
 @SpringBootTest(properties = {
     "db-scheduler.polling-interval=PT0.5S"
 })
-@ActiveProfiles("h2-mem")
-@RecordApplicationEvents
 @Slf4j
 class TaskTest {
 
@@ -58,8 +52,6 @@ class TaskTest {
   DataSource dataSource;
   @Autowired
   Scheduler scheduler;
-  @Autowired
-  ApplicationEvents applicationEvents;
 
   @Test
   void test() {
