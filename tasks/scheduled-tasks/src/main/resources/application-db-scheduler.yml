@@ -3,3 +3,6 @@ app.tasks:
     enabled: true
     startup-tasks:
       enabled: true
+
+db-scheduler:
+  polling-interval:
