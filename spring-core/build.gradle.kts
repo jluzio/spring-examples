@@ -65,6 +65,8 @@ dependencies {
   implementation("jakarta.interceptor:jakarta.interceptor-api:2.1.0")
   implementation("com.google.guava:guava:33.0.0-jre")
   implementation("org.apache.commons:commons-lang3")
+  implementation("io.github.resilience4j:resilience4j-spring-boot3:2.3.0")
+  implementation("io.vavr:vavr:0.10.7")
 
   testImplementation("org.springframework.boot:spring-boot-starter-test")
   testImplementation("io.projectreactor:reactor-test")

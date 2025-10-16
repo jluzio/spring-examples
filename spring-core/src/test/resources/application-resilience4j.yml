@@ -1,0 +1,95 @@
+resilience4j.circuitbreaker:
+  instances:
+    testService:
+      slidingWindowSize: 100
+    backendA:
+      registerHealthIndicator: true
+      slidingWindowSize: 100
+    backendB:
+      registerHealthIndicator: true
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 3
+      slidingWindowType: TIME_BASED
+      minimumNumberOfCalls: 20
+      waitDurationInOpenState: 50s
+      failureRateThreshold: 50
+      eventConsumerBufferSize: 10
+      recordFailurePredicate: com.example.spring.core.lib.resilience4j.RecordFailurePredicate
+
+resilience4j.retry:
+  instances:
+    testService:
+      maxAttempts: 3
+      waitDuration: PT0.2S
+      enableExponentialBackoff: true
+      exponentialBackoffMultiplier: 2
+      retryExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.io.IOException
+      ignoreExceptions:
+        - com.example.spring.core.lib.resilience4j.BusinessException
+    backendA:
+      maxAttempts: 3
+      waitDuration: 10s
+      enableExponentialBackoff: true
+      exponentialBackoffMultiplier: 2
+      retryExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.io.IOException
+      ignoreExceptions:
+        - com.example.spring.core.lib.resilience4j.BusinessException
+    backendB:
+      maxAttempts: 3
+      waitDuration: 10s
+      retryExceptions:
+        - org.springframework.web.client.HttpServerErrorException
+        - java.io.IOException
+      ignoreExceptions:
+        - com.example.spring.core.lib.resilience4j.BusinessException
+
+resilience4j.bulkhead:
+  instances:
+    testService:
+      max-concurrent-calls: 1
+      max-wait-duration: 250ms
+    backendA:
+      maxConcurrentCalls: 10
+    backendB:
+      maxWaitDuration: 10ms
+      maxConcurrentCalls: 20
+
+resilience4j.thread-pool-bulkhead:
+  instances:
+    backendC:
+      maxThreadPoolSize: 1
+      coreThreadPoolSize: 1
+      queueCapacity: 1
+      writableStackTraceEnabled: true
+
+resilience4j.ratelimiter:
+  instances:
+    testService:
+      limit-for-period: 2
+      limit-refresh-period: PT0.5S
+    backendA:
+      limitForPeriod: 10
+      limitRefreshPeriod: 1s
+      timeoutDuration: 0
+      registerHealthIndicator: true
+      eventConsumerBufferSize: 100
+    backendB:
+      limitForPeriod: 6
+      limitRefreshPeriod: 500ms
+      timeoutDuration: 3s
+
+resilience4j.timelimiter:
+  instances:
+    testService:
+      timeout-duration: 1s
+      cancel-running-future: true
+    backendA:
+      timeoutDuration: 2s
+      cancelRunningFuture: true
+    backendB:
+      timeoutDuration: 1s
+      cancelRunningFuture: false
