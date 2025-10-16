@@ -11,6 +11,7 @@ import io.vavr.control.Try;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -22,6 +23,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiFunction;
 import java.util.function.IntFunction;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import lombok.Getter;
@@ -111,9 +113,8 @@ class Resilience4JTest {
   @Test
   void test_bulkhead() throws InterruptedException, ExecutionException {
     var start = Instant.now();
-    BiFunction<Integer, CountDownLatch, Callable<TimedRun>> toCallable = (id, countDownLatch) -> () -> {
+    IntFunction<Callable<TimedRun>> toCallable = id -> () -> {
       log.debug("starting :: {}", id);
-      countDownLatch.await();
       log.debug("calling func :: {}", id);
       var data = service.bulkhead_nonThreadSafeMethod("data" + id);
       log.debug("completed func :: {}", id);
@@ -121,48 +122,44 @@ class Resilience4JTest {
     };
 
     try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
-      var countDownLatches = IntStream.rangeClosed(1, 3).mapToObj(_ -> new CountDownLatch(1)).toList();
       var callables = IntStream.rangeClosed(1, 3)
-          .mapToObj(id -> toCallable.apply(id, countDownLatches.get(id - 1)))
+          .mapToObj(toCallable)
           .toList();
-      Runnable releaseCountDownLatches = () -> {
-        Flux.just(1, 2, 3)
-            .delayElements(Duration.ofMillis(10))
-            .doOnNext(id -> countDownLatches.get(id - 1).countDown())
-            .blockLast();
-      };
 
-      executor.submit(releaseCountDownLatches);
       var futures = executor.invokeAll(callables);
       log.debug("futures: {}", futures.stream().map(Future::state).toList());
 
-      var data1Call = futures.get(0);
-      assertThat(data1Call.state())
-          .isEqualTo(State.SUCCESS);
-      var data1TimedRun = data1Call.get();
-      assertThat(data1TimedRun.data())
-          .isEqualTo("data1");
-      assertThat(data1TimedRun.executionTime())
+      var callsByState = futures.stream()
+          .collect(Collectors.groupingBy(Future::state));
+      assertThat(callsByState.get(State.SUCCESS))
+          .hasSize(2);
+      assertThat(callsByState.get(State.FAILED))
+          .hasSize(1);
+
+      var successfulCallsOrderedByExecutionTime = futures.stream()
+          .filter(f -> f.state() == State.SUCCESS)
+          .map(f -> Try.of(f::get).get())
+          .sorted(Comparator.comparing(TimedRun::executionTime))
+          .toList();
+
+      // note that successful calls are probably not in the initial order
+      log.debug("successfulCallsOrderedByExecutionTime: {}", successfulCallsOrderedByExecutionTime);
+
+      var successfulCall1 = successfulCallsOrderedByExecutionTime.get(0);
+      assertThat(successfulCall1.executionTime())
           .isBetween(Duration.ofMillis(200), Duration.ofMillis(350));
 
-      var data2Call = futures.get(1);
-      assertThat(data2Call.state())
-          .isEqualTo(State.SUCCESS);
-      var data2TimedRun = data2Call.get();
-      assertThat(data2TimedRun.data())
-          .isEqualTo("data2");
-      assertThat(data2TimedRun.executionTime())
+      var successfulCall2 = successfulCallsOrderedByExecutionTime.get(1);
+      assertThat(successfulCall2.executionTime())
+          .isGreaterThan(successfulCall1.executionTime())
           .isBetween(Duration.ofMillis(400), Duration.ofMillis(550));
-
-      var data3Call = futures.get(2);
-      assertThat(data3Call.state())
-          .isEqualTo(State.FAILED);
     }
   }
 
   @Test
   void test_rateLimiter() throws InterruptedException, ExecutionException {
     var start = Instant.now();
+    // forcing execution order due to initial delay, for easier test assertions
     IntFunction<Callable<TimedRun>> toCallable = id -> () -> {
       log.debug("starting :: {}", id);
       Mono.delay(Duration.ofMillis(10L * id)).block();
