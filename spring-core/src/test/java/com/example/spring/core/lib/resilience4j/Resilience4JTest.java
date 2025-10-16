@@ -13,14 +13,17 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.Future.State;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.BiFunction;
 import java.util.function.IntFunction;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -29,6 +32,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ActiveProfiles;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @SpringBootTest
@@ -107,9 +111,9 @@ class Resilience4JTest {
   @Test
   void test_bulkhead() throws InterruptedException, ExecutionException {
     var start = Instant.now();
-    IntFunction<Callable<TimedRun>> toCallable = id -> () -> {
+    BiFunction<Integer, CountDownLatch, Callable<TimedRun>> toCallable = (id, countDownLatch) -> () -> {
       log.debug("starting :: {}", id);
-      Mono.delay(Duration.ofMillis(20L * id)).block();
+      countDownLatch.await();
       log.debug("calling func :: {}", id);
       var data = service.bulkhead_nonThreadSafeMethod("data" + id);
       log.debug("completed func :: {}", id);
@@ -117,9 +121,18 @@ class Resilience4JTest {
     };
 
     try (var executor = Executors.newVirtualThreadPerTaskExecutor()) {
+      var countDownLatches = IntStream.rangeClosed(1, 3).mapToObj(_ -> new CountDownLatch(1)).toList();
       var callables = IntStream.rangeClosed(1, 3)
-          .mapToObj(toCallable)
+          .mapToObj(id -> toCallable.apply(id, countDownLatches.get(id - 1)))
           .toList();
+      Runnable releaseCountDownLatches = () -> {
+        Flux.just(1, 2, 3)
+            .delayElements(Duration.ofMillis(10))
+            .doOnNext(id -> countDownLatches.get(id - 1).countDown())
+            .blockLast();
+      };
+
+      executor.submit(releaseCountDownLatches);
       var futures = executor.invokeAll(callables);
       log.debug("futures: {}", futures.stream().map(Future::state).toList());
 
