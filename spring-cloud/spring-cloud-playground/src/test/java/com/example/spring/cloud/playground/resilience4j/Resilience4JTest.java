@@ -1,9 +1,9 @@
-package com.example.spring.core.lib.resilience4j;
+package com.example.spring.cloud.playground.resilience4j;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.example.spring.core.lib.resilience4j.Resilience4JTest.Config.ResilientService;
+import com.example.spring.cloud.playground.resilience4j.Resilience4JTest.Config.ResilientService;
 import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;

@@ -1,4 +1,4 @@
-package com.example.spring.core.lib.resilience4j;
+package com.example.spring.cloud.playground.resilience4j;
 
 import java.util.function.Predicate;
 

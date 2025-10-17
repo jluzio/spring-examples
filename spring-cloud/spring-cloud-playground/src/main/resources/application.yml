@@ -21,34 +21,3 @@ spring.cloud.openfeign:
       json-placeholder:
         url: https://jsonplaceholder.typicode.com
         loggerLevel: FULL
-
-resilience4j.circuitbreaker:
-  configs:
-    default:
-      registerHealthIndicator: true
-      wait-duration-in-open-state: PT5S
-      failure-rate-threshold: 50
-      minimum-number-of-calls: 3
-      sliding-window-type: COUNT_BASED
-      sliding-window-size: 10
-  instances:
-    user:
-      base-config: default
-
-resilience4j.timelimiter:
-  configs:
-    default:
-      timeoutDuration: 5s
-      cancelRunningFuture: true
-
-resilience4j.retry:
-  configs:
-    default:
-      max-attempts: 3
-  instances:
-    userRetry:
-      base-config: default
-#      maxAttempts: 3
-      waitDuration: 2s
-      enableExponentialBackoff: true
-      exponentialBackoffMultiplier: 2

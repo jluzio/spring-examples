@@ -1,4 +1,4 @@
-package com.example.spring.core.lib.resilience4j;
+package com.example.spring.cloud.playground.resilience4j;
 
 import io.github.resilience4j.bulkhead.BulkheadFullException;
 import io.github.resilience4j.circuitbreaker.CallNotPermittedException;

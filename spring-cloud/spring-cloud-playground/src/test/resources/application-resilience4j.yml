@@ -14,7 +14,7 @@ resilience4j.circuitbreaker:
       waitDurationInOpenState: 50s
       failureRateThreshold: 50
       eventConsumerBufferSize: 10
-      recordFailurePredicate: com.example.spring.core.lib.resilience4j.RecordFailurePredicate
+      recordFailurePredicate: com.example.spring.cloud.playground.resilience4j.RecordFailurePredicate
 
 resilience4j.retry:
   instances:
@@ -27,7 +27,7 @@ resilience4j.retry:
         - org.springframework.web.client.HttpServerErrorException
         - java.io.IOException
       ignoreExceptions:
-        - com.example.spring.core.lib.resilience4j.BusinessException
+        - com.example.spring.cloud.playground.resilience4j.BusinessException
     backendA:
       maxAttempts: 3
       waitDuration: 10s
@@ -37,7 +37,7 @@ resilience4j.retry:
         - org.springframework.web.client.HttpServerErrorException
         - java.io.IOException
       ignoreExceptions:
-        - com.example.spring.core.lib.resilience4j.BusinessException
+        - com.example.spring.cloud.playground.resilience4j.BusinessException
     backendB:
       maxAttempts: 3
       waitDuration: 10s
@@ -45,7 +45,7 @@ resilience4j.retry:
         - org.springframework.web.client.HttpServerErrorException
         - java.io.IOException
       ignoreExceptions:
-        - com.example.spring.core.lib.resilience4j.BusinessException
+        - com.example.spring.cloud.playground.resilience4j.BusinessException
 
 resilience4j.bulkhead:
   instances:
