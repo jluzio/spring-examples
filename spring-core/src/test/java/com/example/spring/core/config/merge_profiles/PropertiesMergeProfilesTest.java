@@ -6,15 +6,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
-import org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest(properties = "debug=true")
-class JavaConfigMergeProfilesTest {
+class PropertiesMergeProfilesTest {
 
   @Configuration
   @EnableAutoConfiguration
@@ -23,12 +22,18 @@ class JavaConfigMergeProfilesTest {
 
   }
 
-  @EnableAutoConfiguration(exclude = JacksonAutoConfiguration.class)
+  @EnableAutoConfiguration
+  @TestPropertySource(properties = {
+      "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration"
+  })
   static class Config1 {
 
   }
 
-  @EnableAutoConfiguration(exclude = TaskExecutionAutoConfiguration.class)
+  @EnableAutoConfiguration
+  @TestPropertySource(properties = {
+      "spring.autoconfigure.exclude=org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration"
+  })
   static class Config2 {
 
   }
