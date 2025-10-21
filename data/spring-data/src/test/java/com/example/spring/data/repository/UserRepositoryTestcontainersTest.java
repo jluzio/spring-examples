@@ -31,11 +31,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 //@SpringBootTest
 @DataJpaTest(properties = {
-    "spring.jpa.properties.jakarta.persistence.schema-generation.scripts.action=drop-and-create",
-    "spring.jpa.properties.jakarta.persistence.schema-generation.scripts.create-target=build/classes/java/test/gen/create.sql",
-    "spring.jpa.properties.jakarta.persistence.schema-generation.scripts.drop-target=build/classes/java/test/gen/drop.sql",
-    "spring.jpa.properties.jakarta.persistence.schema-generation.scripts.create-source=metadata",
-    "spring.jpa.properties.jakarta.persistence.schema-generation.scripts.drop-source=metadata"
+    "spring.jpa.properties.jakarta.persistence.schema-generation.scripts.action: drop-and-create",
+    "spring.jpa.properties.jakarta.persistence.schema-generation.scripts.create-target: build/classes/java/test/gen/create.sql",
+    "spring.jpa.properties.jakarta.persistence.schema-generation.scripts.drop-target: build/classes/java/test/gen/drop.sql",
+    "spring.jpa.properties.jakarta.persistence.schema-generation.scripts.create-source: metadata",
+    "spring.jpa.properties.jakarta.persistence.schema-generation.scripts.drop-source: metadata"
 })
 @AutoConfigureTestDatabase(replace = Replace.NONE)
 @Testcontainers

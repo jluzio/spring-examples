@@ -5,8 +5,7 @@ spring:
   jpa.hibernate.ddl-auto: update
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:file:./data/scheddb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL
-#    url: jdbc:h2:mem:scheddb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL
+    url: jdbc:h2:mem:scheddb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL
     username: sa
     password:
   sql.init.platform: h2
