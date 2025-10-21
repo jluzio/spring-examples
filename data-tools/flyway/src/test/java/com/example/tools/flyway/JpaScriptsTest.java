@@ -11,9 +11,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ActiveProfiles;
 
-@DataJpaTest(properties = "spring.flyway.enabled: false")
+@DataJpaTest
 @Slf4j
-@ActiveProfiles({"h2-mem", "jpa-gen-scripts"})
+@ActiveProfiles({"h2-mem", "jpa-gen-scripts", "flyway-disabled"})
 class JpaScriptsTest {
 
   @Value("file:${spring.jpa.properties.jakarta.persistence.schema-generation.scripts.create-target}")

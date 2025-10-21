@@ -1,6 +1,6 @@
 spring.application.name: scheduled-tasks
 
-spring.profiles.default: h2-file
+spring.profiles.default: h2-mem
 spring.docker.compose.enabled: false
 
 debug: true
