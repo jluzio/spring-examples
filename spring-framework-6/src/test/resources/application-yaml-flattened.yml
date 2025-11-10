@@ -1,0 +1,7 @@
+"example-service.settings.enabled": "true"
+"example-service.settings.name": "example-service"
+"example-service.settings.endpoint": "http://example-service:8080/v1"
+"example-service.settings.features.text.name": "text"
+"example-service.settings.features.text.values.from": "+351000000000"
+"example-service.settings.features.email.name": "email"
+"example-service.settings.features.email.values.from": "john.doe@server.com"

@@ -1,0 +1,1 @@
+spring.config.import: application-import.yml,application-import-2.yml
