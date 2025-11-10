@@ -1,0 +1,6 @@
+app:
+  test:
+    string: ahh yeah
+    csv: 1,2,3
+    composite: ${app.test.string} / ${app.test.csv}
+    composite-quoted: "${app.test.string} / ${app.test.csv}"
