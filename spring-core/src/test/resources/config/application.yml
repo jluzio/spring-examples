@@ -1,9 +1,0 @@
-app:
-  merged-profile-bean:
-    value: value2
-
-spring:
-  profiles:
-    active: defaultIncludedProfile1
-    group:
-      test-group: test1, test2

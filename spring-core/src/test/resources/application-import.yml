@@ -1,3 +1,0 @@
-spring.config.import: application-import-some-bean-feature.yml
-
-app.some-bean: ""
