@@ -1,2 +1,7 @@
 spring.application.name: spring-framework-7
 
+logging:
+  level:
+#    root: info
+    root: debug
+    com.example.spring: debug

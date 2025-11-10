@@ -17,7 +17,7 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 @SpringBootTest
 @Log4j2
-class HttpInterfaceExternalApiTest {
+class HttpServiceExternalApiTest {
 
   @Configuration
   static class Config {
