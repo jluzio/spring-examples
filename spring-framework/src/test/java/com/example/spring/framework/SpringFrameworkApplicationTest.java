@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 @Slf4j
-class SpringCoreApplicationTest {
+class SpringFrameworkApplicationTest {
 
   @Autowired
   private String appVersion;
