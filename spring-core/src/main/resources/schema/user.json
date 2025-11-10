@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2019-09/schema",
   "type": "object",
   "javaInterfaces": [
-    "com.example.spring.core.api.model.ModelPublicView"
+    "com.example.spring.framework.api.model.ModelPublicView"
   ],
   "allOf": [
     {
@@ -18,11 +18,11 @@
     },
     "email": {
       "type": "string",
-      "javaJsonView": "com.example.spring.core.api.model.view.Detailed"
+      "javaJsonView": "com.example.spring.framework.api.model.view.Detailed"
     },
     "fullName": {
       "type": "string",
-      "javaJsonView": "com.example.spring.core.api.model.view.Detailed"
+      "javaJsonView": "com.example.spring.framework.api.model.view.Detailed"
     }
   }
 }

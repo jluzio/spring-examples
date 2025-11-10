@@ -11,13 +11,13 @@
 > /META-INF/spring.factories
 > ~~~
 > org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-> com.example.spring.core.config.auto_configuration.SampleAutoConfiguration
+> com.example.spring.framework.config.auto_configuration.SampleAutoConfiguration
 > ~~~
 
 - Current: 
 > /META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports
 > ~~~
-> com.example.spring.core.config.auto_configuration.SampleAutoConfiguration
+> com.example.spring.framework.config.auto_configuration.SampleAutoConfiguration
 > ~~~
 
 ## WireMock

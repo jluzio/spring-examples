@@ -1,3 +1,5 @@
+spring.autoconfigure.exclude: org.springframework.boot.autoconfigure.task.TaskExecutionAutoConfiguration
+
 app.some-map-bean:
   key2: val2.2
   key3: val3

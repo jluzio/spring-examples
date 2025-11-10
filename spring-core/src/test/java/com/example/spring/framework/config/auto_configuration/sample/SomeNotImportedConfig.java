@@ -1,0 +1,13 @@
+package com.example.spring.framework.config.auto_configuration.sample;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class SomeNotImportedConfig {
+
+  @Bean
+  String someNotImportedConfigBean() {
+    return "someNotImportedConfigBean";
+  }
+}

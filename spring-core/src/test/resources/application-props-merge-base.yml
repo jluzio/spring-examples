@@ -1,3 +1,5 @@
+spring.autoconfigure.exclude: org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
+
 app.some-map-bean:
   key1: val1
   key2: val2
