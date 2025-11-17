@@ -2,6 +2,7 @@ package com.example.spring.framework.config_vars;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -31,6 +32,7 @@ class MergedProfileConfigurationPropertiesTest {
 
     private String name;
     private String value;
+    private List<String> list;
 
   }
 
@@ -39,8 +41,9 @@ class MergedProfileConfigurationPropertiesTest {
 
   @Test
   void test() {
+    // application.yml in test is higher priority. same applies to profiles vs default profile
     assertThat(properties)
-        .isEqualTo(new ConfigProperties("property1", "value2"));
+        .isEqualTo(new ConfigProperties("property1", "value2", List.of("priority-value")));
   }
 
 }

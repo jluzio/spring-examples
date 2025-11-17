@@ -30,6 +30,7 @@ app:
   merged-profile-bean:
     name: property1
     value: value1
+    list: default
   cache:
     templateSpec: expireAfterWrite=P1d
     specs:

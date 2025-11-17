@@ -1,6 +1,7 @@
 app:
   merged-profile-bean:
     value: value2
+    list: priority-value
 
 spring:
   profiles:
