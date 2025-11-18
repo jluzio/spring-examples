@@ -20,40 +20,34 @@ import tools.jackson.databind.SerializationContext;
 @SpringBootTest(classes = {JacksonAutoConfiguration.class, PostJacksonComponent.class})
 class Jackson3Test {
 
-  record User(String id, String username, String email) {
-
-  }
-  record Post(String id, String text, String userId) {
-
-  }
+  // @formatter:off
+  record User(String id, String username, String email) {}
+  record Post(String id, String text, String userId) {}
+  record Foo(String id) {}
 
   @JacksonComponent
   static class PostJacksonComponent {
-
     static class Serializer extends ObjectValueSerializer<Post> {
-
       @Override
       protected void serializeObject(Post value, JsonGenerator jgen, SerializationContext context) {
         jgen
             .writeStringProperty("_id", value.id())
             .writeStringProperty("_text", value.text())
-            .writeStringProperty("_userId", value.userId())
-        ;
+            .writeStringProperty("_userId", value.userId());
       }
     }
 
     static class Deserializer extends ObjectValueDeserializer<Post> {
-
       @Override
       protected Post deserializeObject(JsonParser jsonParser, DeserializationContext context, JsonNode tree) {
         return new Post(
             nullSafeValue(tree.get("_id"), String.class),
             nullSafeValue(tree.get("_text"), String.class),
-            nullSafeValue(tree.get("_userId"), String.class)
-        );
+            nullSafeValue(tree.get("_userId"), String.class));
       }
     }
   }
+  // @formatter:on
 
   @Autowired
   ObjectMapper objectMapper;
@@ -76,13 +70,11 @@ class Jackson3Test {
 
     var json = objectMapper.writeValueAsString(pojo);
     IO.println(json);
-    assertThat(json)
-        .isEqualTo("""
-            {"_id":"id","_text":"some post","_userId":"userId1"}""");
+    assertThat(json).isEqualTo("""
+        {"_id":"id","_text":"some post","_userId":"userId1"}""");
 
     var deserPojo = objectMapper.readValue(json, Post.class);
     assertThat(deserPojo)
         .isEqualTo(pojo);
   }
-
 }
