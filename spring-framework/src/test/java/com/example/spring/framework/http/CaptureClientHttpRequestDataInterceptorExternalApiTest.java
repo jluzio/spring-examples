@@ -13,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,6 +20,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
@@ -32,9 +31,9 @@ import org.springframework.test.context.event.ApplicationEvents;
 import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpClientErrorException.NotFound;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
-import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
 @Slf4j
@@ -48,35 +47,32 @@ class CaptureClientHttpRequestDataInterceptorExternalApiTest {
   static class Config {
 
     @Bean
-    RestTemplate restTemplate(Collection<ClientHttpRequestInterceptor> interceptors) {
-      return baseRestTemplateBuilder()
-          .additionalInterceptors(interceptors)
+    RestClient restClient(Collection<ClientHttpRequestInterceptor> interceptors) {
+      return baseRestClientBuilder()
+          .requestInterceptors(it -> it.addAll(interceptors))
           .build();
     }
 
     @Bean
-    RestTemplate restTemplateWithExceptionHandlingInterceptor(
+    RestClient restClientWithExceptionHandlingInterceptor(
         Collection<ClientHttpRequestInterceptor> interceptors) {
-      return baseRestTemplateBuilder()
-          .additionalInterceptors(interceptors)
-          .additionalInterceptors(new NotFoundInterceptor())
+      return baseRestClientBuilder()
+          .requestInterceptors(it -> it.addAll(interceptors))
+          .requestInterceptor(new NotFoundInterceptor())
           .build();
     }
 
-    RestTemplateBuilder baseRestTemplateBuilder() {
-      return new RestTemplateBuilder()
-          .rootUri(ROOT_URI)
-          .requestFactory(
-              () -> new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
+    RestClient.Builder baseRestClientBuilder() {
+      return RestClient.builder()
+          .baseUrl(ROOT_URI)
+          .requestFactory(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
     }
   }
 
   @Autowired
-  @Qualifier("restTemplate")
-  RestTemplate restTemplate;
+  RestClient restClient;
   @Autowired
-  @Qualifier("restTemplateWithExceptionHandlingInterceptor")
-  RestTemplate restTemplateWithExceptionHandlingInterceptor;
+  RestClient restClientWithExceptionHandlingInterceptor;
   @Autowired
   ApplicationEvents applicationEvents;
   @MockitoBean
@@ -93,7 +89,7 @@ class CaptureClientHttpRequestDataInterceptorExternalApiTest {
 
   @Test
   void test_ok() {
-    var responseEntity = restTemplate.getForEntity("/todos/1", String.class);
+    var responseEntity = getRetrieveEntity(restClient, "/todos/1");
     log.debug("responseEntity: {}", responseEntity);
     assertThat(responseEntity.getStatusCode())
         .isEqualTo(HttpStatus.OK);
@@ -118,8 +114,7 @@ class CaptureClientHttpRequestDataInterceptorExternalApiTest {
 
   @Test
   void test_not_found() {
-    assertThatThrownBy(() -> restTemplate.getForEntity(
-        "/todos/999999", String.class)
+    assertThatThrownBy(() -> getRetrieveEntity(restClient, "/todos/999999")
     )
         .isInstanceOf(RestClientException.class)
         .isInstanceOf(RestClientResponseException.class)
@@ -143,8 +138,7 @@ class CaptureClientHttpRequestDataInterceptorExternalApiTest {
 
   @Test
   void test_not_found_with_exception_interceptor() {
-    assertThatThrownBy(() -> restTemplateWithExceptionHandlingInterceptor.getForEntity(
-        "/todos/999999", String.class))
+    assertThatThrownBy(() -> getRetrieveEntity(restClientWithExceptionHandlingInterceptor, "/todos/999999"))
         .isInstanceOf(RestClientException.class)
         .isInstanceOf(RestClientResponseException.class)
         .isInstanceOf(NotFound.class)
@@ -164,6 +158,10 @@ class CaptureClientHttpRequestDataInterceptorExternalApiTest {
               .isNotNull()
               .isInstanceOf(NotFound.class);
         });
+  }
+
+  private ResponseEntity<String> getRetrieveEntity(RestClient restClient, String apiUri) {
+    return restClient.get().uri(apiUri).retrieve().toEntity(String.class);
   }
 
   static class LoggingEventListener {

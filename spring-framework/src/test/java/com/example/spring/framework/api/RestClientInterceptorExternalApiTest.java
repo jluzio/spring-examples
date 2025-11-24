@@ -13,28 +13,27 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClientResponseException;
-import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
 @Slf4j
-class RestTemplateInterceptorExternalApiTest {
+class RestClientInterceptorExternalApiTest {
 
   public static final String ROOT_URI = "https://jsonplaceholder.typicode.com";
 
@@ -42,31 +41,28 @@ class RestTemplateInterceptorExternalApiTest {
   static class Config {
 
     @Bean
-    public RestTemplateBuilder restTemplateBuilder() {
-      return new RestTemplateBuilder()
-          .rootUri(ROOT_URI);
-    }
-
-    @Bean
-    RestTemplate restTemplate(
-        RestTemplateBuilder builder,
+    RestClient restClient(
         Collection<ClientHttpRequestInterceptor> interceptors
     ) {
-      return builder
-          // the order in the list is is the order of application, otherwise the bean class should have an @Order or similar
-          .additionalInterceptors(interceptors)
+      // not reusing RestClient.Builder, since it would share interceptors
+      return RestClient.builder()
+          .baseUrl(ROOT_URI)
+          .requestInterceptors(clientHttpRequestInterceptors ->
+              clientHttpRequestInterceptors.addAll(interceptors))
           .build();
     }
 
     @Bean
-    RestTemplate reversedOrderRestTemplate(
-        RestTemplateBuilder builder,
+    RestClient reversedOrderRestClient(
         Collection<ClientHttpRequestInterceptor> interceptors
     ) {
       var reversedInterceptors = List.copyOf(interceptors).reversed();
-      return builder
-          // since the bean instances don't have an annotation for order, they won't be reordered by RestTemplate
-          .additionalInterceptors(reversedInterceptors)
+      // not reusing RestClient.Builder, since it would share interceptors
+      return RestClient.builder()
+          .baseUrl(ROOT_URI)
+          // since the bean instances don't have an annotation for order, they won't be reordered by RestClient
+          .requestInterceptors(clientHttpRequestInterceptors ->
+              clientHttpRequestInterceptors.addAll(reversedInterceptors))
           .build();
     }
 
@@ -98,13 +94,13 @@ class RestTemplateInterceptorExternalApiTest {
   }
 
   @Autowired
-  RestTemplate restTemplate;
+  RestClient restClient;
   @Autowired
-  RestTemplate reversedOrderRestTemplate;
+  RestClient reversedOrderRestClient;
 
   @Test
   void test_ok() {
-    var responseEntity = restTemplate.getForEntity("/todos/1", String.class);
+    var responseEntity = getRetrieveEntity(restClient, "/todos/1");
     log.debug("responseEntity: {}", responseEntity);
     assertThat(responseEntity.getStatusCode())
         .isEqualTo(HttpStatus.OK);
@@ -112,27 +108,26 @@ class RestTemplateInterceptorExternalApiTest {
 
   @Test
   void test_not_found() {
-    assertThatThrownBy(() -> restTemplate.getForEntity("/todos/999999", String.class))
+    assertThatThrownBy(() -> getRetrieveEntity(restClient, "/todos/999999"))
         .isInstanceOf(NoSuchElementException.class);
-    assertThatThrownBy(() -> reversedOrderRestTemplate.getForEntity("/todos/999999", String.class))
+    assertThatThrownBy(() -> getRetrieveEntity(reversedOrderRestClient, "/todos/999999"))
         .isInstanceOf(IllegalArgumentException.class);
   }
 
   @Test
   void test_other_httpMethod_error() {
-    var httpHeaders = new HttpHeaders();
-    httpHeaders.setAccept(List.of(MediaType.TEXT_XML));
-    log.debug("httpHeaders: {}", httpHeaders);
-    var requestEntity = new HttpEntity<>(httpHeaders);
-
-    assertThatThrownBy(() -> restTemplate.exchange(
-        "/todos/999999",
-        HttpMethod.TRACE,
-        requestEntity,
-        String.class)
+    var retrieve = restClient.method(HttpMethod.TRACE)
+        .uri("/todos/999999")
+        .header(HttpHeaders.ACCEPT, MediaType.TEXT_XML.toString())
+        .retrieve();
+    assertThatThrownBy(() -> retrieve.toEntity(String.class)
     )
         .isInstanceOf(RestClientException.class)
         .isInstanceOf(RestClientResponseException.class);
+  }
+
+  private ResponseEntity<String> getRetrieveEntity(RestClient restClient, String apiUri) {
+    return restClient.get().uri(apiUri).retrieve().toEntity(String.class);
   }
 
   @RequiredArgsConstructor
