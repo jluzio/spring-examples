@@ -2,24 +2,20 @@ package com.example.spring.framework.http;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.time.Clock;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -31,6 +27,9 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.event.ApplicationEvents;
+import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpClientErrorException.NotFound;
 import org.springframework.web.client.RestClientException;
@@ -39,6 +38,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest
 @Slf4j
+@RecordApplicationEvents
 class CaptureClientHttpRequestDataInterceptorExternalApiTest {
 
   public static final String ROOT_URI = "https://jsonplaceholder.typicode.com";
@@ -77,10 +77,8 @@ class CaptureClientHttpRequestDataInterceptorExternalApiTest {
   @Autowired
   @Qualifier("restTemplateWithExceptionHandlingInterceptor")
   RestTemplate restTemplateWithExceptionHandlingInterceptor;
-  @MockitoSpyBean
-  LoggingEventListener eventListener;
-  @Captor
-  ArgumentCaptor<ClientHttpRequestDataEvent> eventArgCaptor;
+  @Autowired
+  ApplicationEvents applicationEvents;
   @MockitoBean
   Clock clock;
   Instant instant1 = Instant.parse("2020-01-02T03:04:05Z");
@@ -103,12 +101,14 @@ class CaptureClientHttpRequestDataInterceptorExternalApiTest {
     assertThat(responseEntity.getBody())
         .isNotEmpty();
 
-    verify(eventListener).receiveEvent(eventArgCaptor.capture());
-    assertThat(eventArgCaptor.getValue())
+    var capturedEvent = getCapturedEvent();
+    assertThat(capturedEvent)
+        .isPresent()
+        .get()
         .isNotNull()
         .satisfies(it -> log.debug("event: {}", it));
 
-    var requestData = eventArgCaptor.getValue().getRequestData();
+    var requestData = capturedEvent.get().getRequestData();
     var responsePayload = requestData.getResponseBody();
     var responsePayloadString = new String(responsePayload);
     log.debug("responsePayloadString: {}", responsePayloadString);
@@ -128,12 +128,14 @@ class CaptureClientHttpRequestDataInterceptorExternalApiTest {
           RestClientResponseException restClientResponseException = (RestClientResponseException) throwable;
           log.debug("responseBody: {}", restClientResponseException.getResponseBodyAsString());
 
-          verify(eventListener).receiveEvent(eventArgCaptor.capture());
-          assertThat(eventArgCaptor.getValue())
+          var capturedEvent = getCapturedEvent();
+          assertThat(capturedEvent)
+              .isPresent()
+              .get()
               .isNotNull()
               .satisfies(it -> log.debug("event: {}", it));
 
-          var requestData = eventArgCaptor.getValue().getRequestData();
+          var requestData = capturedEvent.get().getRequestData();
           assertThat(requestData.getResponseException())
               .isNull();
         });
@@ -150,12 +152,14 @@ class CaptureClientHttpRequestDataInterceptorExternalApiTest {
           RestClientResponseException restClientResponseException = (RestClientResponseException) throwable;
           log.debug("responseBody: {}", restClientResponseException.getResponseBodyAsString());
 
-          verify(eventListener).receiveEvent(eventArgCaptor.capture());
-          assertThat(eventArgCaptor.getValue())
+          var capturedEvent = getCapturedEvent();
+          assertThat(capturedEvent)
+              .isPresent()
+              .get()
               .isNotNull()
               .satisfies(it -> log.debug("event: {}", it));
 
-          var requestData = eventArgCaptor.getValue().getRequestData();
+          var requestData = capturedEvent.get().getRequestData();
           assertThat(requestData.getResponseException())
               .isNotNull()
               .isInstanceOf(NotFound.class);
@@ -184,4 +188,9 @@ class CaptureClientHttpRequestDataInterceptorExternalApiTest {
       }
     }
   }
+
+  private Optional<ClientHttpRequestDataEvent> getCapturedEvent() {
+    return applicationEvents.stream(ClientHttpRequestDataEvent.class).findFirst();
+  }
+
 }

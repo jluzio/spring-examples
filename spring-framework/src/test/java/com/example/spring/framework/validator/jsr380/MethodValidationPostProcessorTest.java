@@ -1,5 +1,7 @@
 package com.example.spring.framework.validator.jsr380;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.constraints.Min;
 import org.junit.jupiter.api.Test;
@@ -8,8 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.validation.beanvalidation.MethodValidationPostProcessor;
-
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class MethodValidationPostProcessorTest {
 

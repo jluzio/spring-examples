@@ -1,9 +1,9 @@
 package com.example.spring.framework.serializer;
 
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.core.serializer.support.SerializationDelegate;
 import org.springframework.stereotype.Component;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.ObjectMapper;
 
 @Component
 public class Serializations {

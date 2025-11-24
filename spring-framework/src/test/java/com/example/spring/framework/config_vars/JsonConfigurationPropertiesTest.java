@@ -3,9 +3,6 @@ package com.example.spring.framework.config_vars;
 import static org.assertj.core.api.Assertions.assertThat;
 import static uk.org.webcompere.systemstubs.SystemStubs.withEnvironmentVariable;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.json.JsonMapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +17,8 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 @Log4j2
 class JsonConfigurationPropertiesTest {
@@ -45,7 +44,7 @@ class JsonConfigurationPropertiesTest {
     }
 
     @Bean
-    JsonData jsonDataEnv(@Value("${app.json-data:{}}") String json) throws JsonProcessingException {
+    JsonData jsonDataEnv(@Value("${app.json-data:{}}") String json) {
       ObjectMapper objectMapper = JsonMapper.builder().build();
       return objectMapper.readValue(json, JsonData.class);
     }
@@ -89,7 +88,7 @@ class JsonConfigurationPropertiesTest {
   }
 
   @Test
-  void test_mock_environment_properties() throws JsonProcessingException {
+  void test_mock_environment_properties() {
     appCtxRunner()
         .withSystemProperties("app.json-data=%s".formatted(objectMapper.writeValueAsString(expectedJsonData)))
         .run(ctx -> {

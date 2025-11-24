@@ -1,25 +1,26 @@
 package com.example.spring.framework.api;
 
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-
 import com.example.spring.framework.api.service.UserService;
 import com.example.types.User;
 import java.util.ArrayList;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webflux.test.autoconfigure.WebFluxTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
-//  We create a `@SpringBootTest`, starting an actual server on a `RANDOM_PORT`
-@SpringBootTest(webEnvironment = RANDOM_PORT)
+@WebFluxTest(controllers = {
+    com.example.spring.framework.api.webflux.UserRouter.class,
+    com.example.spring.framework.api.webflux.UserHandler.class,
+    com.example.spring.framework.api.webmvc.UserController.class
+})
+@Import({UserService.class})
 @Slf4j
 class UserTest {
 
-  // Spring Boot will create a `WebTestClient` for you,
-  // already configure and ready to issue requests against "localhost:RANDOM_PORT"
   @Autowired
   WebTestClient webTestClient;
   @Autowired

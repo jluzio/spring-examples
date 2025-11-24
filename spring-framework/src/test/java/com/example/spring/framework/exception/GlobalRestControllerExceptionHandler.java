@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class GlobalRestControllerExceptionHandler {
 
-  @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+  @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
   @ExceptionHandler({UnsupportedOperationException.class})
   public void handleUnsupportedOperation() {
     // nothing to add

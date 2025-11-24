@@ -10,6 +10,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 
+
 @SpringBootTest(
     classes = ExcludeAllPackagesTest.Config.class,
     properties = {"debug=true"})
@@ -18,6 +19,7 @@ class ExcludeAllPackagesTest {
   @ComponentScan(
       basePackages = "com.example.spring.framework.config.component_scan",
       excludeFilters = @Filter(
+          // this filter depends on AspectJ module
           type = FilterType.ASPECTJ,
           pattern = "com.example.spring.framework.config.component_scan..*"
       )

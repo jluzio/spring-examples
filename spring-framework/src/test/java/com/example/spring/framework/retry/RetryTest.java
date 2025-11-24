@@ -1,6 +1,5 @@
 package com.example.spring.framework.retry;
 
-import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -14,12 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.retry.RetryException;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.EnableRetry;
-import org.springframework.retry.annotation.Recover;
-import org.springframework.retry.annotation.Retryable;
-import org.springframework.retry.support.RetrySynchronizationManager;
+import org.springframework.resilience.annotation.EnableResilientMethods;
+import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Service;
 
 @SpringBootTest
@@ -27,8 +22,8 @@ import org.springframework.stereotype.Service;
 class RetryTest {
 
   @Configuration
-  @EnableRetry
-  @Import({FaultyService.class, FaultyAndRecoverService.class})
+  @EnableResilientMethods
+  @Import({FaultyService.class})
   static class Config {
 
   }
@@ -38,13 +33,12 @@ class RetryTest {
     @Getter
     AtomicInteger callCounter = new AtomicInteger(0);
 
-    @Retryable(maxAttempts = 3, backoff = @Backoff(100L))
+    @Retryable(maxRetries = 2, delay = 100L)
     public void faultyCall(int faults) {
-      var retryCount = requireNonNull(RetrySynchronizationManager.getContext()).getRetryCount();
       if (callCounter.incrementAndGet() > faults) {
-        log.debug("faultyCall({}) :: success", retryCount);
+        log.debug("faultyCall :: success");
       } else {
-        log.debug("faultyCall({}) :: error", retryCount);
+        log.debug("faultyCall :: error");
         throw new IllegalArgumentException("Some exception");
       }
     }
@@ -59,25 +53,12 @@ class RetryTest {
 
   }
 
-  @Service
-  public static class FaultyAndRecoverService extends BaseFaultyService {
-
-    @Recover
-    public void faultyCallRecover(IllegalArgumentException e, int faults) {
-      log.debug("faultyCallRecover :: {} | {}", e.getMessage(), faults);
-      throw new RetryException("max retries reached", e);
-    }
-  }
-
   @Autowired
   FaultyService faultyService;
-  @Autowired
-  FaultyAndRecoverService faultyAndRecoverService;
 
   @BeforeEach
   void clear() {
     faultyService.clear();
-    faultyAndRecoverService.clear();
   }
 
   @Test
@@ -96,16 +77,6 @@ class RetryTest {
     assertThatThrownBy(() -> faultyService.faultyCall(3))
         .isInstanceOf(IllegalArgumentException.class);
     assertThat(faultyService.getCallCounter().get())
-        .isEqualTo(3);
-    logEnd();
-  }
-
-  @Test
-  void test_custom_recover() {
-    logStart();
-    assertThatThrownBy(() -> faultyAndRecoverService.faultyCall(3))
-        .isInstanceOf(RetryException.class);
-    assertThat(faultyAndRecoverService.getCallCounter().get())
         .isEqualTo(3);
     logEnd();
   }

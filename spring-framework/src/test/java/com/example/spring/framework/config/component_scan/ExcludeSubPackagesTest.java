@@ -18,6 +18,7 @@ class ExcludeSubPackagesTest {
   @ComponentScan(
       basePackages = "com.example.spring.framework.config.component_scan",
       excludeFilters = @Filter(
+          // this filter depends on AspectJ module
           type = FilterType.ASPECTJ,
           pattern = "com.example.spring.framework.config.component_scan.**.*"
       )

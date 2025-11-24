@@ -13,8 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -123,11 +123,12 @@ class RestTemplateInterceptorExternalApiTest {
     var httpHeaders = new HttpHeaders();
     httpHeaders.setAccept(List.of(MediaType.TEXT_XML));
     log.debug("httpHeaders: {}", httpHeaders);
+    var requestEntity = new HttpEntity<>(httpHeaders);
 
     assertThatThrownBy(() -> restTemplate.exchange(
         "/todos/999999",
         HttpMethod.TRACE,
-        new HttpEntity<>(httpHeaders),
+        requestEntity,
         String.class)
     )
         .isInstanceOf(RestClientException.class)

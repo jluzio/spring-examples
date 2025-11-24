@@ -1,6 +1,5 @@
 package com.example.spring.framework.retry;
 
-import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -15,20 +14,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.retry.annotation.Backoff;
-import org.springframework.retry.annotation.EnableRetry;
-import org.springframework.retry.annotation.Retryable;
-import org.springframework.retry.support.RetrySynchronizationManager;
+import org.springframework.resilience.annotation.EnableResilientMethods;
+import org.springframework.resilience.annotation.Retryable;
 
 @SpringBootTest(properties = {
-    "svc.maxAttempts=2",
+    "svc.maxRetries=1",
     "svc.delay=150"
 })
 @Slf4j
 class ConfigurationRetryTest {
 
   @Configuration
-  @EnableRetry
+  @EnableResilientMethods
   @Import({FaultyService.class})
   static class Config {
 
@@ -39,13 +36,12 @@ class ConfigurationRetryTest {
     @Getter
     AtomicInteger callCounter = new AtomicInteger(0);
 
-    @Retryable(maxAttemptsExpression = "#{${svc.maxAttempts}}", backoff = @Backoff(delayExpression = "#{${svc.delay}}"))
+    @Retryable(maxRetriesString = "#{${svc.maxRetries}}", delayString = "#{${svc.delay}}")
     public void faultyCall(int faults) {
-      var retryCount = requireNonNull(RetrySynchronizationManager.getContext()).getRetryCount();
       if (callCounter.incrementAndGet() > faults) {
-        log.debug("faultyCall({}) :: success", retryCount);
+        log.debug("faultyCall :: success");
       } else {
-        log.debug("faultyCall({}) :: error", retryCount);
+        log.debug("faultyCall :: error");
         throw new IllegalArgumentException("Some exception");
       }
     }

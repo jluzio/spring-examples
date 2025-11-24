@@ -33,8 +33,8 @@ class WebTestClientFilterTest {
           HttpStatusCode::isError,
           ignored -> new IllegalArgumentException("Error"));
       var errorFilter2 = errorFilter(
-          HttpStatus.I_AM_A_TEAPOT::equals,
-          ignored -> new UnsupportedOperationException("I_AM_A_TEAPOT"));
+          HttpStatus.NOT_IMPLEMENTED::equals,
+          ignored -> new UnsupportedOperationException("NOT_IMPLEMENTED"));
       var logFilter = logFilter();
 
       return WebTestClient
@@ -51,7 +51,7 @@ class WebTestClientFilterTest {
 
       @GetMapping(path = "/exception")
       public String test() {
-        throw new ResponseStatusException(HttpStatus.I_AM_A_TEAPOT);
+        throw new ResponseStatusException(HttpStatus.NOT_IMPLEMENTED);
       }
     }
 

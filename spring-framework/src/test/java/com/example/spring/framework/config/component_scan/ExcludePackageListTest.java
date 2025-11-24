@@ -20,11 +20,13 @@ class ExcludePackageListTest {
       excludeFilters = {
           // filter classes in root of package
           @Filter(
+              // this filter depends on AspectJ module
               type = FilterType.ASPECTJ,
               pattern = "com.example.spring.framework.config.component_scan.config_b.*"
           ),
           // filter classes inside package
           @Filter(
+              // this filter depends on AspectJ module
               type = FilterType.ASPECTJ,
               pattern = "com.example.spring.framework.config.component_scan.config_c..*"
           )

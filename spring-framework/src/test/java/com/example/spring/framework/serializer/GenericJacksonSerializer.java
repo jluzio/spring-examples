@@ -1,10 +1,10 @@
 package com.example.spring.framework.serializer;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.io.OutputStream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.serializer.Serializer;
+import tools.jackson.databind.ObjectMapper;
 
 @RequiredArgsConstructor
 public class GenericJacksonSerializer implements Serializer<Object> {

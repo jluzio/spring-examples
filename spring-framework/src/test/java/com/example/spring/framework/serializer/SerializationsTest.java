@@ -3,17 +3,17 @@ package com.example.spring.framework.serializer;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
+import org.springframework.boot.jackson.autoconfigure.JacksonAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.type.TypeFactory;
 
 @SpringBootTest(classes = {Serializations.class, JacksonAutoConfiguration.class})
 class SerializationsTest {
@@ -53,7 +53,7 @@ class SerializationsTest {
 
   @Test
   void json() throws IOException {
-    var javaType = TypeFactory.defaultInstance().constructType(NonSerializableBean.class);
+    var javaType = TypeFactory.createDefaultInstance().constructType(NonSerializableBean.class);
     var serialization = serializations.json(objectMapper, javaType);
 
     var value = nonSerializableValue();
@@ -73,7 +73,7 @@ class SerializationsTest {
   void json_generics() throws IOException {
     var typeReference = new TypeReference<ArrayList<NonSerializableBean>>() {
     };
-    var javaType = TypeFactory.defaultInstance().constructType(typeReference);
+    var javaType = TypeFactory.createDefaultInstance().constructType(typeReference);
     var serialization = serializations.json(objectMapper, javaType);
 
     var value = new ArrayList<>(List.of(nonSerializableValue()));

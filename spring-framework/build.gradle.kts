@@ -1,6 +1,6 @@
 plugins {
   java
-  id("org.springframework.boot") version "3.5.4"
+  id("org.springframework.boot") version "4.0.0"
   id("io.spring.dependency-management") version "1.1.7"
 	id("org.jsonschema2pojo") version "1.2.1"
 }
@@ -42,13 +42,13 @@ repositories {
 }
 
 dependencies {
-  implementation("org.springframework.boot:spring-boot-starter")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
+  implementation("org.springframework.boot:spring-boot-starter-restclient")
   implementation("org.springframework.boot:spring-boot-starter-validation")
-  implementation("org.springframework.boot:spring-boot-starter-aop")
   implementation("org.springframework.boot:spring-boot-starter-actuator")
   implementation("org.springframework.boot:spring-boot-starter-cache")
-  implementation("org.springframework.retry:spring-retry")
+  implementation("org.springframework.boot:spring-boot-starter-aspectj")
+//  implementation("org.springframework.boot:spring-boot-starter-reactor")
 
   developmentOnly("org.springframework.boot:spring-boot-devtools")
   developmentOnly("org.springframework.boot:spring-boot-docker-compose")
@@ -66,7 +66,14 @@ dependencies {
   implementation("org.apache.commons:commons-lang3")
   implementation("io.vavr:vavr:0.10.7")
 
-  testImplementation("org.springframework.boot:spring-boot-starter-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-webflux-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-restclient-test")
+  testImplementation("org.springframework.boot:spring-boot-resttestclient")
+  testImplementation("org.springframework.boot:spring-boot-starter-cache-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-actuator-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-aspectj-test")
+//  testImplementation("org.springframework.boot:spring-boot-starter-reactor-test")
   testImplementation("io.projectreactor:reactor-test")
   /* WARNING:
      WireMock 3.3.1 has a dependency mismatch with Spring Boot 3.2.2.

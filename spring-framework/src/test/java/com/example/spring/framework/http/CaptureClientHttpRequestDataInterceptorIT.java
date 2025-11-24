@@ -2,21 +2,19 @@ package com.example.spring.framework.http;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.restclient.RestTemplateBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.event.EventListener;
@@ -28,7 +26,8 @@ import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
+import org.springframework.test.context.event.ApplicationEvents;
+import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -40,6 +39,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @Slf4j
+@RecordApplicationEvents
 class CaptureClientHttpRequestDataInterceptorIT {
 
   @TestConfiguration
@@ -76,12 +76,10 @@ class CaptureClientHttpRequestDataInterceptorIT {
   @Autowired
   @Qualifier("restTemplateWithExceptionHandlingInterceptor")
   RestTemplate restTemplateWithExceptionHandlingInterceptor;
-  @MockitoSpyBean
-  LoggingEventListener eventListener;
-  @Captor
-  ArgumentCaptor<ClientHttpRequestDataEvent> eventArgCaptor;
   @LocalServerPort
   int port;
+  @Autowired
+  ApplicationEvents applicationEvents;
 
 
   @Test
@@ -95,12 +93,14 @@ class CaptureClientHttpRequestDataInterceptorIT {
     assertThat(responseEntity.getBody())
         .isNotEmpty();
 
-    verify(eventListener).receiveEvent(eventArgCaptor.capture());
-    assertThat(eventArgCaptor.getValue())
+    var capturedEvent = getCapturedEvent();
+    assertThat(capturedEvent)
+        .isPresent()
+        .get()
         .isNotNull()
         .satisfies(it -> log.debug("event: {}", it));
 
-    var requestData = eventArgCaptor.getValue().getRequestData();
+    var requestData = capturedEvent.get().getRequestData();
     var responsePayload = requestData.getResponseBody();
     var responsePayloadString = new String(responsePayload);
     log.debug("responsePayloadString: {}", responsePayloadString);
@@ -121,12 +121,14 @@ class CaptureClientHttpRequestDataInterceptorIT {
           RestClientResponseException restClientResponseException = (RestClientResponseException) throwable;
           log.debug("responseBody: {}", restClientResponseException.getResponseBodyAsString());
 
-          verify(eventListener).receiveEvent(eventArgCaptor.capture());
-          assertThat(eventArgCaptor.getValue())
+          var capturedEvent = getCapturedEvent();
+          assertThat(capturedEvent)
+              .isPresent()
+              .get()
               .isNotNull()
               .satisfies(it -> log.debug("event: {}", it));
 
-          var requestData = eventArgCaptor.getValue().getRequestData();
+          var requestData = capturedEvent.get().getRequestData();
           assertThat(requestData.getResponseException())
               .isNull();
         });
@@ -144,12 +146,14 @@ class CaptureClientHttpRequestDataInterceptorIT {
           RestClientResponseException restClientResponseException = (RestClientResponseException) throwable;
           log.debug("responseBody: {}", restClientResponseException.getResponseBodyAsString());
 
-          verify(eventListener).receiveEvent(eventArgCaptor.capture());
-          assertThat(eventArgCaptor.getValue())
+          var capturedEvent = getCapturedEvent();
+          assertThat(capturedEvent)
+              .isPresent()
+              .get()
               .isNotNull()
               .satisfies(it -> log.debug("event: {}", it));
 
-          var requestData = eventArgCaptor.getValue().getRequestData();
+          var requestData = capturedEvent.get().getRequestData();
           assertThat(requestData.getResponseException())
               .isNull();
         });
@@ -167,12 +171,14 @@ class CaptureClientHttpRequestDataInterceptorIT {
           RestClientResponseException restClientResponseException = (RestClientResponseException) throwable;
           log.debug("responseBody: {}", restClientResponseException.getResponseBodyAsString());
 
-          verify(eventListener).receiveEvent(eventArgCaptor.capture());
-          assertThat(eventArgCaptor.getValue())
+          var capturedEvent = getCapturedEvent();
+          assertThat(capturedEvent)
+              .isPresent()
+              .get()
               .isNotNull()
               .satisfies(it -> log.debug("event: {}", it));
 
-          var requestData = eventArgCaptor.getValue().getRequestData();
+          var requestData = capturedEvent.get().getRequestData();
           assertThat(requestData.getResponseException())
               .isNotNull()
               .isInstanceOf(NotFound.class);
@@ -193,8 +199,8 @@ class CaptureClientHttpRequestDataInterceptorIT {
 
     @GetMapping("/data/error")
     public ResponseEntity<String> dataError() {
-      return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT)
-          .body("I'm a teapot!");
+      return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED)
+          .body("NOT_IMPLEMENTED");
     }
 
     @GetMapping("/data/{id}")
@@ -226,4 +232,9 @@ class CaptureClientHttpRequestDataInterceptorIT {
       }
     }
   }
+
+  private Optional<ClientHttpRequestDataEvent> getCapturedEvent() {
+    return applicationEvents.stream(ClientHttpRequestDataEvent.class).findFirst();
+  }
+
 }

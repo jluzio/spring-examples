@@ -1,9 +1,7 @@
 package com.example.spring.framework.log;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.logging.LogFactory;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
@@ -29,6 +27,7 @@ class LogTest {
   }
 
   @Test
+  @SuppressWarnings("java:S2699")
   void test_groups() {
     var logCustom1 = LoggerFactory.getLogger("com.example.custom1");
     logCustom1.trace("testing group - custom1");

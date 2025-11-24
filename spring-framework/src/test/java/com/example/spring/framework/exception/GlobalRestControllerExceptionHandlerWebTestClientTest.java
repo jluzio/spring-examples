@@ -4,9 +4,9 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -41,6 +41,6 @@ class GlobalRestControllerExceptionHandlerWebTestClientTest {
         .accept(MediaType.TEXT_PLAIN)
         .exchange()
         // and use the dedicated DSL to test assertions against the response
-        .expectStatus().isEqualTo(HttpStatus.I_AM_A_TEAPOT);
+        .expectStatus().isEqualTo(HttpStatus.NOT_IMPLEMENTED);
   }
 }

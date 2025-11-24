@@ -1,7 +1,6 @@
 package com.example.spring.framework.events.concurrent;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.awaitility.Awaitility.await;
 
 import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;

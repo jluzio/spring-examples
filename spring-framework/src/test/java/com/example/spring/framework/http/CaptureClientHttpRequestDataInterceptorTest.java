@@ -2,31 +2,29 @@ package com.example.spring.framework.http;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.AbstractStringAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.context.bean.override.mockito.MockitoSpyBean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.event.EventListener;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.mock.http.client.MockClientHttpRequest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.event.ApplicationEvents;
+import org.springframework.test.context.event.RecordApplicationEvents;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpClientErrorException.NotFound;
 import org.springframework.web.client.RestClientException;
@@ -34,20 +32,19 @@ import org.springframework.web.client.RestClientResponseException;
 
 @SpringBootTest
 @Slf4j
+@RecordApplicationEvents
 class CaptureClientHttpRequestDataInterceptorTest {
 
   @Configuration
-  @Import({CaptureClientHttpRequestDataInterceptor.class, NopEventListener.class})
+  @Import({CaptureClientHttpRequestDataInterceptor.class})
   static class Config {
 
   }
 
   @Autowired
   CaptureClientHttpRequestDataInterceptor interceptor;
-  @Captor
-  ArgumentCaptor<ClientHttpRequestDataEvent> eventArgCaptor;
-  @MockitoSpyBean
-  NopEventListener eventListener;
+  @Autowired
+  ApplicationEvents applicationEvents;
   @MockitoBean
   Clock clock;
   Instant instant1 = Instant.parse("2020-01-02T03:04:05Z");
@@ -74,12 +71,14 @@ class CaptureClientHttpRequestDataInterceptorTest {
     assertResponseStringData(response)
         .isEqualTo(responseBody);
 
-    verify(eventListener).listen(eventArgCaptor.capture());
-    assertThat(eventArgCaptor.getValue())
+    var capturedEvent = getCapturedEvent();
+    assertThat(capturedEvent)
+        .isPresent()
+        .get()
         .isNotNull()
         .satisfies(it -> log.debug("event: {}", it));
 
-    var requestData = eventArgCaptor.getValue().getRequestData();
+    var requestData = capturedEvent.get().getRequestData();
     assertThat(requestData)
         .satisfies(it -> assertThat(it.getResponseException()).isNull())
         .usingRecursiveComparison()
@@ -105,23 +104,25 @@ class CaptureClientHttpRequestDataInterceptorTest {
   void test_status_error() throws IOException {
     var request = mockClientHttpRequest("/data");
     var requestBody = "dummy";
-    var responseBody = HttpStatus.I_AM_A_TEAPOT.getReasonPhrase();
+    var responseBody = HttpStatus.NOT_IMPLEMENTED.getReasonPhrase();
     var execution = mockClientHttpRequestExecution(
-        responseBody.getBytes(), HttpStatus.I_AM_A_TEAPOT);
+        responseBody.getBytes(), HttpStatus.NOT_IMPLEMENTED);
 
     var response = interceptor.intercept(request, requestBody.getBytes(), execution);
 
     assertThat(response.getStatusCode())
-        .isEqualTo(HttpStatus.I_AM_A_TEAPOT);
+        .isEqualTo(HttpStatus.NOT_IMPLEMENTED);
     assertResponseStringData(response)
         .isEqualTo(responseBody);
 
-    verify(eventListener).listen(eventArgCaptor.capture());
-    assertThat(eventArgCaptor.getValue())
+    var capturedEvent = getCapturedEvent();
+    assertThat(capturedEvent)
+        .isPresent()
+        .get()
         .isNotNull()
         .satisfies(it -> log.debug("event: {}", it));
 
-    var requestData = eventArgCaptor.getValue().getRequestData();
+    var requestData = capturedEvent.get().getRequestData();
     assertThat(requestData)
         .satisfies(it -> assertThat(it.getResponseException()).isNull())
         .usingRecursiveComparison()
@@ -156,13 +157,15 @@ class CaptureClientHttpRequestDataInterceptorTest {
         .isInstanceOf(RestClientException.class)
         .isInstanceOf(RestClientResponseException.class)
         .isInstanceOf(NotFound.class)
-        .satisfies(throwable -> {
-          verify(eventListener).listen(eventArgCaptor.capture());
-          assertThat(eventArgCaptor.getValue())
+        .satisfies(_ -> {
+          var capturedEvent = getCapturedEvent();
+          assertThat(capturedEvent)
+              .isPresent()
+              .get()
               .isNotNull()
               .satisfies(it -> log.debug("event: {}", it));
 
-          var requestData = eventArgCaptor.getValue().getRequestData();
+          var requestData = capturedEvent.get().getRequestData();
           assertThat(requestData)
               .usingRecursiveComparison()
               .ignoringExpectedNullFields()
@@ -194,13 +197,15 @@ class CaptureClientHttpRequestDataInterceptorTest {
 
     assertThatThrownBy(() -> interceptor.intercept(request, requestBodyBytes, execution))
         .isInstanceOf(IOException.class)
-        .satisfies(throwable -> {
-          verify(eventListener).listen(eventArgCaptor.capture());
-          assertThat(eventArgCaptor.getValue())
+        .satisfies(_ -> {
+          var capturedEvent = getCapturedEvent();
+          assertThat(capturedEvent)
+              .isPresent()
+              .get()
               .isNotNull()
               .satisfies(it -> log.debug("event: {}", it));
 
-          var requestData = eventArgCaptor.getValue().getRequestData();
+          var requestData = capturedEvent.get().getRequestData();
           assertThat(requestData)
               .usingRecursiveComparison()
               .ignoringExpectedNullFields()
@@ -220,6 +225,10 @@ class CaptureClientHttpRequestDataInterceptorTest {
           assertThat(requestData.getResponseException())
               .isInstanceOf(IOException.class);
         });
+  }
+
+  private Optional<ClientHttpRequestDataEvent> getCapturedEvent() {
+    return applicationEvents.stream(ClientHttpRequestDataEvent.class).findFirst();
   }
 
   MockClientHttpRequest mockClientHttpRequest(String uri) {
@@ -248,11 +257,4 @@ class CaptureClientHttpRequestDataInterceptorTest {
     };
   }
 
-  static class NopEventListener {
-
-    @EventListener
-    public void listen(ClientHttpRequestDataEvent event) {
-      // nop
-    }
-  }
 }
