@@ -1,8 +1,7 @@
-package com.example.spring.framework.features;
+package com.example.spring.framework.jackson;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.spring.framework.features.Jackson3Test.PostJacksonComponent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jackson.JacksonComponent;
@@ -17,7 +16,7 @@ import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.SerializationContext;
 
-@SpringBootTest(classes = {JacksonAutoConfiguration.class, PostJacksonComponent.class})
+@SpringBootTest(classes = {JacksonAutoConfiguration.class, Jackson3Test.PostJacksonComponent.class})
 class Jackson3Test {
 
   // @formatter:off

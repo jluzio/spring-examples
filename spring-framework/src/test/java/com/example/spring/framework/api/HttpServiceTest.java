@@ -1,4 +1,4 @@
-package com.example.spring.framework.features;
+package com.example.spring.framework.api;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

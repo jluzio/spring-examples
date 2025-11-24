@@ -1,7 +1,0 @@
-spring.application.name: spring-framework-7
-
-logging:
-  level:
-    root: info
-    com.example.spring: debug
-    org.springframework: info
