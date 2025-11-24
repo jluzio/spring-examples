@@ -16,7 +16,7 @@ public class ObservableController {
   private final ObservationRegistry observationRegistry;
 
 
-  @GetMapping(path = "/webmvc/observable/users/{userId}")
+  @GetMapping(path = "/observable/users/{userId}")
   public String users(@PathVariable String userId) {
     return Observation.createNotStarted("getUserById", observationRegistry)
         .observe(() -> {

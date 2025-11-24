@@ -2,18 +2,20 @@ package com.example.spring.framework.api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webflux.test.autoconfigure.WebFluxTest;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.test.web.servlet.client.RestTestClient;
 
-@WebFluxTest(controllers = QueryParamsController.class)
+@WebMvcTest(QueryParamsController.class)
+@AutoConfigureRestTestClient
 class QueryParamsControllerTest {
 
   @Autowired
-  WebTestClient webTestClient;
+  RestTestClient restTestClient;
 
   @Test
   void params_default() {
-    webTestClient
+    restTestClient
         .get().uri("/query-params?paramFoo=foo&paramBar=bar")
         .exchange()
         .expectStatus().isOk()
@@ -24,7 +26,7 @@ class QueryParamsControllerTest {
 
   @Test
   void params_custom_setters() {
-    webTestClient
+    restTestClient
         .get().uri("/query-params?paramFoo=foo&param_bar=bar")
         .exchange()
         .expectStatus().isOk()

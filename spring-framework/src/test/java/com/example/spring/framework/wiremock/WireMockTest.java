@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 @EnableWireMock({
@@ -35,19 +35,15 @@ class WireMockTest {
     String message = "World!";
     stubFor(get("/hello").willReturn(ok(message)));
 
-    WebClient webClient = WebClient.builder()
+    RestClient restClient = RestClient.builder()
         .baseUrl(wiremock.baseUrl())
         .build();
 
-    String response = webClient.get().uri("/hello")
-        .exchangeToMono(clientResponse -> clientResponse.bodyToMono(String.class))
-        .block();
+    String response = restClient.get().uri("/hello").retrieve().body(String.class);
     log.info(response);
     assertThat(response).isEqualTo(message);
 
-    String messageSimpleResponse = webClient.get().uri("/message/simple")
-        .exchangeToMono(clientResponse -> clientResponse.bodyToMono(String.class))
-        .block();
+    String messageSimpleResponse = restClient.get().uri("/message/simple").retrieve().body(String.class);
     log.info(messageSimpleResponse);
     assertThat(messageSimpleResponse).isEqualTo("Hello world!");
   }

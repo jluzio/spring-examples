@@ -42,7 +42,7 @@ repositories {
 }
 
 dependencies {
-  implementation("org.springframework.boot:spring-boot-starter-webflux")
+  implementation("org.springframework.boot:spring-boot-starter-webmvc")
   implementation("org.springframework.boot:spring-boot-starter-restclient")
   implementation("org.springframework.boot:spring-boot-starter-validation")
   implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -59,6 +59,9 @@ dependencies {
   annotationProcessor("org.projectlombok:lombok")
   testAnnotationProcessor("org.projectlombok:lombok")
 
+  implementation(platform("io.projectreactor:reactor-bom:2025.0.0"))
+  implementation("io.projectreactor:reactor-core")
+
   implementation("org.ehcache:ehcache:3.10.8")
   implementation("javax.cache:cache-api")
   implementation("com.github.ben-manes.caffeine:caffeine:3.1.8")
@@ -66,7 +69,7 @@ dependencies {
   implementation("org.apache.commons:commons-lang3")
   implementation("io.vavr:vavr:0.10.7")
 
-  testImplementation("org.springframework.boot:spring-boot-starter-webflux-test")
+  testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
   testImplementation("org.springframework.boot:spring-boot-starter-restclient-test")
   testImplementation("org.springframework.boot:spring-boot-resttestclient")
   testImplementation("org.springframework.boot:spring-boot-starter-cache-test")
@@ -74,6 +77,7 @@ dependencies {
   testImplementation("org.springframework.boot:spring-boot-starter-validation-test")
   testImplementation("org.springframework.boot:spring-boot-starter-aspectj-test")
 //  testImplementation("org.springframework.boot:spring-boot-starter-reactor-test")
+
   testImplementation("io.projectreactor:reactor-test")
   /* WARNING:
      WireMock 3.3.1 has a dependency mismatch with Spring Boot 3.2.2.

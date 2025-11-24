@@ -3,10 +3,9 @@ package com.example.spring.framework.api.service;
 import com.example.types.User;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @Component
 public class UserService {
@@ -17,15 +16,14 @@ public class UserService {
       user("3", "tom.doe")
   );
 
-  public Flux<User> getUsers() {
-    return Flux.fromIterable(users);
+  public List<User> getUsers() {
+    return users;
   }
 
-  public Mono<User> findUser(String id) {
-    var maybeUser = users.stream()
+  public Optional<User> findUser(String id) {
+    return users.stream()
         .filter(u -> Objects.equals(u.getId(), id))
         .findFirst();
-    return Mono.justOrEmpty(maybeUser);
   }
 
   private User user(String id, String username) {

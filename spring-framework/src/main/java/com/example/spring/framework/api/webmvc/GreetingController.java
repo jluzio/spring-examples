@@ -10,12 +10,12 @@ public class GreetingController {
 
   }
 
-  @GetMapping(path = "/webmvc/hello")
+  @GetMapping(path = "/greetings/hello")
   public String hello() {
     return "Hello, WebMvc Spring!";
   }
 
-  @GetMapping(path = "/webmvc/hello-message")
+  @GetMapping(path = "/greetings/hello-message")
   public Message helloMessage() {
     return new Message("Hello, WebMvc Spring!", "WebMvc Spring");
   }

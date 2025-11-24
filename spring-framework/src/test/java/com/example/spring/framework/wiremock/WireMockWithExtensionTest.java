@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.client.RestClient;
 
 @SpringBootTest
 @Slf4j
@@ -28,13 +28,11 @@ class WireMockWithExtensionTest {
     String message = "World!";
     wireMock.stubFor(get("/hello").willReturn(ok(message)));
 
-    WebClient webClient = WebClient.builder()
+    RestClient restClient = RestClient.builder()
         .baseUrl(wireMock.getRuntimeInfo().getHttpBaseUrl())
         .build();
 
-    String response = webClient.get().uri("/hello")
-        .exchangeToMono(clientResponse -> clientResponse.bodyToMono(String.class))
-        .block();
+    String response = restClient.get().uri("/hello").retrieve().body(String.class);
     log.info(response);
     assertThat(response).isEqualTo(message);
   }

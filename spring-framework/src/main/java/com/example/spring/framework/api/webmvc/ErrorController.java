@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ErrorController {
 
-  @GetMapping(path = "/webmvc/error/users/{userId}")
+  @GetMapping(path = "/error/users/{userId}")
   public String users(@PathVariable String userId) {
     Assert.state(StringUtils.isNumeric(userId), "userId must not be numeric");
     return "Requested details for user %s".formatted(userId);

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class HeadersController {
 
-  @GetMapping(path = "/webmvc/headers")
+  @GetMapping(path = "/debug/headers")
   public String headers(
       @RequestHeader HttpHeaders httpHeaders,
       @RequestHeader Map<String, String> httpHeadersAsMap,

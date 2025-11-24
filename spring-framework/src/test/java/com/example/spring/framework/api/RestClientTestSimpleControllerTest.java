@@ -4,21 +4,23 @@ import com.example.spring.framework.api.webmvc.GreetingController;
 import com.example.spring.framework.api.webmvc.GreetingController.Message;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webflux.test.autoconfigure.WebFluxTest;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.servlet.client.RestTestClient;
 
-@WebFluxTest(controllers = GreetingController.class)
-class WebFluxTestSimpleControllerTest {
+@WebMvcTest(GreetingController.class)
+@AutoConfigureRestTestClient
+class RestClientTestSimpleControllerTest {
 
   @Autowired
-  WebTestClient webTestClient;
+  RestTestClient restTestClient;
 
   @Test
   void test_hello() {
-    webTestClient
+    restTestClient
         // Create a GET request to test an endpoint
-        .get().uri("/webmvc/hello")
+        .get().uri("/greetings/hello")
         .accept(MediaType.TEXT_PLAIN)
         .exchange()
         // and use the dedicated DSL to test assertions against the response
@@ -28,9 +30,9 @@ class WebFluxTestSimpleControllerTest {
 
   @Test
   void test_hello_message_json() {
-    webTestClient
+    restTestClient
         // Create a GET request to test an endpoint
-        .get().uri("/webmvc/hello-message")
+        .get().uri("/greetings/hello-message")
         .exchange()
         // and use the dedicated DSL to test assertions against the response
         .expectStatus().isOk()
@@ -42,9 +44,9 @@ class WebFluxTestSimpleControllerTest {
 
   @Test
   void test_hello_message_object() {
-    webTestClient
+    restTestClient
         // Create a GET request to test an endpoint
-        .get().uri("/webmvc/hello-message")
+        .get().uri("/greetings/hello-message")
         .exchange()
         // and use the dedicated DSL to test assertions against the response
         .expectStatus().isOk()
