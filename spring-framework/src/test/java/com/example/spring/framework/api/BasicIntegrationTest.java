@@ -22,7 +22,7 @@ class BasicIntegrationTest {
 
   @Test
   void test() {
-    restTestClient.get().uri("/hello")
+    restTestClient.get().uri("/tests/hello")
         .exchange()
         .expectStatus().isOk()
         .expectBody(String.class).isEqualTo("Hello World!");
@@ -31,7 +31,7 @@ class BasicIntegrationTest {
     var alternativeClient = RestTestClient.bindToServer()
         .baseUrl(baseUrl)
         .build();
-    alternativeClient.get().uri("/hello")
+    alternativeClient.get().uri("/tests/hello")
         .exchange()
         .expectStatus().isOk()
         .expectBody(String.class).isEqualTo("Hello World!");
@@ -39,7 +39,7 @@ class BasicIntegrationTest {
     var restClient = RestClient.builder()
         .baseUrl(baseUrl)
         .build();
-    assertThat(restClient.get().uri("/hello").retrieve().toEntity(String.class))
+    assertThat(restClient.get().uri("/tests/hello").retrieve().toEntity(String.class))
         .satisfies(it -> assertThat(it.getStatusCode().is2xxSuccessful()).isTrue())
         .satisfies(it -> assertThat(it.getBody()).isEqualTo("Hello World!"));
   }

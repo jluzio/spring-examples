@@ -33,13 +33,13 @@ class WireMockTest {
     WireMock.configureFor(wiremock.port());
 
     String message = "World!";
-    stubFor(get("/hello").willReturn(ok(message)));
+    stubFor(get("/tests/hello").willReturn(ok(message)));
 
     RestClient restClient = RestClient.builder()
         .baseUrl(wiremock.baseUrl())
         .build();
 
-    String response = restClient.get().uri("/hello").retrieve().body(String.class);
+    String response = restClient.get().uri("/tests/hello").retrieve().body(String.class);
     log.info(response);
     assertThat(response).isEqualTo(message);
 

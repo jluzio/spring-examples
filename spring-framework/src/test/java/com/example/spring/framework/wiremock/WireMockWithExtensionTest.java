@@ -26,13 +26,13 @@ class WireMockWithExtensionTest {
     log.debug("{}", wiremockServerPort);
 
     String message = "World!";
-    wireMock.stubFor(get("/hello").willReturn(ok(message)));
+    wireMock.stubFor(get("/tests/hello").willReturn(ok(message)));
 
     RestClient restClient = RestClient.builder()
         .baseUrl(wireMock.getRuntimeInfo().getHttpBaseUrl())
         .build();
 
-    String response = restClient.get().uri("/hello").retrieve().body(String.class);
+    String response = restClient.get().uri("/tests/hello").retrieve().body(String.class);
     log.info(response);
     assertThat(response).isEqualTo(message);
   }

@@ -7,8 +7,8 @@ class BasicRestTestClientTest {
 
   @Test
   void test() {
-    var restTestClient = RestTestClient.bindToController(new HelloController()).build();
-    restTestClient.get().uri("/hello")
+    var restTestClient = RestTestClient.bindToController(new TestsHelloController()).build();
+    restTestClient.get().uri("/tests/hello")
         .exchange()
         .expectStatus().isOk()
         .expectBody(String.class).isEqualTo("Hello World!");

@@ -12,7 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.client.RestTestClient;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-@WebMvcTest(controllers = HelloController.class)
+@WebMvcTest(controllers = TestsHelloController.class)
 @AutoConfigureRestTestClient
 class RestTestClientTest {
 
@@ -23,7 +23,7 @@ class RestTestClientTest {
 
   @Test
   void test() {
-    restTestClient.get().uri("/hello")
+    restTestClient.get().uri("/tests/hello")
         .exchange()
         .expectStatus().isOk()
         .expectBody(String.class).isEqualTo("Hello World!");
@@ -31,7 +31,7 @@ class RestTestClientTest {
 
   @Test
   void mockMvc_test() throws Exception {
-    mockMvc.perform(MockMvcRequestBuilders.get("/hello"))
+    mockMvc.perform(MockMvcRequestBuilders.get("/tests/hello"))
         .andDo(print())
         .andExpect(status().isOk())
         .andExpect(content().string("Hello World!"));

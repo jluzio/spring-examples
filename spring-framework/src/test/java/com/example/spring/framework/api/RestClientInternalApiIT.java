@@ -3,7 +3,6 @@ package com.example.spring.framework.api;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import com.example.spring.framework.http.ClientHttpRequestDataEvent;
 import com.example.types.Todo;
 import java.util.Collection;
 import java.util.List;
@@ -11,8 +10,6 @@ import java.util.Objects;
 import java.util.stream.IntStream;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -57,8 +54,6 @@ class RestClientInternalApiIT {
 
   @Autowired
   RestClient restClient;
-  @Captor
-  ArgumentCaptor<ClientHttpRequestDataEvent> eventArgCaptor;
   @LocalServerPort
   Integer serverPort;
 
