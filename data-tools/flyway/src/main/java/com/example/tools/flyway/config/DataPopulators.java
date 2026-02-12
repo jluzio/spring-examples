@@ -1,22 +1,21 @@
 package com.example.tools.flyway.config;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import java.util.Arrays;
 import lombok.experimental.UtilityClass;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.data.repository.init.Jackson2RepositoryPopulatorFactoryBean;
+import org.springframework.data.repository.init.JacksonRepositoryPopulatorFactoryBean;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.json.JsonMapper;
 
 @UtilityClass
 public class DataPopulators {
 
-  public static Jackson2RepositoryPopulatorFactoryBean dataPopulator(String... resources) {
-    Jackson2RepositoryPopulatorFactoryBean factoryBean = new Jackson2RepositoryPopulatorFactoryBean();
-    factoryBean.setMapper(new ObjectMapper()
-        .registerModule(new JavaTimeModule())
+  public static JacksonRepositoryPopulatorFactoryBean dataPopulator(String... resources) {
+    var factoryBean = new JacksonRepositoryPopulatorFactoryBean();
+    factoryBean.setMapper(JsonMapper.builder()
         .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+        .build()
     );
     factoryBean.setResources(
         Arrays.stream(resources)

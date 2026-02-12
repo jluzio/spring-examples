@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
+@SpringBootTest(properties = "DEBUG: true")
 @Slf4j
 //@ActiveProfiles({"h2-mem", "jpa-gen-scripts"})
 @ActiveProfiles({"h2-mem"})

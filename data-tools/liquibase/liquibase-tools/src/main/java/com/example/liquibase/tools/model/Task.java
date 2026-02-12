@@ -27,6 +27,7 @@ public class Task {
   private String changeLog;
   private Contexts contexts;
   private LabelExpression labels;
+  @Builder.Default
   private OutputMode output = OutputMode.LOG;
   private boolean verbose;
 
