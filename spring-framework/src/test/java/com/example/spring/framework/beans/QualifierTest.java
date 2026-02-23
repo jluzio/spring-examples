@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.annotation.Order;
 
-@SpringBootTest(classes = QualifierTest.Config.class)
+@SpringBootTest
 @Slf4j
 class QualifierTest {
 
