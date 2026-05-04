@@ -2,12 +2,31 @@ package com.example.spring.cloud.configclient.config;
 
 import com.example.spring.cloud.configclient.config.model.FeatureProperties;
 import java.util.Map;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class FeaturesConfig {
+
+  @Bean
+  @ConfigurationProperties("app.features.feat1")
+  public FeatureProperties feat1Properties() {
+    return new FeatureProperties();
+  }
+
+  @Bean
+  @ConfigurationProperties("app.features.feat2")
+  public FeatureProperties feat2Properties() {
+    return new FeatureProperties();
+  }
+
+  @Bean
+  @ConfigurationProperties("app.features.featdef")
+  public FeatureProperties featDefProperties() {
+    return new FeatureProperties();
+  }
 
   @Bean
   public Map<String, FeatureProperties> computedFeaturePropertiesMap(Map<String, FeatureProperties> featuresConfig) {

@@ -20,7 +20,7 @@ public class ComputedFeaturePropertiesController {
     return computedFeaturePropertiesMap;
   }
 
-  @GetMapping("/refresh")
+  @GetMapping("/refreshable")
   public Map<String, FeatureProperties> getRefreshableComputedFeaturePropertiesMap() {
     return refreshableComputedFeaturePropertiesMap;
   }
