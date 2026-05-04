@@ -1,0 +1,4 @@
+app:
+  features:
+    featdef:
+      prop1: featdef_prop1

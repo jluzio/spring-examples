@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: config-client
+
+logging:
+  level:
+    root: info
+    com.example: debug
+
+#spring.config.import: optional:configserver:http://root:s3cr3t@localhost:8888
+spring.config.import: optional:configserver:http://localhost:8888
+#spring.cloud.config:
+#  username: root
+#  password: s3cr3t
+
+management.endpoints.web.exposure.include: '*'
+#management.endpoints.web.exposure.include: health,info,refresh

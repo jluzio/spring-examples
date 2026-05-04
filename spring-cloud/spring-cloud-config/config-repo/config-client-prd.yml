@@ -1,0 +1,10 @@
+app:
+  features:
+    feat1:
+      prop1: feat1_prop1_prd
+      prop2: feat1_prop2_prd
+      prop3: feat1_prop3_prd
+    feat2:
+      prop1: feat2_prop1_prd
+      prop2: feat2_prop2_prd
+      prop3: feat2_prop3_prd
