@@ -4,21 +4,23 @@ import com.example.spring.cloud.configclient.config.model.FeatureProperties;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class ComputedPropertiesController {
+@RequestMapping("/features/computed")
+public class ComputedFeaturePropertiesController {
 
   private final Map<String, FeatureProperties> computedFeaturePropertiesMap;
   private final Map<String, FeatureProperties> refreshableComputedFeaturePropertiesMap;
 
-  @GetMapping("/features/computed")
+  @GetMapping
   public Map<String, FeatureProperties> getComputedFeaturePropertiesMap() {
     return computedFeaturePropertiesMap;
   }
 
-  @GetMapping("/features/computed-refresh")
+  @GetMapping("/refresh")
   public Map<String, FeatureProperties> getRefreshableComputedFeaturePropertiesMap() {
     return refreshableComputedFeaturePropertiesMap;
   }

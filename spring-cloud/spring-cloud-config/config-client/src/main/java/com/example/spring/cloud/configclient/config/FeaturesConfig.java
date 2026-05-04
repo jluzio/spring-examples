@@ -10,15 +10,14 @@ import org.springframework.context.annotation.Configuration;
 public class FeaturesConfig {
 
   @Bean
-  public Map<String, FeatureProperties> computedFeaturePropertiesMap(
-      Map<String, FeatureProperties> featurePropertiesMap) {
-    return Features.cloneFeaturePropertiesMap(featurePropertiesMap);
+  public Map<String, FeatureProperties> computedFeaturePropertiesMap(Map<String, FeatureProperties> featuresConfig) {
+    return Features.cloneFeaturePropertiesMap(featuresConfig);
   }
 
   @Bean
   @RefreshScope
   public Map<String, FeatureProperties> refreshableComputedFeaturePropertiesMap(
-      Map<String, FeatureProperties> featurePropertiesMap) {
-    return Features.cloneFeaturePropertiesMap(featurePropertiesMap);
+      Map<String, FeatureProperties> featuresConfig) {
+    return Features.cloneFeaturePropertiesMap(featuresConfig);
   }
 }

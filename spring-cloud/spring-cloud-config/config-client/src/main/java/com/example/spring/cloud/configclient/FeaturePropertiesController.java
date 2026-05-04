@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/features")
-public class FeatureController {
+public class FeaturePropertiesController {
 
   private final Map<String, FeatureProperties> featurePropertiesMap;
 
