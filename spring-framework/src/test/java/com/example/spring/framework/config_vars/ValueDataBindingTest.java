@@ -13,7 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
         "test-data.string: string_value",
         "test-data.long: 3",
         "test-data.boolean: true",
-        "test-data.list: 1,2,3;4",
+        "test-data.c_csv: 1,2,3,4",
+        "test-data.s_csv: 1;2;3;4",
+        "test-data.mixed_csv: 1,2,3;4",
     }
 )
 class ValueDataBindingTest {
@@ -24,8 +26,12 @@ class ValueDataBindingTest {
   boolean booleanValue;
   @Value("${test-data.long}")
   long longValue;
-  @Value("${test-data.list}")
-  List<String> listValue;
+  @Value("${test-data.c_csv}")
+  List<String> cCsvValue;
+  @Value("${test-data.s_csv}")
+  List<String> sCsvValue;
+  @Value("${test-data.mixed_csv}")
+  List<String> mixedCsvValue;
 
   @Test
   void test() {
@@ -35,7 +41,11 @@ class ValueDataBindingTest {
         .isTrue();
     assertThat(longValue)
         .isEqualTo(3);
-    assertThat(listValue)
+    assertThat(cCsvValue)
+        .containsExactly("1", "2", "3", "4");
+    assertThat(sCsvValue)
+        .containsExactly("1;2;3;4");
+    assertThat(mixedCsvValue)
         .containsExactly("1", "2", "3;4");
   }
 
