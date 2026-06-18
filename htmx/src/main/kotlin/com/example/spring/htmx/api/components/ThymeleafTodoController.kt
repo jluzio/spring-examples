@@ -30,16 +30,16 @@ class ThymeleafTodoController {
 
   @GetMapping("{id}/default")
   fun todoDefault(@PathVariable id: String, model: ModelMap): String {
-    model["todo"] = todoService.todos.find { it.id == id }
+    model.addAttribute("todo", todoService.todos.find { it.id == id })
     return "$COMPONENTS/todo"
   }
 
   @GetMapping("{id}/fragments")
   @HxRequest
   fun todoFragments(@PathVariable id: String, model: ModelMap): FragmentsRendering {
-    model["todo"] = todoService.todos.find { it.id == id }
+    model.addAttribute("todo", todoService.todos.find { it.id == id })
     return FragmentsRendering
-      .with("$COMPONENTS/todo")
+      .fragment("$COMPONENTS/todo")
       .fragment("$COMPONENTS/message")
       .build()
   }

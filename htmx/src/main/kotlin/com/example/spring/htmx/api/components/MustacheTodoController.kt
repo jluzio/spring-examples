@@ -25,7 +25,7 @@ class MustacheTodoController {
 
   @GetMapping("{id}")
   fun todo(@PathVariable id: String, model: ModelMap): String {
-    model["todo"] = todoService.todos.find { it.id == id }
+    model.addAttribute("todo", todoService.todos.find { it.id == id })
     return "$COMPONENTS/todo"
   }
 

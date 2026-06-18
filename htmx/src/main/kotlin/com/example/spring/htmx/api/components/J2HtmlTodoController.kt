@@ -34,12 +34,10 @@ class J2HtmlTodoController {
         tbody(
           *todos.map {
             tr(
-              *listOf(
-                th(it.id).attr("scope", "row"),
-                td(it.name),
-                td(it.description),
-                td()
-              ).toTypedArray()
+              th(it.id).attr("scope", "row"),
+              td(it.name),
+              td(it.description),
+              td()
             )
               .attr("hx-get", "/components/j2html/todos/${it.id}")
               .attr("hx-trigger", "click")

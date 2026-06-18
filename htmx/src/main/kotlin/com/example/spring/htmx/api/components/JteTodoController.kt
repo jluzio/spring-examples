@@ -30,7 +30,7 @@ class JteTodoController {
   @GetMapping("{id}", produces = [MediaType.TEXT_HTML_VALUE])
   fun todo(@PathVariable id: String, model: ModelMap): String {
     val todo = todoService.todos.find { it.id == id }
-    model["todo"] = todo
+    model.addAttribute("todo", todo)
     return render("todo.kte", todo)
   }
 
