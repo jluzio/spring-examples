@@ -2,65 +2,71 @@ package com.example.spring.cloud.playground.function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.RequestEntity;
-import org.springframework.http.ResponseEntity;
+import org.springframework.test.web.servlet.client.RestTestClient;
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-//@org.springframework.cloud.function.context.test.FunctionalSpringBootTest.FunctionalSpringBootTest
+@AutoConfigureRestTestClient
 class HttpLangFunctionsTest {
 
   @Autowired
-  private TestRestTemplate rest;
+  private RestTestClient testClient;
 
   @Test
-  void uppercase() throws Exception {
-    ResponseEntity<String> result = this.rest.exchange(
-        RequestEntity.post(new URI("/uppercase")).body("hello"), String.class);
-    assertThat(result.getBody())
+  void uppercase() {
+    var result = testClient
+        .post().uri("/uppercase")
+        .body("hello")
+        .exchange()
+        .expectBody(String.class)
+        .returnResult();
+    assertThat(result.getResponseBody())
         .isEqualTo("HELLO");
   }
 
   @Test
-  void uppercaseReactive() throws Exception {
-    ParameterizedTypeReference<ArrayList<String>> responseType = new ParameterizedTypeReference<>() {
-    };
-    ResponseEntity<ArrayList<String>> result = this.rest.exchange(
-        RequestEntity.post(new URI("/uppercaseReactive")).body("hello"), responseType);
-    assertThat(result.getBody())
+  void uppercaseReactive() {
+    var result = testClient
+        .post().uri("/uppercaseReactive")
+        .body("hello")
+        .exchange()
+        .expectBody(String[].class)
+        .returnResult();
+    assertThat(result.getResponseBody())
         .hasSize(1)
-        .isEqualTo(List.of("HELLO"));
+        .containsExactly("HELLO");
   }
 
   @Test
-  void lowercase() throws Exception {
-    ResponseEntity<String> result = this.rest.exchange(
-        RequestEntity.post(new URI("/lowercase")).body("Hello"), String.class);
-    assertThat(result.getBody())
+  void lowercase() {
+    testClient
+        .post().uri("/lowercase")
+        .body("Hello")
+        .exchange()
+        .expectBody(String.class)
         .isEqualTo("hello");
   }
 
   @Test
-  void reverse() throws Exception {
-    ResponseEntity<String> result = this.rest.exchange(
-        RequestEntity.post(new URI("/reverse")).body("Hello"), String.class);
-    assertThat(result.getBody())
+  void reverse() {
+    testClient
+        .post().uri("/reverse")
+        .body("Hello")
+        .exchange()
+        .expectBody(String.class)
         .isEqualTo("olleH");
   }
 
   @Test
-  void lowercase_reverse() throws Exception {
-    ResponseEntity<String> result = this.rest.exchange(
-        RequestEntity.post(new URI("/lowercase,reverse")).body("Hello"), String.class);
-    assertThat(result.getBody())
+  void lowercase_reverse() {
+    testClient.post().uri("/lowercase,reverse")
+        .body("Hello")
+        .exchange()
+        .expectBody(String.class)
         .isEqualTo("olleh");
   }
 }

@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.spring.cloud.playground.function.model.User;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import org.junit.jupiter.api.Test;
@@ -20,35 +19,35 @@ class LangFunctionsTest {
   private FunctionCatalog catalog;
 
   @Test
-  void uppercaseReactive() throws Exception {
+  void uppercaseReactive() {
     Function<Flux<String>, Flux<String>> function = catalog.lookup(Function.class, "uppercaseReactive");
     assertThat(function.apply(Flux.just("Hello")).collectList().block())
         .isEqualTo(List.of("HELLO"));
   }
 
   @Test
-  void lowercase() throws Exception {
+  void lowercase() {
     Function<String, String> function = catalog.lookup(Function.class, "lowercase");
     assertThat(function.apply("Hello"))
         .isEqualTo("hello");
   }
 
   @Test
-  void reverse() throws Exception {
+  void reverse() {
     Function<String, String> function = catalog.lookup(Function.class, "reverse");
     assertThat(function.apply("Hello"))
         .isEqualTo("olleH");
   }
 
   @Test
-  void lowercase_reverse() throws Exception {
+  void lowercase_reverse() {
     Function<String, String> function = catalog.lookup(Function.class, "lowercase,reverse");
     assertThat(function.apply("Hello"))
         .isEqualTo("olleh");
   }
 
   @Test
-  void users() throws Exception {
+  void users() {
     Supplier<Flux<User>> function = catalog.lookup(Function.class, "users");
     assertThat(function.get().collectList().block())
         .hasSize(10);

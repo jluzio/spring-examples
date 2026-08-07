@@ -21,4 +21,5 @@ spring.cloud.openfeign:
         url: https://login.microsoftonline.com
         loggerLevel: FULL
         decoder: com.example.spring.cloud.playground.feign.ConvertersTest.AzureAdResponseDecoder
+#        decoder: azureAdResponseDecoder
       #        loggerLevel: NONE

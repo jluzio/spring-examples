@@ -14,12 +14,12 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.http.HttpMessageConverters;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.support.FeignHttpMessageConverters;
 import org.springframework.cloud.openfeign.support.SpringDecoder;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -48,13 +48,12 @@ class ConvertersTest {
     JWKSet keysAsJwkSet();
   }
 
-  @Component
-  static class AzureAdResponseDecoder implements Decoder {
+  public static class AzureAdResponseDecoder implements Decoder {
 
     private final Decoder delegate;
 
-    AzureAdResponseDecoder(ObjectFactory<HttpMessageConverters> httpMessageConvertersObjectFactory) {
-      delegate = new SpringDecoder(httpMessageConvertersObjectFactory);
+    AzureAdResponseDecoder(ObjectProvider<FeignHttpMessageConverters> converters) {
+      this.delegate = new SpringDecoder(converters);
     }
 
     @Override

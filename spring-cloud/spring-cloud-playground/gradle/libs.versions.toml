@@ -6,11 +6,11 @@ com-google-guava-guava = "33.0.0-jre"
 io-projectreactor-reactor-test = "3.6.8"
 org-apache-commons-commons-lang3 = "3.12.0"
 org-projectlombok-lombok = "1.18.34"
-org-springframework-boot-spring-boot-configuration-processor = "3.3.2"
-org-springframework-boot-spring-boot-devtools = "3.3.2"
-org-springframework-boot-spring-boot-starter-test = "3.3.2"
-org-springframework-boot-spring-boot-starter-webflux = "3.3.2"
-org-springframework-cloud-spring-cloud-function-web = "4.1.3"
+org-springframework-boot-spring-boot-configuration-processor = "4.0.2"
+org-springframework-boot-spring-boot-devtools = "4.0.2"
+org-springframework-boot-spring-boot-starter-test = "4.0.2"
+org-springframework-boot-spring-boot-starter-webflux = "4.0.2"
+org-springframework-cloud-spring-cloud-function-web = "5.0.3"
 
 [libraries]
 com-google-guava-guava = { module = "com.google.guava:guava", version.ref = "com-google-guava-guava" }
