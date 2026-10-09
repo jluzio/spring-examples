@@ -59,6 +59,10 @@ dependencies {
   annotationProcessor("org.projectlombok:lombok")
   testAnnotationProcessor("org.projectlombok:lombok")
 
+  // run migration check on properties
+  developmentOnly("org.springframework.boot:spring-boot-properties-migrator")
+  testImplementation("org.springframework.boot:spring-boot-properties-migrator")
+
   implementation(platform("io.projectreactor:reactor-bom:2025.0.0"))
   implementation("io.projectreactor:reactor-core")
 
