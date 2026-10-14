@@ -1,0 +1,5 @@
+app.localkey.feat.prop1: "Local key for '${app.features.feat1.prop1}'"
+app.features.feat1.prop1: "warning: local key will be overridden"
+
+app.localkey.feat.prop999: "Local key for '${app.features.feat1.prop999}'"
+app.features.feat1.prop999: "warning: local key will NOT be overridden"
